@@ -6,9 +6,19 @@
     <title>@yield('title', 'Vale da Benção Church - Site Oficial')</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/perfil.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Exo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style-projeto.css') }}">
+    <style>
+        body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        #app-content {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+    </style>
     @stack('styles')
 </head>
 <body>
