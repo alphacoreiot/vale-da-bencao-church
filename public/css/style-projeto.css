@@ -2648,6 +2648,10 @@ body {
     .header {
         padding: 5px 10px;
     }
+    
+    .logo {
+        height: 55px;
+    }
 
     .section-title {
         font-size: 1.5rem;
