@@ -24,7 +24,6 @@
     </div>
 
     <!-- Componentes Flutuantes Fixos -->
-    @include('components.radio')
     @include('components.chat')
 
     <!-- Footer Fixo -->

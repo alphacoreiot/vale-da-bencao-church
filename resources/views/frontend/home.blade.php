@@ -196,5 +196,8 @@
     </div>
 </section>
 
+<!-- Rádio somente na home -->
+@include('components.radio')
+
 @endsection
 
