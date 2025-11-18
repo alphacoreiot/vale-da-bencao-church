@@ -9,6 +9,7 @@
     <div class="video-background">
         <iframe 
             src="https://www.youtube.com/embed/Pr98Ozup7oU?autoplay=1&mute=1&loop=1&playlist=Pr98Ozup7oU&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&vq=hd1080" 
+            id="heroVideo" 
             frameborder="0" 
             allow="autoplay; encrypted-media" 
             allowfullscreen>
@@ -117,9 +118,10 @@
         <div class="culto-video-preview">
             <div class="video-frame">
                 <iframe 
+                    id="cultoVideo"
                     width="100%" 
                     height="100%" 
-                    src="https://www.youtube.com/embed/hM9YbvTNOOg" 
+                    src="https://www.youtube.com/embed/hM9YbvTNOOg?enablejsapi=1" 
                     title="Culto ao Vivo - Igreja Vale da Benção" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -205,7 +207,7 @@
 <!-- Rádio Gospel Flutuante -->
 <div class="radio-player-float" id="radioPlayer">
     <div class="radio-header">
-        <span>🎵 Rádio Gospel</span>
+        <span>🎵 Rádio Vale da Benção Church</span>
         <button class="radio-close" id="radioClose">✕</button>
     </div>
     <div class="radio-body">

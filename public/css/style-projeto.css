@@ -508,6 +508,10 @@ body {
     transition: all 0.3s ease;
 }
 
+.ai-chat.front {
+    z-index: 1001;
+}
+
 .ai-chat.active {
     display: flex;
 }
@@ -708,6 +712,10 @@ body {
     overflow: hidden;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.radio-player-float.front {
+    z-index: 1001;
 }
 
 .radio-player-float.active {
