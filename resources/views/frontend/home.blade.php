@@ -230,7 +230,7 @@
             </button>
             <button class="radio-control-btn" id="radioNext" title="Próximo">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M16 18h2V6h-2zm-11-7l8.5-6v12z"/>
+                    <path d="M6 6l8.5 6L6 18V6zm10 0h2v12h-2V6z"/>
                 </svg>
             </button>
         </div>
