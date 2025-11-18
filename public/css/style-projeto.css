@@ -948,30 +948,35 @@ body {
 /* Seção de Carrossel de Banners */
 .carousel-section {
     position: relative;
-    min-height: 95vh;
+    height: 87vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
-    padding: 80px 40px;
+    padding: 40px;
 }
 
 .carousel-content-wrapper {
     max-width: 1400px;
     width: 100%;
+    height: 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .carousel-content-wrapper .section-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+    flex-shrink: 0;
 }
 
 .carousel-wrapper-full {
     position: relative;
     width: 100%;
-    height: 80vh;
+    flex: 1;
+    min-height: 0;
 }
 
 .carousel-banners {
@@ -989,72 +994,124 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    background: #000;
+    overflow: hidden;
+    padding: 20px;
 }
 
-.banner-overlay {
+.banner-image {
+    max-width: 95%;
+    max-height: 95%;
+    min-width: 80%;
+    min-height: 80%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.8)) 
+            drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
+    animation: floatImage 4s ease-in-out infinite;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.banner-image:hover {
+    transform: scale(1.02);
+}
+
+@keyframes floatImage {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-10px) scale(1.02);
+    }
+}
+
+/* Modal de Zoom da Imagem */
+.image-zoom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.image-zoom-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-zoom-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+    background: rgba(0, 0, 0, 0.95);
+    cursor: pointer;
 }
 
-.banner-content {
+.image-zoom-content {
     position: relative;
-    z-index: 10;
-    text-align: center;
-    padding: 40px;
-    max-width: 800px;
-    animation: fadeInUp 0.8s ease;
+    z-index: 10000;
+    max-width: 95vw;
+    max-height: 95vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.banner-icon {
-    font-size: 8rem;
-    margin-bottom: 30px;
-    animation: pulse 2s infinite;
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+.image-zoom-img {
+    max-width: 100%;
+    max-height: 95vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
+    animation: zoomIn 0.3s ease;
 }
 
-.banner-content h2 {
-    font-size: 4rem;
-    color: var(--cor-principal);
-    margin-bottom: 20px;
-    font-family: 'Exo', sans-serif;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
-.banner-content p {
-    font-size: 1.5rem;
-    color: #cccccc;
-    margin-bottom: 40px;
-    line-height: 1.8;
-}
-
-.banner-btn {
-    display: inline-block;
+.image-zoom-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
     background: rgba(255, 255, 255, 0.1);
-    border: 2px solid #e8e8e8;
-    color: var(--cor-principal);
-    padding: 18px 50px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    z-index: 10001;
 }
 
-.banner-btn:hover {
+.image-zoom-close:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
-    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
 }
 
 .carousel-control {
@@ -1196,7 +1253,7 @@ body {
     height: 600px;
     border-radius: 30px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
+    background: url('../assets/background.png') center/cover;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -37,28 +37,21 @@
         </div>
         <div class="carousel-wrapper-full">
             <div class="carousel-banners" id="carouselBanners">
-            @foreach($sections as $section)
-            <div class="banner-slide">
-                <div class="banner-overlay"></div>
-                <div class="banner-content">
-                    <div class="banner-icon">
-                        @switch($section->slug)
-                            @case('eventos') 📅 @break
-                            @case('ministerios') 🙏 @break
-                            @case('estudos') 📖 @break
-                            @case('galeria') 📸 @break
-                            @case('testemunhos') ⭐ @break
-                            @case('contato') 📞 @break
-                            @case('boas-vindas') 👋 @break
-                            @default 📄
-                        @endswitch
-                    </div>
-                    <h2>{{ $section->name }}</h2>
-                    <p>{{ $section->description }}</p>
-                    <a href="{{ route('section.show', $section->slug) }}" class="banner-btn">Explorar</a>
+                <div class="banner-slide">
+                    <img src="{{ asset('assets/imagem 0.jpeg') }}" alt="Vale News 1" class="banner-image">
                 </div>
-            </div>
-            @endforeach
+                <div class="banner-slide">
+                    <img src="{{ asset('assets/imagem 1.jpg') }}" alt="Vale News 2" class="banner-image">
+                </div>
+                <div class="banner-slide">
+                    <img src="{{ asset('assets/imagem 2.jpg') }}" alt="Vale News 3" class="banner-image">
+                </div>
+                <div class="banner-slide">
+                    <img src="{{ asset('assets/imagem 3.jpg') }}" alt="Vale News 4" class="banner-image">
+                </div>
+                <div class="banner-slide">
+                    <img src="{{ asset('assets/imagem 4.jpg') }}" alt="Vale News 5" class="banner-image">
+                </div>
         </div>
         <div class="carousel-dots" id="carouselDots"></div>
         <button class="carousel-control prev" id="bannerPrev">‹</button>
@@ -102,7 +95,6 @@
         </div>
         <div class="devocional-image">
             <div class="image-overlay"></div>
-            <div class="bible-icon">📖</div>
         </div>
     </div>
 </section>
