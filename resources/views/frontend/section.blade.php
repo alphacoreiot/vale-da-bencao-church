@@ -3,61 +3,81 @@
 @section('title', $section->name . ' - Igreja Vale da Bênção')
 
 @section('content')
-<!-- Section Header -->
-<section class="py-5" style="background-color: #000000; color: #FFFFFF;">
+<!-- Hero Section da Página -->
+<section class="section-hero-page">
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}" style="color: #D0FBF9;">Início</a></li>
-                <li class="breadcrumb-item active" style="color: #FFFFFF;">{{ $section->name }}</li>
-            </ol>
-        </nav>
-        <h1 class="display-5 fw-bold">{{ $section->name }}</h1>
-        @if($section->description)
-            <p class="lead" style="color: #D0FBF9;">{{ $section->description }}</p>
-        @endif
+        <div class="section-hero-content">
+            <div class="breadcrumb-nav">
+                <a href="{{ route('home') }}" class="breadcrumb-link">← Início</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">{{ $section->name }}</span>
+            </div>
+            
+            <div class="section-icon-large">
+                @switch($section->slug)
+                    @case('eventos') 📅 @break
+                    @case('ministerios') 🙏 @break
+                    @case('estudos') 📖 @break
+                    @case('galeria') 📸 @break
+                    @case('testemunhos') ⭐ @break
+                    @case('contato') 📞 @break
+                    @case('boas-vindas') 👋 @break
+                    @default 📄
+                @endswitch
+            </div>
+            
+            <h1 class="section-page-title">{{ $section->name }}</h1>
+            @if($section->description)
+                <p class="section-page-description">{{ $section->description }}</p>
+            @endif
+        </div>
     </div>
 </section>
 
-<!-- Section Content -->
-<section class="py-5">
+<!-- Conteúdo Principal -->
+<section class="section-content-area">
     <div class="container">
-        <div class="row">
-            <!-- Main Content -->
-            <div class="col-lg-8">
+        <div class="content-grid">
+            <!-- Conteúdo Principal -->
+            <div class="content-main">
                 @if($section->publishedContents->isEmpty())
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Nenhum conteúdo disponível no momento.
+                    <div class="empty-content">
+                        <div class="empty-icon">📝</div>
+                        <h3>Conteúdo em breve</h3>
+                        <p>Estamos preparando conteúdos especiais para esta seção.</p>
+                        <a href="{{ route('home') }}" class="btn-primary">← Voltar ao Início</a>
                     </div>
                 @else
                     @foreach($section->publishedContents as $content)
-                        <article class="mb-4 pb-4 border-bottom">
-                            <h3 class="mb-3" style="color: #9C0505;">{{ $content->title }}</h3>
-                            <div class="text-muted small mb-3">
-                                <i class="fas fa-calendar me-2"></i>
-                                {{ $content->published_at->format('d/m/Y') }}
+                        <article class="content-card">
+                            <h3 class="content-card-title">{{ $content->title }}</h3>
+                            
+                            <div class="content-meta">
+                                <span>📅 {{ $content->published_at->format('d/m/Y') }}</span>
+                                @if($content->author)
+                                    <span>👤 {{ $content->author }}</span>
+                                @endif
                             </div>
-                            <div class="content">
-                                {!! $content->content !!}
+                            
+                            <div class="content-excerpt">
+                                {!! Str::limit(strip_tags($content->content), 300) !!}
                             </div>
+                            
                             @if($content->media->isNotEmpty())
-                                <div class="row mt-3 g-3">
+                                <div class="content-gallery">
                                     @foreach($content->media->take(3) as $media)
-                                        <div class="col-md-4">
-                                            @if($media->isImage())
-                                                <img src="{{ $media->getUrl() }}" 
-                                                     alt="{{ $media->alt_text }}" 
-                                                     class="img-fluid rounded">
-                                            @endif
-                                        </div>
+                                        @if($media->isImage())
+                                            <img src="{{ $media->getUrl() }}" 
+                                                 alt="{{ $media->alt_text }}" 
+                                                 class="gallery-thumb">
+                                        @endif
                                     @endforeach
                                 </div>
                             @endif
+                            
                             <a href="{{ route('section.content', [$section->slug, $content->id]) }}" 
-                               class="btn btn-sm mt-3"
-                               style="background-color: #9C0505; color: #FFFFFF;">
-                                Ler Mais
+                               class="btn-read-more">
+                                Ler Mais →
                             </a>
                         </article>
                     @endforeach
@@ -65,52 +85,45 @@
             </div>
 
             <!-- Sidebar -->
-            <div class="col-lg-4">
-                <!-- AI Chat Widget -->
-                @if($section->getAiAgentConfig()['enabled'])
-                <div class="card mb-4 shadow-sm" style="border-left: 4px solid #FF3700 !important;">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: #9C0505;">
-                            <i class="fas fa-robot me-2"></i>
-                            {{ $section->getAiAgentConfig()['name'] }}
-                        </h5>
-                        <p class="small text-muted">
-                            Tire suas dúvidas sobre {{ strtolower($section->name) }}
-                        </p>
-                        <button class="btn btn-sm w-100" 
-                                style="background-color: #FF3700; color: #FFFFFF;"
-                                onclick="openAIChat('{{ $section->slug }}')">
-                            <i class="fas fa-comments me-2"></i> Iniciar Conversa
-                        </button>
+            <aside class="content-sidebar">
+                <!-- Chat IA -->
+                <div class="sidebar-card card-highlight">
+                    <div class="sidebar-card-header">
+                        <h4>🤖 Assistente IA</h4>
+                    </div>
+                    <div class="sidebar-card-body">
+                        <p>Tire suas dúvidas sobre {{ strtolower($section->name) }}</p>
+                        <button class="btn-secondary" onclick="openAIChat()">💬 Iniciar Conversa</button>
                     </div>
                 </div>
-                @endif
 
-                <!-- Other Sections -->
-                <div class="card shadow-sm">
-                    <div class="card-header" style="background-color: #9C0505; color: #FFFFFF;">
-                        <strong>Outras Seções</strong>
+                <!-- Outras Seções -->
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <h4>📋 Outras Seções</h4>
                     </div>
-                    <div class="list-group list-group-flush">
-                        @foreach(\App\Models\Section::active()->where('id', '!=', $section->id)->ordered()->get() as $otherSection)
-                            <a href="{{ route('section.show', $otherSection->slug) }}" 
-                               class="list-group-item list-group-item-action">
-                                {{ $otherSection->name }}
+                    <div class="sidebar-links">
+                        @foreach(\App\Models\Section::where('is_active', true)->where('id', '!=', $section->id)->get() as $otherSection)
+                            <a href="{{ route('section.show', $otherSection->slug) }}" class="sidebar-link">
+                                → {{ $otherSection->name }}
                             </a>
                         @endforeach
                     </div>
                 </div>
-            </div>
+            </aside>
         </div>
     </div>
 </section>
 
 @push('scripts')
 <script>
-function openAIChat(sectionSlug) {
-    // Simple alert for now - will be enhanced with modal
-    alert('Chat IA será implementado em breve! Seção: ' + sectionSlug);
-    // TODO: Implement AI chat modal
+function openAIChat() {
+    // Abrir chat AI fixo
+    const chatContainer = document.getElementById('aiChatContainer');
+    if (chatContainer) {
+        chatContainer.classList.remove('minimized');
+        chatContainer.classList.add('front');
+    }
 }
 </script>
 @endpush

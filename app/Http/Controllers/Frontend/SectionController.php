@@ -20,6 +20,11 @@ class SectionController extends Controller
             }, 'media'])
             ->firstOrFail();
 
+        // Se for requisição AJAX, retornar apenas o conteúdo
+        if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+            return view('frontend.section', compact('section'));
+        }
+
         return view('frontend.section', compact('section'));
     }
 
@@ -40,6 +45,11 @@ class SectionController extends Controller
             ->where('id', '!=', $contentId)
             ->limit(3)
             ->get();
+
+        // Se for requisição AJAX, retornar apenas o conteúdo
+        if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+            return view('frontend.content', compact('section', 'content', 'relatedContents'));
+        }
 
         return view('frontend.content', compact('section', 'content', 'relatedContents'));
     }

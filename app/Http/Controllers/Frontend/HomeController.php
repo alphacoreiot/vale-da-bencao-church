@@ -33,6 +33,15 @@ class HomeController extends Controller
             ? $highlightedSection->publishedContents()->first()
             : null;
 
+        // Se for requisição AJAX, retornar apenas o conteúdo
+        if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+            return view('frontend.home', compact(
+                'sections',
+                'highlightedSection',
+                'featuredContent'
+            ));
+        }
+
         return view('frontend.home', compact(
             'sections',
             'highlightedSection',
