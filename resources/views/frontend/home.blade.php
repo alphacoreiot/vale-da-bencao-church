@@ -129,11 +129,11 @@
         </div>
         <div class="culto-online-content">
             <div class="culto-buttons">
-                <a href="https://youtube.com/@igrejavaledasbencaos" target="_blank" class="culto-btn primary">
+                <a href="https://www.youtube.com/@valedabencaochurch" target="_blank" class="culto-btn primary">
                     <span class="btn-icon">▶</span>
                     Assistir Ao Vivo
                 </a>
-                <a href="https://youtube.com/@igrejavaledasbencaos" target="_blank" class="culto-btn secondary">
+                <a href="https://www.youtube.com/@valedabencaochurch" target="_blank" class="culto-btn secondary">
                     <span class="btn-icon">📺</span>
                     Ver Cultos Anteriores
                 </a>
@@ -141,6 +141,106 @@
         </div>
     </div>
 </section>
+
+<!-- Seção Localização -->
+<section class="localizacao-section">
+    <div class="localizacao-container">
+        <div class="section-header">
+            <span class="section-label">Localização</span>
+            <h2 class="section-main-title">Venha nos Visitar</h2>
+            <p class="section-description">Estamos de portas abertas para receber você e sua família</p>
+        </div>
+        
+        <div class="localizacao-content">
+            <div class="localizacao-info">
+                <div class="info-card">
+                    <div class="info-icon">📍</div>
+                    <div class="info-text">
+                        <h4>Endereço</h4>
+                        <p>Rua Dos Buritis, 07<br>Camaçari/BA</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🕒</div>
+                    <div class="info-text">
+                        <h4>Horários dos Cultos</h4>
+                        <p>Domingos: 18:30 - 20:30<br>
+                           Quartas: 19:00 - 21:00<br>
+                           Quintas (Célula): 19:00 - 21:00</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">📞</div>
+                    <div class="info-text">
+                        <h4>Contato</h4>
+                        <p>Entre em contato conosco<br>para mais informações</p>
+                    </div>
+                </div>
+                
+                <a href="https://www.google.com/maps/dir/?api=1&destination=-12.6957261,-38.2934209" 
+                   target="_blank" 
+                   class="route-btn">
+                    <span class="btn-icon">🧭</span>
+                    Traçar Rota no Google Maps
+                </a>
+            </div>
+            
+            <div class="localizacao-mapa">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3890.0442756842845!2d-38.29599582516824!3d-12.695726119159485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x71642f50e03969f%3A0x91f3d25ced8e8301!2sIgreja%20Vale%20Da%20Ben%C3%A7%C3%A3o!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Rádio Gospel Flutuante -->
+<div class="radio-player-float" id="radioPlayer">
+    <div class="radio-header">
+        <span>🎵 Rádio Gospel</span>
+        <button class="radio-close" id="radioClose">✕</button>
+    </div>
+    <div class="radio-body">
+        <div id="radioYoutubePlayer" style="display:none;"></div>
+        <p class="radio-song-title" id="radioSongTitle">Carregando...</p>
+        <div class="radio-progress">
+            <div class="radio-progress-bar" id="radioProgressBar"></div>
+        </div>
+        <div class="radio-controls">
+            <button class="radio-control-btn" id="radioPrev" title="Anterior">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
+            </button>
+            <button class="radio-control-btn play-btn" id="radioToggle" title="Play/Pause">
+                <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+            </button>
+            <button class="radio-control-btn" id="radioNext" title="Próximo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16 18h2V6h-2zm-11-7l8.5-6v12z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Botão Rádio -->
+<button class="radio-button" id="radioButton">
+    🎵
+</button>
 
 <!-- Chat IA Flutuante -->
 <div class="ai-chat" id="aiChat">
@@ -170,5 +270,6 @@
     <img src="{{ asset('assets/perfil.png') }}" alt="Chat IA">
     <div class="chat-bubble" id="chatBubble"></div>
 </button>
+
 @endsection
 
