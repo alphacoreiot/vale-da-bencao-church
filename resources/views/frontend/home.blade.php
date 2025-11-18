@@ -109,45 +109,10 @@
 <!-- Seção Culto Online -->
 <section class="culto-online-section">
     <div class="culto-online-container">
-        <div class="culto-online-content">
-            <div class="section-header">
-                <span class="section-label">Culto Online</span>
-                <h2 class="section-main-title">Participe do Culto de Onde Você Estiver</h2>
-                <p class="section-description">Assista nossas transmissões ao vivo e experimente a presença de Deus</p>
-            </div>
-            <div class="culto-schedule">
-                <div class="schedule-item">
-                    <div class="schedule-icon">📅</div>
-                    <div class="schedule-info">
-                        <h4>Domingos</h4>
-                        <p>18:30 - 20:30</p>
-                    </div>
-                </div>
-                <div class="schedule-item">
-                    <div class="schedule-icon">🕒</div>
-                    <div class="schedule-info">
-                        <h4>Quartas-feiras</h4>
-                        <p>19:00 - 21:00</p>
-                    </div>
-                </div>
-                <div class="schedule-item">
-                    <div class="schedule-icon">⭐</div>
-                    <div class="schedule-info">
-                        <h4>Quintas-feiras</h4>
-                        <p>19:00 - 21:00 (Célula)</p>
-                    </div>
-                </div>
-            </div>
-            <div class="culto-buttons">
-                <a href="https://youtube.com/@igrejavaledasbencaos" target="_blank" class="culto-btn primary">
-                    <span class="btn-icon">▶</span>
-                    Assistir Ao Vivo
-                </a>
-                <a href="https://youtube.com/@igrejavaledasbencaos" target="_blank" class="culto-btn secondary">
-                    <span class="btn-icon">📺</span>
-                    Ver Cultos Anteriores
-                </a>
-            </div>
+        <div class="section-header">
+            <span class="section-label">Culto Online</span>
+            <h2 class="section-main-title">Participe do Culto de Onde Você Estiver</h2>
+            <p class="section-description">Assista nossas transmissões ao vivo e experimente a presença de Deus</p>
         </div>
         <div class="culto-video-preview">
             <div class="video-frame">
@@ -160,6 +125,18 @@
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
                 </iframe>
+            </div>
+        </div>
+        <div class="culto-online-content">
+            <div class="culto-buttons">
+                <a href="https://youtube.com/@igrejavaledasbencaos" target="_blank" class="culto-btn primary">
+                    <span class="btn-icon">▶</span>
+                    Assistir Ao Vivo
+                </a>
+                <a href="https://youtube.com/@igrejavaledasbencaos" target="_blank" class="culto-btn secondary">
+                    <span class="btn-icon">📺</span>
+                    Ver Cultos Anteriores
+                </a>
             </div>
         </div>
     </div>

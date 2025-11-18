@@ -359,6 +359,42 @@ body {
     opacity: 0.8;
 }
 
+/* Responsivo - Headers */
+@media (max-width: 992px) {
+    .section-main-title {
+        font-size: 2.5rem;
+    }
+    
+    .section-description {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-label {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+    }
+    
+    .section-main-title {
+        font-size: 1.8rem;
+    }
+    
+    .section-description {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-main-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-description {
+        font-size: 0.9rem;
+    }
+}
+
 .highlight-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1056,15 +1092,20 @@ body {
 .culto-online-container {
     max-width: 1400px;
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
     animation: fadeInUp 0.8s ease;
+}
+
+.culto-online-container .section-header {
+    text-align: center;
 }
 
 .culto-online-content {
     color: var(--cor-principal);
+    display: flex;
+    justify-content: center;
 }
 
 .culto-schedule {
@@ -1150,12 +1191,15 @@ body {
 
 .culto-video-preview {
     position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .video-frame {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 500px;
     background: #000000;
     border-radius: 30px;
     overflow: hidden;
@@ -1228,17 +1272,55 @@ body {
     background: rgba(255, 255, 255, 0.6);
 }
 
-@media (max-width: 768px) {
-    .banner-content h2 {
-        font-size: 2.5rem;
+@media (max-width: 992px) {
+    .carousel-content-wrapper .section-header {
+        margin-bottom: 30px;
     }
     
-    .banner-content p {
-        font-size: 1.1rem;
+    .carousel-wrapper-full {
+        height: 70vh;
+    }
+    
+    .banner-content h2 {
+        font-size: 3rem;
     }
     
     .banner-icon {
-        font-size: 5rem;
+        font-size: 6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-section {
+        padding: 60px 20px;
+    }
+    
+    .carousel-wrapper-full {
+        height: 60vh;
+    }
+    
+    .banner-content {
+        padding: 20px;
+    }
+    
+    .banner-content h2 {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+    
+    .banner-content p {
+        font-size: 1rem;
+        margin-bottom: 25px;
+    }
+    
+    .banner-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+    
+    .banner-btn {
+        padding: 12px 30px;
+        font-size: 0.95rem;
     }
     
     .carousel-control {
@@ -1253,6 +1335,43 @@ body {
     
     .carousel-control.next {
         right: 20px;
+    }
+    
+    .carousel-dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-wrapper-full {
+        height: 50vh;
+    }
+    
+    .banner-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .banner-content p {
+        font-size: 0.9rem;
+    }
+    
+    .banner-icon {
+        font-size: 3rem;
+    }
+    
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+    
+    .carousel-control.prev {
+        left: 10px;
+    }
+    
+    .carousel-control.next {
+        right: 10px;
     }
 }
 
@@ -1487,5 +1606,256 @@ body {
 
     .card-icon {
         font-size: 2.5rem;
+    }
+}
+
+/* Responsividade adicional para carrossel */
+@media (max-width: 992px) {
+    .carousel-section {
+        padding: 60px 30px;
+    }
+    
+    .carousel-wrapper-full {
+        height: 70vh;
+    }
+    
+    .banner-content h2 {
+        font-size: 3rem;
+    }
+    
+    .banner-icon {
+        font-size: 6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-wrapper-full {
+        height: 60vh;
+    }
+    
+    .banner-content {
+        padding: 20px;
+    }
+    
+    .banner-content h2 {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+    
+    .banner-content p {
+        font-size: 1rem;
+        margin-bottom: 25px;
+    }
+    
+    .banner-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+    
+    .banner-btn {
+        padding: 12px 30px;
+        font-size: 0.95rem;
+    }
+    
+    .carousel-control {
+        width: 45px;
+        height: 45px;
+        font-size: 1.8rem;
+    }
+    
+    .carousel-dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-wrapper-full {
+        height: 50vh;
+    }
+    
+    .banner-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .banner-content p {
+        font-size: 0.9rem;
+    }
+    
+    .banner-icon {
+        font-size: 3rem;
+    }
+    
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+    
+    .carousel-control.prev {
+        left: 10px;
+    }
+    
+    .carousel-control.next {
+        right: 10px;
+    }
+}
+
+/* Responsividade adicional para devocional */
+@media (max-width: 992px) {
+    .devocional-section {
+        padding: 60px 30px;
+    }
+    
+    .verse-text {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .devocional-section {
+        padding: 40px 15px;
+    }
+    
+    .verse-text {
+        font-size: 0.95rem;
+    }
+    
+    .devocional-verse {
+        padding: 20px;
+    }
+    
+    .devocional-reflection,
+    .devocional-prayer {
+        padding: 15px;
+    }
+    
+    .devocional-image {
+        height: 250px;
+    }
+    
+    .bible-icon {
+        font-size: 6rem;
+    }
+}
+
+/* Responsividade adicional para culto online */
+@media (max-width: 992px) {
+    .culto-online-section {
+        padding: 60px 30px;
+    }
+    
+    .video-frame {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .video-frame {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .culto-online-section {
+        padding: 40px 15px;
+    }
+    
+    .culto-btn {
+        padding: 12px 25px;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+    
+    .video-frame {
+        height: 220px;
+        border-radius: 20px;
+    }
+    
+    .video-frame iframe {
+        border-radius: 20px;
+    }
+}
+
+/* Responsividade para chat IA */
+@media (max-width: 768px) {
+    .ai-chat-button {
+        width: 70px;
+        height: 70px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .ai-chat-button img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .ai-chat {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+    }
+    
+    .ai-chat.maximized {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+    
+    .ai-chat-header {
+        padding: 15px;
+    }
+    
+    .ai-chat-header img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .ai-chat-body {
+        font-size: 0.9rem;
+    }
+    
+    .ai-chat-footer input {
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+    
+    .ai-chat-footer button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ai-chat-button {
+        width: 60px;
+        height: 60px;
+        bottom: 15px;
+        right: 15px;
+        border-width: 2px;
+    }
+    
+    .ai-chat-button img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .ai-chat-header {
+        padding: 12px;
+    }
+    
+    .ai-chat-header span {
+        font-size: 0.9rem;
+    }
+    
+    .ai-chat-header img {
+        width: 40px;
+        height: 40px;
     }
 }
