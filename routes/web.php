@@ -33,6 +33,9 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth', 'log.activity'
     
     // Content Manager
     Route::get('content', [App\Http\Controllers\Admin\ContentManagerController::class, 'index'])->name('content.index');
+    Route::get('content/eventos', [App\Http\Controllers\Admin\ContentManagerController::class, 'eventos'])->name('content.eventos');
+    Route::post('content/eventos', [App\Http\Controllers\Admin\ContentManagerController::class, 'eventosStore'])->name('content.eventos.store');
+    Route::delete('content/eventos/{media}', [App\Http\Controllers\Admin\ContentManagerController::class, 'eventosDestroy'])->name('content.eventos.destroy');
     
     // Sections
     Route::resource('sections', App\Http\Controllers\Admin\SectionController::class);

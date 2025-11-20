@@ -33,19 +33,33 @@ class HomeController extends Controller
             ? $highlightedSection->publishedContents()->first()
             : null;
 
+        // Get Eventos section media for Vale News carousel
+        $eventoSection = Section::where('slug', 'eventos')->where('is_active', true)->first();
+        $eventosMedia = [];
+        
+        if ($eventoSection) {
+            $eventosMedia = $eventoSection->media()
+                ->whereIn('type', ['image', 'video'])
+                ->latest()
+                ->limit(10)
+                ->get();
+        }
+
         // Se for requisição AJAX, retornar apenas o conteúdo
         if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
             return view('frontend.home', compact(
                 'sections',
                 'highlightedSection',
-                'featuredContent'
+                'featuredContent',
+                'eventosMedia'
             ));
         }
 
         return view('frontend.home', compact(
             'sections',
             'highlightedSection',
-            'featuredContent'
+            'featuredContent',
+            'eventosMedia'
         ));
     }
 }

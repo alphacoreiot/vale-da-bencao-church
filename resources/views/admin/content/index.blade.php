@@ -20,16 +20,17 @@
                         <div class="tree-children">
                             <!-- Eventos -->
                             <div class="tree-item">
-                                <div class="tree-node">
+                                <a href="{{ route('admin.content.eventos') }}" class="tree-node tree-link">
                                     <i class="fas fa-calendar-alt text-success me-2 ms-3"></i>
                                     <span class="tree-label">Eventos</span>
-                                </div>
+                                </a>
                             </div>
                             <!-- Devocional -->
                             <div class="tree-item">
                                 <div class="tree-node">
                                     <i class="fas fa-book-open text-info me-2 ms-3"></i>
                                     <span class="tree-label">Devocional</span>
+                                    <small class="ms-2 text-muted">(em breve)</small>
                                 </div>
                             </div>
                             <!-- Culto Online -->
@@ -37,6 +38,7 @@
                                 <div class="tree-node">
                                     <i class="fas fa-video text-danger me-2 ms-3"></i>
                                     <span class="tree-label">Culto Online</span>
+                                    <small class="ms-2 text-muted">(em breve)</small>
                                 </div>
                             </div>
                             <!-- Localização -->
@@ -44,6 +46,7 @@
                                 <div class="tree-node">
                                     <i class="fas fa-map-marker-alt text-warning me-2 ms-3"></i>
                                     <span class="tree-label">Localização</span>
+                                    <small class="ms-2 text-muted">(em breve)</small>
                                 </div>
                             </div>
                         </div>
@@ -74,6 +77,11 @@
 
 .tree-node:hover {
     background-color: rgba(192, 192, 192, 0.1);
+}
+
+.tree-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .tree-icon {

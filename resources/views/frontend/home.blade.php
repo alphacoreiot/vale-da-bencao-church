@@ -37,19 +37,36 @@
         </div>
         <div class="carousel-wrapper-full">
             <div class="carousel-banners" id="carouselBanners">
-                <div class="banner-slide">
-                    <img src="{{ asset('assets/imagem 0.jpeg') }}" alt="Vale News 1" class="banner-image">
-                </div>
-                <div class="banner-slide">
-                    <img src="{{ asset('assets/imagem 1.jpg') }}" alt="Vale News 2" class="banner-image">
-                </div>
-                <div class="banner-slide">
-                    <img src="{{ asset('assets/imagem 2.jpg') }}" alt="Vale News 3" class="banner-image">
-                </div>
-                <div class="banner-slide">
-                    <img src="{{ asset('assets/imagem 3.jpg') }}" alt="Vale News 4" class="banner-image">
-                </div>
-                <div class="banner-slide">
+                @forelse($eventosMedia as $media)
+                    <div class="banner-slide">
+                        @if($media->type === 'image')
+                            <img src="{{ asset('storage/' . $media->path) }}" alt="{{ $media->alt_text ?? 'Vale News' }}" class="banner-image">
+                        @elseif($media->type === 'video')
+                            <video class="banner-image" controls>
+                                <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->mime_type }}">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        @endif
+                    </div>
+                @empty
+                    <!-- Fallback: Imagens padrão caso não haja mídias cadastradas -->
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/imagem 0.jpeg') }}" alt="Vale News 1" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/imagem 1.jpg') }}" alt="Vale News 2" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/imagem 2.jpg') }}" alt="Vale News 3" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/imagem 3.jpg') }}" alt="Vale News 4" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/imagem 4.jpg') }}" alt="Vale News 5" class="banner-image">
+                    </div>
+                @endforelse
+        </div>
                     <img src="{{ asset('assets/imagem 4.jpg') }}" alt="Vale News 5" class="banner-image">
                 </div>
         </div>

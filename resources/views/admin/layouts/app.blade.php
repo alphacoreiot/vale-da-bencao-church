@@ -35,6 +35,39 @@
             overflow-x: hidden;
         }
 
+        /* TOAST NOTIFICATIONS */
+        #adminToast {
+            min-width: 300px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-left: 4px solid var(--cor-destaque) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        #adminToast.toast-success {
+            border-left-color: #00ff88 !important;
+        }
+
+        #adminToast.toast-success .toast-body i {
+            color: #00ff88;
+        }
+
+        #adminToast.toast-error {
+            border-left-color: #ff4444 !important;
+        }
+
+        #adminToast.toast-error .toast-body i {
+            color: #ff4444;
+        }
+
+        #adminToast .toast-body {
+            color: var(--cor-principal);
+            font-size: 0.95rem;
+        }
+
+        #adminToast .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
         /* SIDEBAR */
         .sidebar {
             position: fixed;
@@ -587,6 +620,19 @@
         </div>
     </nav>
 
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        <div id="adminToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="toastMessage"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <div class="main-content">
         @if(session('success'))
@@ -607,6 +653,33 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toastEl = document.getElementById('adminToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastBody = toastEl.querySelector('.toast-body');
+            const icon = toastBody.querySelector('i');
+            
+            // Set message
+            toastMessage.textContent = message;
+            
+            // Set type
+            toastEl.classList.remove('toast-success', 'toast-error');
+            toastEl.classList.add('toast-' + type);
+            
+            // Set icon
+            icon.className = type === 'success' ? 'fas fa-check-circle me-2' : 'fas fa-exclamation-circle me-2';
+            
+            // Show toast
+            const toast = new bootstrap.Toast(toastEl, {
+                autohide: true,
+                delay: 3000
+            });
+            toast.show();
+        }
+    </script>
     
     <script>
         // SPA Navigation for Admin Panel
