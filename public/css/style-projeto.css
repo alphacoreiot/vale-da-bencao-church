@@ -348,12 +348,56 @@ body {
     text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
 }
 
+/* Suporte Markdown no Título */
+.section-main-title p {
+    margin: 0;
+    display: inline;
+}
+
+.section-main-title strong {
+    font-weight: 900;
+}
+
+.section-main-title em {
+    font-style: italic;
+    color: var(--cor-secundaria);
+}
+
 .section-description {
     font-size: 1.1rem;
     line-height: 1.6;
     color: #cccccc;
     opacity: 0.8;
 }
+
+/* Suporte Markdown na Descrição */
+.section-description p {
+    margin-bottom: 0.5rem;
+}
+
+.section-description p:last-child {
+    margin-bottom: 0;
+}
+
+.section-description strong {
+    color: var(--cor-principal);
+    font-weight: 700;
+}
+
+.section-description em {
+    font-style: italic;
+    color: var(--cor-secundaria);
+}
+
+.section-description a {
+    color: var(--cor-secundaria);
+    text-decoration: underline;
+}
+
+.section-description a:hover {
+    color: var(--cor-principal);
+}
+
 
 /* Responsivo - Headers */
 @media (max-width: 992px) {
@@ -1219,6 +1263,134 @@ body {
     color: #cccccc;
     white-space: pre-line;
 }
+
+/* Estilos para Markdown no Devocional */
+.devocional-text h1,
+.devocional-text h2,
+.devocional-text h3 {
+    color: var(--cor-principal);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.devocional-text h1 {
+    font-size: 1.8rem;
+}
+
+.devocional-text h2 {
+    font-size: 1.5rem;
+}
+
+.devocional-text h3 {
+    font-size: 1.3rem;
+}
+
+.devocional-text p {
+    margin-bottom: 1rem;
+}
+
+.devocional-text strong {
+    color: var(--cor-principal);
+    font-weight: 700;
+}
+
+.devocional-text em {
+    font-style: italic;
+    color: var(--cor-secundaria);
+}
+
+.devocional-text blockquote {
+    border-left: 4px solid var(--cor-principal);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--cor-principal);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+}
+
+.devocional-text ul,
+.devocional-text ol {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.devocional-text li {
+    margin-bottom: 0.5rem;
+}
+
+.devocional-text code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.devocional-text pre {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.devocional-text pre code {
+    background: none;
+    padding: 0;
+}
+
+.devocional-text hr {
+    border: none;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    margin: 2rem 0;
+}
+
+.devocional-text a {
+    color: var(--cor-secundaria);
+    text-decoration: underline;
+}
+
+.devocional-text a:hover {
+    color: var(--cor-principal);
+}
+
+/* Wrapper para vídeos do YouTube no devocional */
+.devocional-video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* Proporção 16:9 */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.devocional-video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+}
+
+/* Versão menor para mobile */
+@media (max-width: 768px) {
+    .devocional-video-wrapper {
+        margin: 1.5rem 0;
+        border-radius: 8px;
+    }
+    
+    .devocional-video-wrapper iframe {
+        border-radius: 8px;
+    }
+}
+
 
 .verse-text {
     font-size: 1.3rem;

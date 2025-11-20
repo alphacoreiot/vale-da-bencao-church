@@ -828,11 +828,12 @@ function onRadioPlayerReady(event) {
     radioPlayerReady = true;
     console.log('Radio Player pronto!');
     
-    // Aguardar um momento e iniciar com shuffle
+    // Não iniciar automaticamente - remover autoplay
+    // Apenas configurar shuffle sem iniciar
     setTimeout(() => {
-        console.log('Ativando shuffle e iniciando playback...');
+        console.log('Ativando shuffle (sem autoplay)...');
         radioPlayer.setShuffle(true);
-        radioPlayer.playVideo();
+        // radioPlayer.playVideo(); // REMOVIDO - não inicia automaticamente
         updateAudioCurrentSong();
     }, 1000);
     
@@ -968,23 +969,16 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Radio Close:', radioClose);
 
     if (radioButton && radioPlayerEl) {
-        let firstOpen = true; // Flag para controlar primeira abertura
-        
         // Abrir radio player e trazer para frente
         radioButton.addEventListener('click', function() {
             console.log('Radio button clicado!');
             
-            // Se estiver fechado, abrir
+            // Se estiver fechado, abrir (sem iniciar música automaticamente)
             if (!radioPlayerEl.classList.contains('active')) {
                 radioPlayerEl.classList.add('active');
                 
-                // Pular para próxima música APENAS na primeira vez
-                if (firstOpen && radioPlayerReady && radioPlayer) {
-                    console.log('Primeira abertura - pulando para música aleatória...');
-                    radioPlayer.nextVideo();
-                    setTimeout(updateAudioCurrentSong, 500);
-                    firstOpen = false; // Marca que já foi aberto
-                }
+                // REMOVIDO: Não pular para próxima música automaticamente
+                // O usuário precisa clicar em play manualmente
             }
             
             // Sempre trazer radio para frente quando clicado

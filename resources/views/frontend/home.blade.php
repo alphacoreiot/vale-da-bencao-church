@@ -81,11 +81,11 @@
             @if($devocional)
                 <div class="section-header">
                     <span class="section-label">Devocional Diário - {{ $devocional->data->locale('pt_BR')->isoFormat('DD [de] MMMM [de] YYYY') }}</span>
-                    <h2 class="section-main-title">{{ $devocional->titulo }}</h2>
-                    <p class="section-description">{{ $devocional->descricao }}</p>
+                    <h2 class="section-main-title">{!! $devocional->titulo_html ?? e($devocional->titulo) !!}</h2>
+                    <p class="section-description">{!! $devocional->descricao_html ?? e($devocional->descricao) !!}</p>
                 </div>
                 <div class="devocional-text">
-                    {!! nl2br(e($devocional->texto)) !!}
+                    {!! $devocional->texto_html ?? nl2br(e($devocional->texto)) !!}
                 </div>
             @else
                 <div class="section-header">
@@ -187,14 +187,6 @@
                         <p>Domingos: 18:30 - 20:30<br>
                            Quartas: 19:00 - 21:00<br>
                            Quintas (Célula): 19:00 - 21:00</p>
-                    </div>
-                </div>
-                
-                <div class="info-card">
-                    <div class="info-icon">📞</div>
-                    <div class="info-text">
-                        <h4>Contato</h4>
-                        <p>Entre em contato conosco<br>para mais informações</p>
                     </div>
                 </div>
                 

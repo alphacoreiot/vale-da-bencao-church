@@ -66,11 +66,11 @@
 
 <!-- Modal Criar/Editar -->
 <div class="modal fade" id="devocionalModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" style="color: #000;" id="modalTitle">Novo Devocional</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: #1a1a1a; color: #fff;">
+            <div class="modal-header" style="border-color: rgba(192, 192, 192, 0.3);">
+                <h5 class="modal-title" id="modalTitle">Novo Devocional</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form id="devocionalForm" enctype="multipart/form-data">
                 @csrf
@@ -80,12 +80,14 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="data" class="form-label">Data</label>
-                            <input type="date" class="form-control" id="data" name="data" required>
+                            <label for="data" class="form-label" style="color: #C0C0C0;">Data</label>
+                            <input type="date" class="form-control" id="data" name="data" required 
+                                style="background: #2a2a2a; border-color: rgba(192, 192, 192, 0.3); color: #fff;">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="ativo" class="form-label">Status</label>
-                            <select class="form-control" id="ativo" name="ativo">
+                            <label for="ativo" class="form-label" style="color: #C0C0C0;">Status</label>
+                            <select class="form-control" id="ativo" name="ativo"
+                                style="background: #2a2a2a; border-color: rgba(192, 192, 192, 0.3); color: #fff;">
                                 <option value="1">Ativo</option>
                                 <option value="0">Inativo</option>
                             </select>
@@ -93,34 +95,38 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="titulo" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="titulo" name="titulo" required maxlength="255">
+                        <label for="titulo" class="form-label" style="color: #C0C0C0;">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required maxlength="255"
+                            style="background: #2a2a2a; border-color: rgba(192, 192, 192, 0.3); color: #fff;">
                     </div>
                     
                     <div class="mb-3">
-                        <label for="descricao" class="form-label">Descrição</label>
-                        <input type="text" class="form-control" id="descricao" name="descricao" required maxlength="255">
+                        <label for="descricao" class="form-label" style="color: #C0C0C0;">Descrição</label>
+                        <input type="text" class="form-control" id="descricao" name="descricao" required maxlength="255"
+                            style="background: #2a2a2a; border-color: rgba(192, 192, 192, 0.3); color: #fff;">
                     </div>
                     
                     <div class="mb-3">
-                        <label for="texto" class="form-label">Texto Completo</label>
+                        <label for="texto" class="form-label" style="color: #C0C0C0;">Texto Completo</label>
                         <small class="text-muted d-block mb-2">Inclua versículo, reflexão e oração</small>
-                        <textarea class="form-control" id="texto" name="texto" rows="10" required></textarea>
+                        <textarea class="form-control" id="texto" name="texto" rows="10" required
+                            style="background: #2a2a2a; border-color: rgba(192, 192, 192, 0.3); color: #fff;"></textarea>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="imagem" class="form-label">Imagem de Fundo</label>
-                        <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
+                        <label for="imagem" class="form-label" style="color: #C0C0C0;">Imagem de Fundo</label>
+                        <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*"
+                            style="background: #2a2a2a; border-color: rgba(192, 192, 192, 0.3); color: #fff;">
                         <small class="text-muted">JPG, PNG (Máx: 10MB)</small>
                     </div>
                     
                     <div id="previewImage" class="mb-3" style="display: none;">
-                        <label class="form-label">Pré-visualização</label>
+                        <label class="form-label" style="color: #C0C0C0;">Pré-visualização</label>
                         <div id="previewImageContent"></div>
                     </div>
                 </div>
                 
-                <div class="modal-footer">
+                <div class="modal-footer" style="border-color: rgba(192, 192, 192, 0.3);">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-1"></i>Salvar
@@ -173,6 +179,43 @@
     border-color: #C0C0C0;
     color: #000;
 }
+
+/* Responsivo para Modal */
+@media (max-width: 992px) {
+    .modal-dialog.modal-xl {
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .modal-dialog.modal-xl {
+        max-width: 100%;
+        margin: 0.5rem;
+    }
+    
+    .modal-body {
+        padding: 1rem 0.75rem;
+    }
+    
+    .row > .col-md-6 {
+        margin-bottom: 0.75rem;
+    }
+    
+    .modal-header h5 {
+        font-size: 1.1rem;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .modal-footer button {
+        width: 100%;
+        margin: 0 !important;
+    }
+}
 </style>
 
 <script>
@@ -181,6 +224,7 @@ const devocionaisData = @json($devocionais->items());
 
 // Preview da imagem
 document.getElementById('imagem').addEventListener('change', function(e) {
+    e.stopPropagation(); // Previne propagação do evento
     const file = e.target.files[0];
     if (!file) return;
 
@@ -203,7 +247,9 @@ function resetForm() {
     document.getElementById('formMethod').value = 'POST';
     document.getElementById('modalTitle').textContent = 'Novo Devocional';
     document.getElementById('previewImage').style.display = 'none';
+    document.getElementById('previewImageContent').innerHTML = '';
     document.getElementById('data').value = new Date().toISOString().split('T')[0];
+    document.getElementById('ativo').value = '1';
 }
 
 // Edit devocional
