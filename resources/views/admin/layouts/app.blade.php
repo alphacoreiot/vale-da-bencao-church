@@ -361,22 +361,161 @@
         }
 
         /* RESPONSIVE */
-        @media (max-width: 768px) {
-            :root {
-                --sidebar-width: 70px;
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -280px;
+                transition: left 0.3s ease;
             }
 
-            .sidebar .nav-link span {
+            .sidebar.show {
+                left: 0;
+            }
+
+            .navbar-admin {
+                left: 0;
+                padding: 15px 20px;
+            }
+
+            .navbar-admin h5 {
+                font-size: 18px;
+            }
+
+            .user-info span {
                 display: none;
             }
 
-            .logo-admin h4 {
-                display: none;
+            .user-info .avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
             }
 
-            .logo-admin img {
-                max-width: 40px;
+            .main-content {
+                margin-left: 0 !important;
+                margin-top: 70px;
+                padding: 20px 15px;
             }
+
+            .main-content h1 {
+                font-size: 24px;
+            }
+
+            .main-content h2 {
+                font-size: 20px;
+            }
+
+            .main-content h3 {
+                font-size: 18px;
+            }
+
+            .card {
+                margin-bottom: 15px;
+            }
+
+            .card-header {
+                padding: 12px 15px;
+                font-size: 16px;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .table-responsive {
+                font-size: 14px;
+            }
+
+            .btn {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.7);
+                z-index: 999;
+            }
+
+            .mobile-overlay.show {
+                display: block;
+            }
+
+            .menu-toggle {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-admin {
+                padding: 12px 15px;
+            }
+
+            .navbar-admin h5 {
+                font-size: 16px;
+            }
+
+            .main-content {
+                padding: 15px 10px;
+            }
+
+            .main-content h2 {
+                font-size: 18px;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th,
+            .table td {
+                padding: 8px 5px;
+            }
+
+            .btn-sm {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+
+            .badge {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .form-label {
+                font-size: 14px;
+            }
+
+            .form-control,
+            .form-select {
+                font-size: 14px;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(192, 192, 192, 0.2);
+            border: 1px solid var(--cor-destaque);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(192, 192, 192, 0.3);
+        }
+
+        .menu-toggle i {
+            color: var(--cor-destaque);
+            font-size: 20px;
         }
     </style>
     
@@ -407,13 +546,9 @@
                 <i class="fas fa-history"></i>
                 <span>Logs do Sistema</span>
             </a>
-            <a class="nav-link {{ request()->routeIs('admin.sections.*') ? 'active' : '' }}" href="{{ route('admin.sections.index') }}">
-                <i class="fas fa-layer-group"></i>
-                <span>Seções</span>
-            </a>
-            <a class="nav-link {{ request()->routeIs('admin.rotation.*') ? 'active' : '' }}" href="{{ route('admin.rotation.index') }}">
-                <i class="fas fa-sync-alt"></i>
-                <span>Rotação</span>
+            <a class="nav-link {{ request()->routeIs('admin.content.*') ? 'active' : '' }}" href="{{ route('admin.content.index') }}">
+                <i class="fas fa-edit"></i>
+                <span>Gerenciador de Conteúdo</span>
             </a>
             
             <hr>
@@ -433,10 +568,18 @@
         </form>
     </div>
 
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
     <!-- Top Navbar -->
     <nav class="navbar-admin">
         <div class="d-flex justify-content-between align-items-center w-100">
-            <h5>@yield('page-title', 'Admin')</h5>
+            <div class="d-flex align-items-center gap-3">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h5 class="mb-0">@yield('page-title', 'Admin')</h5>
+            </div>
             <div class="user-info">
                 <div class="avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                 <span>{{ Auth::user()->name }}</span>
@@ -567,6 +710,33 @@
             
             // Add transition effect
             contentArea.style.transition = 'opacity 0.3s ease';
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                    mobileOverlay.classList.toggle('show');
+                });
+
+                mobileOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('show');
+                    mobileOverlay.classList.remove('show');
+                });
+
+                // Close menu when clicking on links (mobile)
+                document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth <= 992) {
+                            sidebar.classList.remove('show');
+                            mobileOverlay.classList.remove('show');
+                        }
+                    });
+                });
+            }
         });
     </script>
     

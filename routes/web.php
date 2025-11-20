@@ -31,6 +31,9 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth', 'log.activity'
     // Logs
     Route::get('logs', [App\Http\Controllers\Admin\UserLogController::class, 'index'])->name('logs.index');
     
+    // Content Manager
+    Route::get('content', [App\Http\Controllers\Admin\ContentManagerController::class, 'index'])->name('content.index');
+    
     // Sections
     Route::resource('sections', App\Http\Controllers\Admin\SectionController::class);
     Route::post('sections/{section}/toggle', [App\Http\Controllers\Admin\SectionController::class, 'toggle'])->name('sections.toggle');

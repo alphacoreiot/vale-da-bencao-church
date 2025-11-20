@@ -6,7 +6,7 @@
 @section('content')
 <div class="card mb-4">
     <div class="card-header">
-        <h5 class="mb-0">Filtros</h5>
+        <h5 class="mb-0" style="color: #fff;">Filtros</h5>
     </div>
     <div class="card-body">
         <form method="GET" action="{{ route('admin.logs.index') }}" class="row g-3">
