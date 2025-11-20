@@ -1128,6 +1128,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    text-align: center;
 }
 
 .carousel-control:hover {
@@ -1779,6 +1783,8 @@ body {
         width: 45px;
         height: 45px;
         font-size: 1.8rem;
+        padding: 0;
+        line-height: 1;
     }
     
     .carousel-control.prev {
