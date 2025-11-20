@@ -27,11 +27,10 @@
                             </div>
                             <!-- Devocional -->
                             <div class="tree-item">
-                                <div class="tree-node">
+                                <a href="{{ route('admin.content.devocional') }}" class="tree-node tree-link">
                                     <i class="fas fa-book-open text-info me-2 ms-3"></i>
                                     <span class="tree-label">Devocional</span>
-                                    <small class="ms-2 text-muted">(em breve)</small>
-                                </div>
+                                </a>
                             </div>
                             <!-- Culto Online -->
                             <div class="tree-item">
@@ -96,7 +95,7 @@
 
 .tree-label {
     font-weight: 500;
-    color: #000;
+    color: #fff;
 }
 
 .tree-children {

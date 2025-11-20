@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Section;
 use App\Models\Media;
+use App\Models\Devocional;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -126,6 +127,99 @@ class ContentManagerController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Mídia removida com sucesso!'
+        ]);
+    }
+
+    // Devocional Methods
+    public function devocional()
+    {
+        $devocionais = Devocional::orderBy('data', 'desc')->paginate(10);
+        return view('admin.content.devocional', compact('devocionais'));
+    }
+
+    public function devocionalStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'titulo' => 'required|string|max:255',
+                'descricao' => 'required|string|max:255',
+                'texto' => 'required|string',
+                'imagem' => 'nullable|image|mimes:jpeg,jpg,png|max:10240',
+                'data' => 'required|date',
+                'ativo' => 'boolean',
+            ]);
+
+            $data = $request->all();
+            
+            if ($request->hasFile('imagem')) {
+                $data['imagem'] = $request->file('imagem')->store('devocionais', 'public');
+            }
+
+            Devocional::create($data);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Devocional criado com sucesso!'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erro ao criar devocional: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao criar devocional: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function devocionalUpdate(Request $request, Devocional $devocional)
+    {
+        try {
+            $request->validate([
+                'titulo' => 'required|string|max:255',
+                'descricao' => 'required|string|max:255',
+                'texto' => 'required|string',
+                'imagem' => 'nullable|image|mimes:jpeg,jpg,png|max:10240',
+                'data' => 'required|date',
+                'ativo' => 'boolean',
+            ]);
+
+            $data = $request->all();
+            
+            if ($request->hasFile('imagem')) {
+                // Deletar imagem antiga
+                if ($devocional->imagem) {
+                    Storage::disk('public')->delete($devocional->imagem);
+                }
+                $data['imagem'] = $request->file('imagem')->store('devocionais', 'public');
+            }
+
+            $devocional->update($data);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Devocional atualizado com sucesso!'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erro ao atualizar devocional: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao atualizar devocional: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function devocionalDestroy(Devocional $devocional)
+    {
+        if ($devocional->imagem) {
+            Storage::disk('public')->delete($devocional->imagem);
+        }
+        
+        $devocional->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Devocional removido com sucesso!'
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Section;
+use App\Models\Devocional;
 use App\Services\SectionRotationService;
 
 class HomeController extends Controller
@@ -46,13 +47,17 @@ class HomeController extends Controller
                 ->get();
         }
 
+        // Get devocional ativo (do dia ou mais recente)
+        $devocional = Devocional::ativoDoDia()->first() ?? Devocional::ativoRecente()->first();
+
         // Se for requisição AJAX, retornar apenas o conteúdo
         if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
             return view('frontend.home', compact(
                 'sections',
                 'highlightedSection',
                 'featuredContent',
-                'eventosMedia'
+                'eventosMedia',
+                'devocional'
             ));
         }
 
@@ -60,7 +65,8 @@ class HomeController extends Controller
             'sections',
             'highlightedSection',
             'featuredContent',
-            'eventosMedia'
+            'eventosMedia',
+            'devocional'
         ));
     }
 }

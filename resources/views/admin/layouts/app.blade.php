@@ -718,6 +718,8 @@
             
             // Load page via AJAX
             function loadPage(url, pushState = true) {
+                console.log('Loading page:', url);
+                
                 // Show loading state
                 contentArea.style.opacity = '0.5';
                 
@@ -727,16 +729,36 @@
                         'Accept': 'text/html'
                     }
                 })
-                .then(response => response.text())
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.text();
+                })
                 .then(html => {
+                    console.log('HTML loaded, length:', html.length);
+                    
                     // Parse the response
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
                     
                     // Extract main content
                     const newContent = doc.querySelector('.main-content');
+                    console.log('New content found:', !!newContent);
+                    
                     if (newContent) {
                         contentArea.innerHTML = newContent.innerHTML;
+                        
+                        // Execute scripts in the new content
+                        const scripts = newContent.querySelectorAll('script');
+                        console.log('Scripts found:', scripts.length);
+                        
+                        scripts.forEach(oldScript => {
+                            const newScript = document.createElement('script');
+                            Array.from(oldScript.attributes).forEach(attr => {
+                                newScript.setAttribute(attr.name, attr.value);
+                            });
+                            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                            oldScript.parentNode.replaceChild(newScript, oldScript);
+                        });
                     }
                     
                     // Update page title
@@ -763,6 +785,9 @@
                 .catch(error => {
                     console.error('Error loading page:', error);
                     contentArea.style.opacity = '1';
+                    
+                    // Fallback to normal navigation
+                    window.location.href = url;
                 });
             }
             
@@ -775,6 +800,7 @@
                         (url.includes('/user-groups') && linkHref.includes('/user-groups')) ||
                         (url.includes('/users') && linkHref.includes('/users') && !linkHref.includes('/user-groups')) ||
                         (url.includes('/sections') && linkHref.includes('/sections')) ||
+                        (url.includes('/content') && linkHref.includes('/content')) ||
                         (url.includes('/rotation') && linkHref.includes('/rotation'))) {
                         link.classList.add('active');
                     }

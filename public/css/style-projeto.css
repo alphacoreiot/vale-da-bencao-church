@@ -1208,6 +1208,18 @@ body {
     backdrop-filter: blur(10px);
 }
 
+.devocional-text {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 20px;
+    border-left: 5px solid var(--cor-principal);
+    backdrop-filter: blur(10px);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #cccccc;
+    white-space: pre-line;
+}
+
 .verse-text {
     font-size: 1.3rem;
     line-height: 1.9;

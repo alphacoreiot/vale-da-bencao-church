@@ -38,6 +38,11 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth', 'log.activity'
     Route::post('content/eventos/reorder', [App\Http\Controllers\Admin\ContentManagerController::class, 'eventosReorder'])->name('content.eventos.reorder');
     Route::delete('content/eventos/{media}', [App\Http\Controllers\Admin\ContentManagerController::class, 'eventosDestroy'])->name('content.eventos.destroy');
     
+    Route::get('content/devocional', [App\Http\Controllers\Admin\ContentManagerController::class, 'devocional'])->name('content.devocional');
+    Route::post('content/devocional', [App\Http\Controllers\Admin\ContentManagerController::class, 'devocionalStore'])->name('content.devocional.store');
+    Route::put('content/devocional/{devocional}', [App\Http\Controllers\Admin\ContentManagerController::class, 'devocionalUpdate'])->name('content.devocional.update');
+    Route::delete('content/devocional/{devocional}', [App\Http\Controllers\Admin\ContentManagerController::class, 'devocionalDestroy'])->name('content.devocional.destroy');
+    
     // Sections
     Route::resource('sections', App\Http\Controllers\Admin\SectionController::class);
     Route::post('sections/{section}/toggle', [App\Http\Controllers\Admin\SectionController::class, 'toggle'])->name('sections.toggle');

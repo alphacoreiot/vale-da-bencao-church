@@ -78,36 +78,47 @@
 <section class="devocional-section">
     <div class="devocional-container">
         <div class="devocional-content">
-            <div class="section-header">
-                <span class="section-label">Devocional Diário - {{ \Carbon\Carbon::now()->locale('pt_BR')->isoFormat('DD [de] MMMM [de] YYYY') }}</span>
-                <h2 class="section-main-title">Nada nos Separará do Amor de Deus</h2>
-                <p class="section-description">Medite na Palavra e fortaleça sua fé hoje</p>
-            </div>
-            <div class="devocional-verse">
-                <p class="verse-text">
-                    "Porque estou certo de que nem a morte, nem a vida, nem os anjos, nem os principados, 
-                    nem as coisas presentes, nem as futuras, nem os poderes, nem a altura, nem a profundidade, 
-                    nem qualquer outra criatura poderá separar-nos do amor de Deus, que está em Cristo Jesus, nosso Senhor."
-                </p>
-                <p class="verse-reference">— Romanos 8:38-39</p>
-            </div>
-            <div class="devocional-reflection">
-                <h3>Reflexão</h3>
-                <p>
-                    O amor de Deus é inabalável e eterno. Não importa quais desafios você enfrente hoje, 
-                    saiba que nada pode separar você do amor incondicional de Cristo. Ele está com você 
-                    em cada momento, em cada circunstância. Permita que essa verdade traga paz ao seu coração.
-                </p>
-            </div>
-            <div class="devocional-prayer">
-                <h3>Oração</h3>
-                <p>
-                    Senhor, obrigado pelo Seu amor que nunca falha. Ajuda-me a lembrar que nada pode me separar de Ti. 
-                    Fortaleça minha fé e encha meu coração com a certeza do Teu amor. Em nome de Jesus, amém.
-                </p>
-            </div>
+            @if($devocional)
+                <div class="section-header">
+                    <span class="section-label">Devocional Diário - {{ $devocional->data->locale('pt_BR')->isoFormat('DD [de] MMMM [de] YYYY') }}</span>
+                    <h2 class="section-main-title">{{ $devocional->titulo }}</h2>
+                    <p class="section-description">{{ $devocional->descricao }}</p>
+                </div>
+                <div class="devocional-text">
+                    {!! nl2br(e($devocional->texto)) !!}
+                </div>
+            @else
+                <div class="section-header">
+                    <span class="section-label">Devocional Diário - {{ \Carbon\Carbon::now()->locale('pt_BR')->isoFormat('DD [de] MMMM [de] YYYY') }}</span>
+                    <h2 class="section-main-title">Nada nos Separará do Amor de Deus</h2>
+                    <p class="section-description">Medite na Palavra e fortaleça sua fé hoje</p>
+                </div>
+                <div class="devocional-verse">
+                    <p class="verse-text">
+                        "Porque estou certo de que nem a morte, nem a vida, nem os anjos, nem os principados, 
+                        nem as coisas presentes, nem as futuras, nem os poderes, nem a altura, nem a profundidade, 
+                        nem qualquer outra criatura poderá separar-nos do amor de Deus, que está em Cristo Jesus, nosso Senhor."
+                    </p>
+                    <p class="verse-reference">— Romanos 8:38-39</p>
+                </div>
+                <div class="devocional-reflection">
+                    <h3>Reflexão</h3>
+                    <p>
+                        O amor de Deus é inabalável e eterno. Não importa quais desafios você enfrente hoje, 
+                        saiba que nada pode separar você do amor incondicional de Cristo. Ele está com você 
+                        em cada momento, em cada circunstância. Permita que essa verdade traga paz ao seu coração.
+                    </p>
+                </div>
+                <div class="devocional-prayer">
+                    <h3>Oração</h3>
+                    <p>
+                        Senhor, obrigado pelo Seu amor que nunca falha. Ajuda-me a lembrar que nada pode me separar de Ti. 
+                        Fortaleça minha fé e encha meu coração com a certeza do Teu amor. Em nome de Jesus, amém.
+                    </p>
+                </div>
+            @endif
         </div>
-        <div class="devocional-image">
+        <div class="devocional-image" @if($devocional && $devocional->imagem) style="background-image: url('{{ asset('storage/' . $devocional->imagem) }}');" @endif>
             <div class="image-overlay"></div>
         </div>
     </div>
