@@ -3,15 +3,33 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\SectionController;
+use App\Http\Controllers\Admin\AuthController;
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/secao/{slug}', [SectionController::class, 'show'])->name('section.show');
 Route::get('/secao/{sectionSlug}/conteudo/{contentId}', [SectionController::class, 'content'])->name('section.content');
 
-// Admin Routes (protected by auth middleware - add authentication later)
+// Admin Auth Routes (public)
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+// Admin Routes (protected by auth middleware)
+Route::prefix('admin')->name('admin.')->middleware(['admin.auth', 'log.activity'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // User Groups
+    Route::resource('user-groups', App\Http\Controllers\Admin\UserGroupController::class);
+    
+    // Users
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::post('users/{user}/toggle', [App\Http\Controllers\Admin\UserController::class, 'toggle'])->name('users.toggle');
+    
+    // Logs
+    Route::get('logs', [App\Http\Controllers\Admin\UserLogController::class, 'index'])->name('logs.index');
     
     // Sections
     Route::resource('sections', App\Http\Controllers\Admin\SectionController::class);

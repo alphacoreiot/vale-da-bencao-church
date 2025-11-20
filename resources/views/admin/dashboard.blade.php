@@ -1,107 +1,106 @@
-@extends('layouts.admin')
+@extends('admin.layouts.app')
 
+@section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
 
 @section('content')
-<div class="row mb-4">
-    <div class="col-12">
-        <h2 class="mb-4">Dashboard</h2>
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Total de Seções</h6>
+                        <h2 class="mb-0">{{ $totalSections }}</h2>
+                    </div>
+                    <div class="text-primary" style="font-size: 3rem; opacity: 0.3;">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- Statistics Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="card text-white bg-primary">
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
             <div class="card-body">
-                <h6 class="card-title">Total de Seções</h6>
-                <h2 class="mb-0">{{ $totalSections }}</h2>
-                <small>{{ $activeSections }} ativas</small>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Total de Conteúdos</h6>
+                        <h2 class="mb-0">{{ $totalContents }}</h2>
+                    </div>
+                    <div class="text-success" style="font-size: 3rem; opacity: 0.3;">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-success">
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
             <div class="card-body">
-                <h6 class="card-title">Conteúdos</h6>
-                <h2 class="mb-0">{{ $totalContents }}</h2>
-                <small>{{ $publishedContents }} publicados</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <h6 class="card-title">Mídias</h6>
-                <h2 class="mb-0">{{ $totalMedia }}</h2>
-                <small>Total de arquivos</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-white" style="background-color: #9C0505;">
-            <div class="card-body">
-                <h6 class="card-title">Quick Actions</h6>
-                <div class="d-grid gap-2">
-                    <a href="{{ route('admin.sections.create') }}" class="btn btn-sm btn-light">
-                        <i class="fas fa-plus"></i> Nova Seção
-                    </a>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Total de Mídias</h6>
+                        <h2 class="mb-0">{{ $totalMedia }}</h2>
+                    </div>
+                    <div class="text-warning" style="font-size: 3rem; opacity: 0.3;">
+                        <i class="fas fa-images"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Recent Activity -->
 <div class="row">
     <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                <strong>Seções Recentes</strong>
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Seções Recentes</h5>
             </div>
             <div class="card-body">
                 @if($recentSections->isEmpty())
-                    <p class="text-muted mb-0">Nenhuma seção criada ainda.</p>
+                    <p class="text-muted">Nenhuma seção cadastrada ainda.</p>
                 @else
-                    <ul class="list-group list-group-flush">
+                    <div class="list-group list-group-flush">
                         @foreach($recentSections as $section)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>
-                                    <strong>{{ $section->name }}</strong>
-                                    <br>
-                                    <small class="text-muted">{{ $section->created_at->diffForHumans() }}</small>
-                                </span>
-                                <a href="{{ route('admin.sections.edit', $section) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            </li>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">{{ $section->name }}</h6>
+                                <small class="text-muted">{{ $section->created_at->diffForHumans() }}</small>
+                            </div>
+                            <a href="{{ route('admin.sections.edit', $section) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
                         @endforeach
-                    </ul>
+                    </div>
                 @endif
             </div>
         </div>
     </div>
 
     <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                <strong>Conteúdos Recentes</strong>
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Conteúdos Recentes</h5>
             </div>
             <div class="card-body">
                 @if($recentContents->isEmpty())
-                    <p class="text-muted mb-0">Nenhum conteúdo criado ainda.</p>
+                    <p class="text-muted">Nenhum conteúdo cadastrado ainda.</p>
                 @else
-                    <ul class="list-group list-group-flush">
+                    <div class="list-group list-group-flush">
                         @foreach($recentContents as $content)
-                            <li class="list-group-item">
-                                <strong>{{ $content->title }}</strong>
-                                <br>
-                                <small class="text-muted">
-                                    {{ $content->section->name }} • {{ $content->created_at->diffForHumans() }}
-                                </small>
-                            </li>
+                        <div class="list-group-item">
+                            <h6 class="mb-1">{{ $content->title }}</h6>
+                            <small class="text-muted">
+                                {{ $content->section->name }} • {{ $content->created_at->diffForHumans() }}
+                            </small>
+                        </div>
                         @endforeach
-                    </ul>
+                    </div>
                 @endif
             </div>
         </div>
