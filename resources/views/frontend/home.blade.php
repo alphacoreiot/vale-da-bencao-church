@@ -66,14 +66,11 @@
                         <img src="{{ asset('assets/imagem 4.jpg') }}" alt="Vale News 5" class="banner-image">
                     </div>
                 @endforelse
-        </div>
-                    <img src="{{ asset('assets/imagem 4.jpg') }}" alt="Vale News 5" class="banner-image">
-                </div>
+            </div>
         </div>
         <div class="carousel-dots" id="carouselDots"></div>
         <button class="carousel-control prev" id="bannerPrev">‹</button>
         <button class="carousel-control next" id="bannerNext">›</button>
-    </div>
     </div>
 </section>
 

@@ -20,10 +20,13 @@
                     <p class="text-muted">Nenhuma mídia cadastrada. Adicione imagens ou vídeos para o carrossel.</p>
                 </div>
             @else
-                <div class="row g-4">
+                <div class="row g-4" id="mediaGrid">
                     @foreach($media as $item)
-                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 media-item" data-id="{{ $item->id }}">
                             <div class="card media-card h-100">
+                                <div class="drag-handle">
+                                    <i class="fas fa-grip-vertical"></i>
+                                </div>
                                 <div class="media-preview">
                                     @if($item->type === 'image')
                                         <img src="{{ asset('storage/' . $item->path) }}" alt="{{ $item->alt_text }}" class="img-fluid">
@@ -96,11 +99,49 @@
 </div>
 
 <style>
+.media-item {
+    position: relative;
+}
+
 .media-card {
     border: 1px solid rgba(192, 192, 192, 0.3);
     transition: all 0.3s ease;
     background: #1a1a1a;
     overflow: hidden;
+    position: relative;
+}
+
+.media-card.sortable-ghost {
+    opacity: 0.4;
+}
+
+.media-card.sortable-drag {
+    opacity: 0.8;
+    transform: rotate(5deg);
+}
+
+.drag-handle {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+    color: #C0C0C0;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: move;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(192, 192, 192, 0.3);
+}
+
+.drag-handle:hover {
+    background: rgba(192, 192, 192, 0.9);
+    color: #000;
+    transform: scale(1.1);
 }
 
 .media-card:hover {
@@ -181,7 +222,63 @@
 }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
+// Initialize Sortable for drag and drop
+document.addEventListener('DOMContentLoaded', function() {
+    const mediaGrid = document.getElementById('mediaGrid');
+    
+    if (mediaGrid) {
+        const sortable = Sortable.create(mediaGrid, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            onEnd: function(evt) {
+                // Get all media items in new order
+                const items = [];
+                const mediaItems = mediaGrid.querySelectorAll('.media-item');
+                
+                mediaItems.forEach((item, index) => {
+                    items.push({
+                        id: parseInt(item.dataset.id),
+                        order: index
+                    });
+                });
+                
+                // Send to server
+                updateOrder(items);
+            }
+        });
+    }
+});
+
+// Update order via AJAX
+async function updateOrder(items) {
+    try {
+        const response = await fetch('{{ route("admin.content.eventos.reorder") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ items })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showToast(data.message || 'Ordem atualizada!', 'success');
+        } else {
+            showToast(data.message || 'Erro ao atualizar ordem', 'error');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        showToast('Erro ao atualizar ordem', 'error');
+    }
+}
+
 // Preview do arquivo antes de enviar
 document.getElementById('file').addEventListener('change', function(e) {
     const file = e.target.files[0];

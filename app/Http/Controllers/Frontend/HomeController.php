@@ -40,7 +40,8 @@ class HomeController extends Controller
         if ($eventoSection) {
             $eventosMedia = $eventoSection->media()
                 ->whereIn('type', ['image', 'video'])
-                ->latest()
+                ->orderBy('order', 'asc')
+                ->orderBy('created_at', 'desc')
                 ->limit(10)
                 ->get();
         }

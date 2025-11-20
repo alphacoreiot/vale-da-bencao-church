@@ -20,6 +20,7 @@ class Media extends Model
         'size',
         'mime_type',
         'alt_text',
+        'order',
     ];
 
     protected $casts = [

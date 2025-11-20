@@ -19,7 +19,8 @@ class ContentManagerController extends Controller
     {
         $section = Section::where('slug', 'eventos')->firstOrFail();
         $media = $section->media()
-            ->latest()
+            ->orderBy('order', 'asc')
+            ->orderBy('created_at', 'desc')
             ->paginate(12);
 
         return view('admin.content.eventos', compact('section', 'media'));
@@ -55,6 +56,9 @@ class ContentManagerController extends Controller
             
             $type = str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image';
 
+            // Get the highest order value and add 1
+            $maxOrder = $section->media()->max('order') ?? 0;
+
             Media::create([
                 'section_id' => $section->id,
                 'type' => $type,
@@ -62,6 +66,7 @@ class ContentManagerController extends Controller
                 'size' => $file->getSize(),
                 'mime_type' => $file->getMimeType(),
                 'alt_text' => $request->alt_text,
+                'order' => $maxOrder + 1,
             ]);
 
             return response()->json([
@@ -82,6 +87,33 @@ class ContentManagerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao processar upload: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function eventosReorder(Request $request)
+    {
+        try {
+            $request->validate([
+                'items' => 'required|array',
+                'items.*.id' => 'required|exists:media,id',
+                'items.*.order' => 'required|integer',
+            ]);
+
+            foreach ($request->items as $item) {
+                Media::where('id', $item['id'])->update(['order' => $item['order']]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Ordem atualizada com sucesso!'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erro ao reordenar mídia: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao atualizar ordem: ' . $e->getMessage()
             ], 500);
         }
     }

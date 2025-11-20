@@ -944,7 +944,7 @@ body {
 /* Seção de Carrossel de Banners */
 .carousel-section {
     position: relative;
-    height: 87vh;
+    height: 85vh;
     display: flex;
     align-items: center;
     justify-content: center;

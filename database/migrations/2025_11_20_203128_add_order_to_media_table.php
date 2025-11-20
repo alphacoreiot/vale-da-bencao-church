@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('media', function (Blueprint $table) {
-            //
+            $table->integer('order')->default(0)->after('alt_text');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('media', function (Blueprint $table) {
-            //
+            $table->dropColumn('order');
         });
     }
 };
