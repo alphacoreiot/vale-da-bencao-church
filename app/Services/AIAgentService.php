@@ -9,13 +9,21 @@ use Illuminate\Support\Facades\Log;
 
 class AIAgentService
 {
+    private ContextBuilderService $contextBuilder;
+
+    public function __construct(ContextBuilderService $contextBuilder)
+    {
+        $this->contextBuilder = $contextBuilder;
+    }
+
     /**
      * Process a user message and get AI response.
      */
     public function chat(
         Section $section,
         string $message,
-        string $userSession
+        string $userSession,
+        bool $isFirstMessage = false
     ): array {
         // Get or create conversation
         $conversation = AIConversation::firstOrCreate(
@@ -29,11 +37,21 @@ class AIAgentService
             ]
         );
 
+        // If it's the first message and it's a generic greeting, provide devocional context
+        if ($isFirstMessage && $this->isGenericGreeting($message)) {
+            $greeting = $this->contextBuilder->generateGreetingForReturningVisitor();
+            return [
+                'message' => $greeting['sugestao'],
+                'conversation_id' => $conversation->id,
+                'has_devocional' => $greeting['has_devocional'] ?? false,
+            ];
+        }
+
         // Add user message
         $conversation->addMessage('user', $message);
 
-        // Get AI response
-        $response = $this->getAIResponse($section, $conversation);
+        // Get AI response with intelligent context
+        $response = $this->getAIResponse($section, $conversation, $message);
 
         // Add assistant message
         $conversation->addMessage('assistant', $response);
@@ -45,9 +63,20 @@ class AIAgentService
     }
 
     /**
+     * Check if message is a generic greeting.
+     */
+    private function isGenericGreeting(string $message): bool
+    {
+        $greetings = ['oi', 'olá', 'ola', 'hello', 'hi', 'hey', 'bom dia', 'boa tarde', 'boa noite'];
+        $messageLower = strtolower(trim($message));
+        
+        return in_array($messageLower, $greetings) || strlen($messageLower) < 10;
+    }
+
+    /**
      * Get AI response from the configured provider.
      */
-    private function getAIResponse(Section $section, AIConversation $conversation): string
+    private function getAIResponse(Section $section, AIConversation $conversation, string $userMessage): string
     {
         $config = $section->getAiAgentConfig();
 
@@ -59,9 +88,9 @@ class AIAgentService
 
         try {
             return match ($provider) {
-                'openai' => $this->getOpenAIResponse($config, $conversation),
-                'claude' => $this->getClaudeResponse($config, $conversation),
-                'local' => $this->getLocalResponse($config, $conversation),
+                'openai' => $this->getOpenAIResponse($config, $conversation, $userMessage),
+                'claude' => $this->getClaudeResponse($config, $conversation, $userMessage),
+                'local' => $this->getLocalResponse($config, $conversation, $userMessage),
                 default => $this->getFallbackResponse(),
             };
         } catch (\Exception $e) {
@@ -73,7 +102,7 @@ class AIAgentService
     /**
      * Get response from OpenAI API.
      */
-    private function getOpenAIResponse(array $config, AIConversation $conversation): string
+    private function getOpenAIResponse(array $config, AIConversation $conversation, string $userMessage): string
     {
         $apiKey = config('ai.openai_api_key');
 
@@ -81,16 +110,16 @@ class AIAgentService
             return $this->getFallbackResponse();
         }
 
-        $messages = $this->formatMessagesForAPI($config, $conversation);
+        $messages = $this->formatMessagesForAPI($config, $conversation, $userMessage);
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $apiKey,
             'Content-Type' => 'application/json',
         ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
-            'model' => config('ai.model', 'gpt-3.5-turbo'),
+            'model' => config('ai.model', 'gpt-4o-mini'),
             'messages' => $messages,
-            'max_tokens' => config('ai.max_tokens', 500),
-            'temperature' => 0.7,
+            'max_tokens' => (int) config('ai.max_tokens', 800),
+            'temperature' => (float) config('ai.temperature', 0.3),
         ]);
 
         if ($response->successful()) {
@@ -104,7 +133,7 @@ class AIAgentService
     /**
      * Get response from Claude API.
      */
-    private function getClaudeResponse(array $config, AIConversation $conversation): string
+    private function getClaudeResponse(array $config, AIConversation $conversation, string $userMessage): string
     {
         $apiKey = config('ai.claude_api_key');
 
@@ -112,7 +141,7 @@ class AIAgentService
             return $this->getFallbackResponse();
         }
 
-        $messages = $this->formatMessagesForAPI($config, $conversation);
+        $messages = $this->formatMessagesForAPI($config, $conversation, $userMessage);
 
         $response = Http::withHeaders([
             'x-api-key' => $apiKey,
@@ -135,7 +164,7 @@ class AIAgentService
     /**
      * Get response from local model (e.g., Ollama).
      */
-    private function getLocalResponse(array $config, AIConversation $conversation): string
+    private function getLocalResponse(array $config, AIConversation $conversation, string $userMessage): string
     {
         $endpoint = config('ai.local_endpoint');
 
@@ -143,7 +172,7 @@ class AIAgentService
             return $this->getFallbackResponse();
         }
 
-        $messages = $this->formatMessagesForAPI($config, $conversation);
+        $messages = $this->formatMessagesForAPI($config, $conversation, $userMessage);
         $prompt = $this->convertMessagesToPrompt($messages);
 
         $response = Http::timeout(30)->post($endpoint, [
@@ -161,14 +190,23 @@ class AIAgentService
     }
 
     /**
-     * Format messages for API.
+     * Format messages for API with intelligent context.
      */
-    private function formatMessagesForAPI(array $config, AIConversation $conversation): array
+    private function formatMessagesForAPI(array $config, AIConversation $conversation, string $userMessage): array
     {
+        // Build intelligent context based on user message
+        $intelligentContext = $this->contextBuilder->buildIntelligentContext(
+            $userMessage,
+            Section::find($conversation->section_id)
+        );
+
+        // Build enhanced system prompt with context
+        $systemPrompt = $this->contextBuilder->buildEnhancedSystemPrompt($intelligentContext);
+
         $messages = [
             [
                 'role' => 'system',
-                'content' => $config['prompts']['system'] . "\n\n" . $config['prompts']['context'],
+                'content' => $systemPrompt,
             ],
         ];
 

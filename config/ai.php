@@ -40,7 +40,8 @@ return [
     | General Settings
     |--------------------------------------------------------------------------
     */
-    'max_tokens' => env('AI_MAX_TOKENS', 500),
-    'timeout' => env('AI_TIMEOUT', 30), // seconds
-    'enabled' => env('AI_ENABLED', true),
+    'max_tokens' => (int) env('AI_MAX_TOKENS', 800),
+    'temperature' => (float) env('AI_TEMPERATURE', 0.3),
+    'timeout' => (int) env('AI_TIMEOUT', 30), // seconds
+    'enabled' => (bool) env('AI_ENABLED', true),
 ];

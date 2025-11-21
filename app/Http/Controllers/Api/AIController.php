@@ -22,6 +22,7 @@ class AIController extends Controller
         $validated = $request->validate([
             'message' => 'required|string|max:1000',
             'session_id' => 'nullable|string',
+            'is_first_message' => 'nullable|boolean',
         ]);
 
         $section = Section::where('slug', $sectionSlug)
@@ -30,11 +31,13 @@ class AIController extends Controller
 
         // Generate session ID if not provided
         $sessionId = $validated['session_id'] ?? Str::uuid()->toString();
+        $isFirstMessage = $validated['is_first_message'] ?? false;
 
         $response = $this->aiService->chat(
             $section,
             $validated['message'],
-            $sessionId
+            $sessionId,
+            $isFirstMessage
         );
 
         return response()->json([
@@ -42,6 +45,7 @@ class AIController extends Controller
             'session_id' => $sessionId,
             'response' => $response['message'],
             'conversation_id' => $response['conversation_id'],
+            'has_devocional' => $response['has_devocional'] ?? false,
         ]);
     }
 

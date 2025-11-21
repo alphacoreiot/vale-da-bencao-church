@@ -414,86 +414,55 @@ function getCurrentSection() {
     return sections[0]; // Default para Início
 }
 
-// Função para chamar a API da OpenAI
+// Variáveis para controle de sessão do chat
+let chatSessionId = localStorage.getItem('chatSessionId') || null;
+let messageCount = 0;
+
+// Função para chamar a API através do Laravel
 async function getAIResponse(userMessage) {
     try {
-        const today = new Date();
-        const dayOfWeek = today.toLocaleDateString('pt-BR', { weekday: 'long' });
-        const dateStr = today.toLocaleDateString('pt-BR');
-        const currentSection = getCurrentSection();
+        messageCount++;
+        const isFirstMessage = messageCount === 1;
         
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        console.log('🤖 Enviando mensagem para API:', {
+            message: userMessage,
+            session_id: chatSessionId,
+            is_first_message: isFirstMessage,
+            url: '/api/ai/chat/chatbot-geral'
+        });
+        
+        const response = await fetch('/api/ai/chat/chatbot-geral', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer YOUR_API_KEY_HERE'
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {
-                        role: 'system',
-                        content: `Você é o assistente virtual da Igreja Vale da Bênção. 
-
-CONTEXTO TEMPORAL:
-- Hoje é ${dayOfWeek}, dia ${dateStr}
-
-SEÇÃO ATUAL DO SITE:
-O usuário está visualizando a seção: "${currentSection.name}"
-Descrição: ${currentSection.description}
-
-IMPORTANTE: Ao responder, considere a seção atual e priorize informações relevantes:
-- Se estiver em "Vale News": Fale sobre eventos, notícias e atividades da igreja
-- Se estiver em "Devocional": Compartilhe reflexões espirituais e versículos
-- Se estiver em "Culto Online": Fale sobre transmissões, horários de culto e como assistir
-- Se estiver em "Localização": Foque em endereço, como chegar e informações de contato
-- Se estiver em "Início": Dê boas-vindas e apresente a igreja
-
-HORÁRIOS DOS CULTOS:
-- DOMINGO: 18:30 às 20:30 ✅
-- QUARTA-FEIRA: 19:00 às 21:00 ✅
-- QUINTA-FEIRA (Célula): 19:00 às 21:00 ✅
-
-LIDERANÇA: Apóstolo Ary Dallas e Naele Santana
-
-ENDEREÇO: Rua Dos Buritis, 07 - Parque Das Palmeiras, Camaçari/BA
-
-TRANSMISSÃO: YouTube @valedabencaochurch
-
-MENSAGEM: Seja cordial ao convite. Focamos no que Jesus ama: Você!
-
-INSTRUÇÕES IMPORTANTES:
-1. Se hoje for DOMINGO, confirme que SIM, há culto às 18:30
-2. Se hoje for QUARTA-FEIRA, confirme que SIM, há culto às 19:00
-3. Se hoje for QUINTA-FEIRA, confirme que SIM, há célula às 19:00
-4. Se hoje for outro dia, informe os próximos dias de culto
-5. Responda SOMENTE sobre essas informações da igreja
-6. Se perguntarem sobre outros assuntos, diga gentilmente que você só pode ajudar com informações sobre a igreja
-7. Seja acolhedor e convide a pessoa para fazer parte da família
-8. Use emojis apropriados (🙏 📅 📍 ✝️ 😊 ❤️)
-9. Mantenha respostas curtas e objetivas
-10. SEMPRE considere o dia da semana atual ao responder sobre "hoje"
-11. CONTEXTUALIZE sua resposta baseando-se na seção atual do site`
-                    },
-                    {
-                        role: 'user',
-                        content: userMessage
-                    }
-                ],
-                max_tokens: 300,
-                temperature: 0.7
+                message: userMessage,
+                session_id: chatSessionId,
+                is_first_message: isFirstMessage
             })
         });
 
+        console.log('📡 Response status:', response.status);
         const data = await response.json();
+        console.log('📦 Response data:', data);
         
-        if (data.choices && data.choices[0]) {
-            return data.choices[0].message.content;
+        if (data.success) {
+            // Salvar session_id para próximas mensagens
+            if (!chatSessionId) {
+                chatSessionId = data.session_id;
+                localStorage.setItem('chatSessionId', chatSessionId);
+                console.log('✅ Session ID salvo:', chatSessionId);
+            }
+            
+            return data.response;
         } else {
             throw new Error('Resposta inválida da API');
         }
     } catch (error) {
-        console.error('Erro ao chamar API:', error);
+        console.error('❌ Erro ao chamar API:', error);
+        console.log('🔄 Usando fallback local');
         return getBotResponse(userMessage); // Fallback para respostas locais
     }
 }
