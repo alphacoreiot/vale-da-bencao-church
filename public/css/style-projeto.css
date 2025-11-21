@@ -169,7 +169,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
     z-index: 1;
 }
 
@@ -356,6 +356,8 @@ body {
 
 .section-main-title strong {
     font-weight: 900;
+    color: #FFFFFF; /* Branco puro */
+    font-style: normal; /* Garantir que não fique itálico */
 }
 
 .section-main-title em {
@@ -957,12 +959,18 @@ body {
 .scroll-indicator {
     position: absolute;
     bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
     text-align: center;
     animation: fadeInUp 1s ease 2s both;
     cursor: pointer;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .scroll-indicator span {
@@ -979,6 +987,8 @@ body {
     font-size: 2rem;
     color: var(--cor-principal);
     animation: bounce 2s infinite;
+    display: block;
+    text-align: center;
 }
 
 .scroll-indicator:hover .scroll-arrow {
@@ -1539,6 +1549,32 @@ body {
 
 .culto-online-container .section-header {
     text-align: center;
+}
+
+.live-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
 }
 
 .culto-online-content {
@@ -2428,28 +2464,33 @@ body {
 .footer {
     background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
     border-top: 2px solid rgba(255, 255, 255, 0.1);
-    padding: 60px 0 30px;
+    padding: 40px 0 15px;
 }
 
 .footer-content {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 50px;
-    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 25px;
+    align-items: start;
+    flex-wrap: wrap;
 }
 
 .footer-section {
     color: var(--cor-principal);
+    flex: 1;
+    min-width: 200px;
 }
 
 .footer-about {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    flex: 1.5;
 }
 
 .footer-logo {
-    height: 80px;
+    height: 50px;
     width: auto;
     object-fit: contain;
     filter: brightness(1.1);
@@ -2457,19 +2498,19 @@ body {
 
 .footer-description {
     color: #cccccc;
-    line-height: 1.6;
-    font-size: 0.95rem;
+    line-height: 1.5;
+    font-size: 0.85rem;
 }
 
 .footer-social {
     display: flex;
-    gap: 15px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 5px;
 }
 
 .social-link {
-    width: 45px;
-    height: 45px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2500,9 +2541,9 @@ body {
 .footer-section h4 {
     color: var(--cor-principal);
     font-family: 'Exo', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -2513,13 +2554,13 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .footer-links li a {
     color: #cccccc;
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     transition: all 0.3s ease;
     display: inline-block;
 }
@@ -2535,45 +2576,45 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 8px;
 }
 
 .footer-schedule li {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: 10px 0;
+    gap: 2px;
+    padding: 6px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .schedule-day {
     color: var(--cor-principal);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .schedule-time {
     color: #cccccc;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .footer-address {
     color: #cccccc;
-    line-height: 1.8;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
+    line-height: 1.6;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
 }
 
 .footer-map-btn {
     display: inline-block;
-    padding: 12px 25px;
+    padding: 10px 20px;
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px;
+    border-radius: 20px;
     color: var(--cor-principal);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: all 0.3s ease;
 }
 
@@ -2585,41 +2626,58 @@ body {
 
 .footer-bottom {
     text-align: center;
-    padding-top: 30px;
+    padding-top: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     color: #999;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .footer-bottom p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .footer-credits {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     opacity: 0.7;
 }
 
 /* Responsivo Footer */
-@media (max-width: 1200px) {
+@media (max-width: 992px) {
     .footer-content {
-        grid-template-columns: 1fr 1fr;
-        gap: 40px;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+    
+    .footer-section {
+        flex: 1 1 calc(50% - 25px);
+        min-width: 180px;
+    }
+    
+    .footer-about {
+        flex: 1 1 100%;
     }
 }
 
 @media (max-width: 768px) {
     .footer {
-        padding: 40px 0 20px;
+        padding: 30px 0 12px;
     }
     
     .footer-content {
-        grid-template-columns: 1fr;
-        gap: 35px;
+        flex-direction: column;
+        gap: 25px;
         text-align: center;
+        align-items: center;
+    }
+    
+    .footer-section {
+        flex: 1 1 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     
     .footer-about {
@@ -2635,6 +2693,14 @@ body {
     }
     
     .footer-links {
+        align-items: center;
+    }
+    
+    .footer-schedule {
+        align-items: center;
+    }
+    
+    .footer-schedule li {
         align-items: center;
     }
     

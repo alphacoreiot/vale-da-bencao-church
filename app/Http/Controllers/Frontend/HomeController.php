@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Section;
 use App\Models\Devocional;
 use App\Services\SectionRotationService;
+use App\Services\YouTubeService;
 use League\CommonMark\CommonMarkConverter;
 
 class HomeController extends Controller
 {
     public function __construct(
-        private SectionRotationService $rotationService
+        private SectionRotationService $rotationService,
+        private YouTubeService $youtubeService
     ) {}
 
     /**
@@ -65,6 +67,9 @@ class HomeController extends Controller
             $devocional->texto_html = $this->convertYoutubeLinks($devocional->texto_html);
         }
 
+        // Get último vídeo do YouTube para Culto Online
+        $latestVideo = $this->youtubeService->getLatestVideo();
+
         // Se for requisição AJAX, retornar apenas o conteúdo
         if (request()->ajax() || request()->wantsJson() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
             return view('frontend.home', compact(
@@ -72,7 +77,8 @@ class HomeController extends Controller
                 'highlightedSection',
                 'featuredContent',
                 'eventosMedia',
-                'devocional'
+                'devocional',
+                'latestVideo'
             ));
         }
 
@@ -81,7 +87,8 @@ class HomeController extends Controller
             'highlightedSection',
             'featuredContent',
             'eventosMedia',
-            'devocional'
+            'devocional',
+            'latestVideo'
         ));
     }
     

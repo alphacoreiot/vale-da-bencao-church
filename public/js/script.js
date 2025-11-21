@@ -809,13 +809,13 @@ window.onYouTubeIframeAPIReady = function() {
         playerVars: {
             listType: 'playlist',
             list: PLAYLIST_ID,
-            autoplay: 1,
+            autoplay: 0,  // MUDADO para 0 - NÃO AUTOPLAY
             controls: 0,
             modestbranding: 1,
             rel: 0,
             showinfo: 0,
-            loop: 1,
-            shuffle: 1
+            loop: 1
+            // shuffle removido daqui - será configurado manualmente
         },
         events: {
             'onReady': onRadioPlayerReady,
@@ -828,14 +828,19 @@ function onRadioPlayerReady(event) {
     radioPlayerReady = true;
     console.log('Radio Player pronto!');
     
-    // Não iniciar automaticamente - remover autoplay
-    // Apenas configurar shuffle sem iniciar
-    setTimeout(() => {
-        console.log('Ativando shuffle (sem autoplay)...');
-        radioPlayer.setShuffle(true);
-        // radioPlayer.playVideo(); // REMOVIDO - não inicia automaticamente
-        updateAudioCurrentSong();
-    }, 1000);
+    // PARAR imediatamente qualquer reprodução que possa ter iniciado
+    event.target.stopVideo();
+    
+    // NÃO FAZER NADA - deixar o player completamente inativo até o usuário clicar em play
+    console.log('Player pronto e aguardando interação do usuário...');
+    
+    // Garantir que os ícones estão corretos (mostrar play)
+    const playIcon = document.querySelector('#radioToggle .play-icon');
+    const pauseIcon = document.querySelector('#radioToggle .pause-icon');
+    if (playIcon && pauseIcon) {
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+    }
     
     setupAudioPlayerControls();
 }
@@ -869,6 +874,7 @@ function setupAudioPlayerControls() {
     const toggleBtn = document.getElementById('radioToggle');
     const prevBtn = document.getElementById('radioPrev');
     const nextBtn = document.getElementById('radioNext');
+    let firstPlay = true; // Flag para primeira reprodução
     
     // Controles de play/pause
     toggleBtn?.addEventListener('click', () => {
@@ -885,6 +891,11 @@ function setupAudioPlayerControls() {
             radioPlayer.pauseVideo();
         } else {
             console.log('Tocando...');
+            // Na primeira vez que tocar, configurar shuffle
+            if (firstPlay) {
+                radioPlayer.setShuffle(true);
+                firstPlay = false;
+            }
             radioPlayer.playVideo();
         }
     });

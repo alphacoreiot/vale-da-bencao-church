@@ -8,7 +8,7 @@
     <!-- YouTube Video Background -->
     <div class="video-background">
         <iframe 
-            src="https://www.youtube.com/embed/Pr98Ozup7oU?autoplay=1&mute=1&loop=1&playlist=Pr98Ozup7oU&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&vq=hd1080" 
+            src="https://www.youtube.com/embed/N7__lfkWDXA?autoplay=1&mute=1&loop=1&playlist=N7__lfkWDXA&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&vq=hd1080" 
             id="heroVideo" 
             frameborder="0" 
             allow="autoplay; encrypted-media" 
@@ -128,9 +128,9 @@
 <section class="culto-online-section">
     <div class="culto-online-container">
         <div class="section-header">
-            <span class="section-label">Culto Online</span>
-            <h2 class="section-main-title">Participe do Culto de Onde Você Estiver</h2>
-            <p class="section-description">Assista nossas transmissões ao vivo e experimente a presença de Deus</p>
+            <span class="section-label">Culto Online @if($latestVideo['is_live'])<span class="live-badge">● AO VIVO</span>@endif</span>
+            <h2 class="section-main-title">{{ $latestVideo['is_live'] ? 'Assista Agora ao Vivo' : 'Participe do Culto de Onde Você Estiver' }}</h2>
+            <p class="section-description">{{ $latestVideo['is_live'] ? 'Estamos transmitindo ao vivo agora!' : 'Assista nossas transmissões ao vivo e experimente a presença de Deus' }}</p>
         </div>
         <div class="culto-video-preview">
             <div class="video-frame">
@@ -138,8 +138,8 @@
                     id="cultoVideo"
                     width="100%" 
                     height="100%" 
-                    src="https://www.youtube.com/embed/hM9YbvTNOOg?enablejsapi=1" 
-                    title="Culto ao Vivo - Igreja Vale da Benção" 
+                    src="https://www.youtube.com/embed/{{ $latestVideo['id'] }}?enablejsapi=1{{ $latestVideo['is_live'] ? '&autoplay=1&mute=0' : '' }}" 
+                    title="{{ $latestVideo['title'] }}" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
@@ -150,7 +150,7 @@
             <div class="culto-buttons">
                 <a href="https://www.youtube.com/@valedabencaochurch" target="_blank" class="culto-btn primary">
                     <span class="btn-icon">▶</span>
-                    Assistir Ao Vivo
+                    {{ $latestVideo['is_live'] ? 'Ver no YouTube' : 'Assistir Ao Vivo' }}
                 </a>
                 <a href="https://www.youtube.com/@valedabencaochurch" target="_blank" class="culto-btn secondary">
                     <span class="btn-icon">📺</span>
