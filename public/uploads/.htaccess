@@ -1,0 +1,28 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine Off
+</IfModule>
+
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+# Permitir acesso a todos os arquivos
+Options +FollowSymLinks
+Options -Indexes
+
+# Permitir CORS para imagens
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# Cache de imagens por 1 ano
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType video/mp4 "access plus 1 year"
+    ExpiresByType video/avi "access plus 1 year"
+    ExpiresByType video/mov "access plus 1 year"
+</IfModule>

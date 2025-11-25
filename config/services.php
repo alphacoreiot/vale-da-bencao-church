@@ -40,4 +40,9 @@ return [
         'channel_id' => env('YOUTUBE_CHANNEL_ID', 'UCpwW-RzmYlG1dCiZUqXVo2g'), // ID do canal @valedabencaochurch
     ],
 
+    'vapid' => [
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+    ],
+
 ];

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Section;
 use App\Models\Media;
 use App\Models\Devocional;
+use App\Services\PushNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -156,6 +157,16 @@ class ContentManagerController extends Controller
             }
 
             Devocional::create($data);
+
+            // Enviar push notification se devocional estiver ativo
+            if ($request->input('ativo', true)) {
+                try {
+                    $pushService = new PushNotificationService();
+                    $pushService->notifyNewDevocional($data['titulo'], $data['descricao']);
+                } catch (\Exception $e) {
+                    \Log::warning('Erro ao enviar push notification: ' . $e->getMessage());
+                }
+            }
 
             return response()->json([
                 'success' => true,

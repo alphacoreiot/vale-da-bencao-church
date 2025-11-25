@@ -4,11 +4,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\SectionController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\PushNotificationController;
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/secao/{slug}', [SectionController::class, 'show'])->name('section.show');
 Route::get('/secao/{sectionSlug}/conteudo/{contentId}', [SectionController::class, 'content'])->name('section.content');
+
+// Push Notifications API
+Route::prefix('api/push')->group(function () {
+    Route::get('public-key', [PushNotificationController::class, 'getPublicKey']);
+    Route::post('subscribe', [PushNotificationController::class, 'subscribe']);
+    Route::post('unsubscribe', [PushNotificationController::class, 'unsubscribe']);
+    Route::get('test', [PushNotificationController::class, 'testNotification']);
+});
 
 // Admin Auth Routes (public)
 Route::prefix('admin')->name('admin.')->group(function () {
