@@ -53,22 +53,65 @@
             <div class="footer-section">
                 <h4>Localização</h4>
                 <p class="footer-address">
-                    📍 Rua Dos Buritis, 07<br>
+                    <span style="display: inline-flex; align-items: center; gap: 5px;">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/surcxhka.json"
+                            trigger="loop"
+                            delay="3000"
+                            colors="primary:#D4AF37"
+                            style="width:20px;height:20px">
+                        </lord-icon>
+                        Rua Dos Buritis, 07
+                    </span><br>
                     Camaçari/BA<br><br>
-                    📧 contato@valedabencao.com.br<br>
-                    📱 (71) 98765-4321
+                    <span style="display: inline-flex; align-items: center; gap: 5px;">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/diihvcfp.json"
+                            trigger="loop"
+                            delay="3000"
+                            colors="primary:#D4AF37"
+                            style="width:20px;height:20px">
+                        </lord-icon>
+                        contato@valedabencao.com.br
+                    </span><br>
+                    <span style="display: inline-flex; align-items: center; gap: 5px;">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/rsvfayfn.json"
+                            trigger="loop"
+                            delay="3000"
+                            colors="primary:#D4AF37"
+                            style="width:20px;height:20px">
+                        </lord-icon>
+                        (71) 98765-4321
+                    </span>
                 </p>
                 <a href="https://www.google.com/maps/dir/?api=1&destination=-12.6957261,-38.2934209" 
                    target="_blank" 
                    class="footer-map-btn">
-                    Como Chegar →
+                    <lord-icon
+                        src="https://cdn.lordicon.com/ofwpzftr.json"
+                        trigger="hover"
+                        colors="primary:#000000"
+                        style="width:20px;height:20px">
+                    </lord-icon>
+                    Como Chegar
                 </a>
             </div>
         </div>
         
         <div class="footer-bottom">
             <p>&copy; {{ date('Y') }} Igreja Vale da Benção. Todos os direitos reservados.</p>
-            <p class="footer-credits">Desenvolvido com ❤️ para a glória de Deus</p>
+            <p class="footer-credits">
+                Desenvolvido com 
+                <lord-icon
+                    src="https://cdn.lordicon.com/ohfmmfhn.json"
+                    trigger="loop"
+                    delay="2000"
+                    colors="primary:#e74c3c"
+                    style="width:20px;height:20px;vertical-align:middle">
+                </lord-icon>
+                para a glória de Deus
+            </p>
         </div>
     </div>
 </footer>

@@ -40,10 +40,10 @@
                 @forelse($eventosMedia as $media)
                     <div class="banner-slide">
                         @if($media->type === 'image')
-                            <img src="{{ asset('storage/' . $media->path) }}" alt="{{ $media->alt_text ?? 'Vale News' }}" class="banner-image">
+                            <img src="{{ asset('uploads/' . $media->path) }}" alt="{{ $media->alt_text ?? 'Vale News' }}" class="banner-image">
                         @elseif($media->type === 'video')
                             <video class="banner-image" controls>
-                                <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->mime_type }}">
+                                <source src="{{ asset('uploads/' . $media->path) }}" type="{{ $media->mime_type }}">
                                 Seu navegador não suporta o elemento de vídeo.
                             </video>
                         @endif
@@ -54,16 +54,13 @@
                         <img src="{{ asset('assets/imagem 0.jpeg') }}" alt="Vale News 1" class="banner-image">
                     </div>
                     <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 1.jpg') }}" alt="Vale News 2" class="banner-image">
+                        <img src="{{ asset('assets/imagem 1.jpeg') }}" alt="Vale News 2" class="banner-image">
                     </div>
                     <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 2.jpg') }}" alt="Vale News 3" class="banner-image">
+                        <img src="{{ asset('assets/imagem 2.jpeg') }}" alt="Vale News 3" class="banner-image">
                     </div>
                     <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 3.jpg') }}" alt="Vale News 4" class="banner-image">
-                    </div>
-                    <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 4.jpg') }}" alt="Vale News 5" class="banner-image">
+                        <img src="{{ asset('assets/imagem 3.jpeg') }}" alt="Vale News 4" class="banner-image">
                     </div>
                 @endforelse
             </div>
@@ -118,7 +115,7 @@
                 </div>
             @endif
         </div>
-        <div class="devocional-image" @if($devocional && $devocional->imagem) style="background-image: url('{{ asset('storage/' . $devocional->imagem) }}');" @endif>
+        <div class="devocional-image" @if($devocional && $devocional->imagem) style="background-image: url('{{ asset('uploads/' . $devocional->imagem) }}');" @endif>
             <div class="image-overlay"></div>
         </div>
     </div>
@@ -173,7 +170,15 @@
         <div class="localizacao-content">
             <div class="localizacao-info">
                 <div class="info-card">
-                    <div class="info-icon">📍</div>
+                    <div class="info-icon">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/surcxhka.json"
+                            trigger="loop"
+                            delay="2000"
+                            colors="primary:#D4AF37,secondary:#ffffff"
+                            style="width:50px;height:50px">
+                        </lord-icon>
+                    </div>
                     <div class="info-text">
                         <h4>Endereço</h4>
                         <p>Rua Dos Buritis, 07<br>Camaçari/BA</p>
@@ -181,7 +186,15 @@
                 </div>
                 
                 <div class="info-card">
-                    <div class="info-icon">🕒</div>
+                    <div class="info-icon">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/kbtmbyzy.json"
+                            trigger="loop"
+                            delay="2000"
+                            colors="primary:#D4AF37,secondary:#ffffff"
+                            style="width:50px;height:50px">
+                        </lord-icon>
+                    </div>
                     <div class="info-text">
                         <h4>Horários dos Cultos</h4>
                         <p>Domingos: 18:30 - 20:30<br>
@@ -193,7 +206,12 @@
                 <a href="https://www.google.com/maps/dir/?api=1&destination=-12.6957261,-38.2934209" 
                    target="_blank" 
                    class="route-btn">
-                    <span class="btn-icon">🧭</span>
+                    <lord-icon
+                        src="https://cdn.lordicon.com/ofwpzftr.json"
+                        trigger="hover"
+                        colors="primary:#000000,secondary:#D4AF37"
+                        style="width:30px;height:30px">
+                    </lord-icon>
                     Traçar Rota no Google Maps
                 </a>
             </div>
