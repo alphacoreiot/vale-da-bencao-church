@@ -1,0 +1,27 @@
+{
+    "name": "Igreja Vale da Bênção",
+    "short_name": "Vale da Bênção",
+    "description": "Site oficial da Igreja Vale da Bênção - Devocionais, Eventos e mais",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1a1a2e",
+    "theme_color": "#D4AF37",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/assets/logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "categories": ["lifestyle", "social"],
+    "lang": "pt-BR",
+    "dir": "ltr"
+}

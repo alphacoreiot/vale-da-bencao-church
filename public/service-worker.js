@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vale-da-bencao-v5';
+const CACHE_NAME = 'vale-da-bencao-v6';
 const urlsToCache = [
   '/',
   '/css/style-projeto.css',
@@ -44,33 +44,48 @@ self.addEventListener('push', event => {
     title: 'Vale da Bênção',
     body: 'Você tem uma nova mensagem!',
     icon: '/assets/logo.png',
-    badge: '/assets/logo.png',
+    badge: '/assets/perfil.png',
     data: { url: '/' }
   };
   
   if (event.data) {
     try {
-      data = { ...data, ...event.data.json() };
+      const payload = event.data.json();
+      data = { ...data, ...payload };
     } catch (e) {
-      console.error('Erro ao parsear dados do push:', e);
+      // Se não for JSON, tenta como texto
+      try {
+        data.body = event.data.text();
+      } catch (e2) {
+        console.error('Erro ao parsear dados do push:', e2);
+      }
     }
   }
   
+  // Opções otimizadas para mobile
   const options = {
-    body: data.body,
+    body: data.body || 'Nova mensagem',
     icon: data.icon || '/assets/logo.png',
-    badge: data.badge || '/assets/logo.png',
-    vibrate: [100, 50, 100],
+    badge: data.badge || '/assets/perfil.png',
+    image: data.image || undefined,
+    vibrate: [200, 100, 200],
+    tag: 'vale-da-bencao-' + Date.now(), // Tag única para não agrupar
+    renotify: true, // Notifica mesmo se tag existir
     data: data.data || { url: '/' },
-    actions: [
-      { action: 'open', title: 'Abrir' },
-      { action: 'close', title: 'Fechar' }
-    ],
-    requireInteraction: true
+    // Removido actions para melhor compatibilidade mobile
+    requireInteraction: false, // Mobile não suporta bem
+    silent: false
   };
   
+  // Remove propriedades undefined
+  Object.keys(options).forEach(key => {
+    if (options[key] === undefined) {
+      delete options[key];
+    }
+  });
+  
   event.waitUntil(
-    self.registration.showNotification(data.title, options)
+    self.registration.showNotification(data.title || 'Vale da Bênção', options)
   );
 });
 

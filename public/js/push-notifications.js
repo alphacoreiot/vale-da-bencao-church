@@ -151,14 +151,15 @@ function updateNotificationUI() {
     
     const permission = PushManager.getPermissionStatus();
     
+    // Se já está inscrito ou permissão negada, esconde o botão
     if (permission === 'denied') {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-bell-slash"></i> Bloqueado';
-        btn.style.background = '#666';
-    } else if (window.pushManager.isSubscribed) {
-        btn.innerHTML = '<i class="fas fa-bell"></i> Notificações Ativas';
-        btn.style.background = 'linear-gradient(135deg, #28a745 0%, #1e7e34 100%)';
+        btn.style.display = 'none';
+    } else if (window.pushManager.isSubscribed || localStorage.getItem('push_subscribed') === 'true') {
+        // Botão some após ativar
+        btn.style.display = 'none';
+        localStorage.setItem('push_subscribed', 'true');
     } else {
+        btn.style.display = 'flex';
         btn.innerHTML = '<i class="fas fa-bell"></i> Ativar Notificações';
         btn.style.background = 'linear-gradient(135deg, #D4AF37 0%, #B8941F 100%)';
     }
@@ -171,14 +172,26 @@ async function toggleNotifications() {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
     
-    const result = await window.pushManager.toggle();
+    // Só ativa, não desativa mais
+    const result = await window.pushManager.subscribe();
     
-    if (typeof showToast === 'function') {
-        showToast(result.message, result.success ? 'success' : 'error');
+    if (result.success) {
+        // Salva no localStorage e esconde o botão
+        localStorage.setItem('push_subscribed', 'true');
+        btn.style.display = 'none';
+        
+        if (typeof showToast === 'function') {
+            showToast('🔔 Notificações ativadas! Você receberá os devocionais diários.', 'success');
+        } else {
+            alert('Notificações ativadas!');
+        }
     } else {
-        alert(result.message);
+        if (typeof showToast === 'function') {
+            showToast(result.message, 'error');
+        } else {
+            alert(result.message);
+        }
+        btn.disabled = false;
+        updateNotificationUI();
     }
-    
-    btn.disabled = false;
-    updateNotificationUI();
 }

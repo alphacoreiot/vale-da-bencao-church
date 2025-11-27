@@ -44,6 +44,126 @@
         #notificationToggle:hover {
             transform: scale(1.05);
         }
+        
+        /* PWA Install Prompt */
+        .pwa-install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            gap: 16px;
+            max-width: 90%;
+            width: 380px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .pwa-install-prompt.show {
+            display: flex;
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        .pwa-install-prompt img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+        }
+        .pwa-install-prompt .pwa-text {
+            flex: 1;
+        }
+        .pwa-install-prompt .pwa-text h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            color: #D4AF37;
+        }
+        .pwa-install-prompt .pwa-text p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        .pwa-install-prompt .pwa-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .pwa-install-prompt button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .pwa-install-prompt .pwa-install-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: #000;
+        }
+        .pwa-install-prompt .pwa-install-btn:hover {
+            transform: scale(1.05);
+        }
+        .pwa-install-prompt .pwa-close-btn {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        .pwa-install-prompt .pwa-close-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* iOS Install Instructions */
+        .ios-install-instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 90%;
+            width: 340px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+        }
+        .ios-install-instructions.show {
+            display: flex;
+            animation: slideUp 0.5s ease;
+        }
+        .ios-install-instructions h4 {
+            margin: 0;
+            color: #D4AF37;
+            font-size: 18px;
+        }
+        .ios-install-instructions p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .ios-install-instructions .ios-icon {
+            font-size: 24px;
+        }
+        .ios-install-instructions .pwa-close-btn {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
     </style>
     @stack('styles')
 </head>
@@ -69,12 +189,36 @@
     <button id="notificationToggle" onclick="toggleNotifications()">
         <i class="fas fa-bell"></i> Ativar Notificações
     </button>
+    
+    <!-- PWA Install Prompt -->
+    <div class="pwa-install-prompt" id="pwaInstallPrompt">
+        <img src="{{ asset('assets/perfil.png') }}" alt="Vale da Bênção">
+        <div class="pwa-text">
+            <h4>📱 Instalar App</h4>
+            <p>Adicione à tela inicial para acesso rápido</p>
+        </div>
+        <div class="pwa-buttons">
+            <button class="pwa-install-btn" id="pwaInstallBtn">Instalar</button>
+            <button class="pwa-close-btn" id="pwaCloseBtn">✕</button>
+        </div>
+    </div>
+    
+    <!-- iOS Install Instructions -->
+    <div class="ios-install-instructions" id="iosInstallPrompt">
+        <h4>📱 Instalar App</h4>
+        <p>
+            <span class="ios-icon">⬆️</span><br>
+            Toque em <strong>Compartilhar</strong> e depois em<br>
+            <strong>"Adicionar à Tela de Início"</strong>
+        </p>
+        <button class="pwa-close-btn" id="iosCloseBtn">Entendi</button>
+    </div>
 
     <!-- Scripts -->
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="{{ asset('js/push-notifications.js') }}"></script>
     
-    <!-- Service Worker & Push Notifications -->
+    <!-- Service Worker & Push Notifications & PWA Install -->
     <script>
         // Registrar Service Worker
         if ('serviceWorker' in navigator) {
@@ -85,14 +229,122 @@
             });
         }
         
-        // Mostrar botão de notificações após 3 segundos
-        setTimeout(() => {
-            if ('serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window) {
-                if (Notification.permission !== 'denied') {
-                    document.getElementById('notificationToggle').style.display = 'block';
-                }
+        // ========================================
+        // PWA Install Prompt
+        // ========================================
+        let deferredPrompt;
+        const pwaInstallPrompt = document.getElementById('pwaInstallPrompt');
+        const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+        const pwaCloseBtn = document.getElementById('pwaCloseBtn');
+        const iosInstallPrompt = document.getElementById('iosInstallPrompt');
+        const iosCloseBtn = document.getElementById('iosCloseBtn');
+        
+        // Verificar se já instalou ou já fechou
+        const pwaInstalled = localStorage.getItem('pwaInstalled');
+        const pwaDismissed = localStorage.getItem('pwaDismissed');
+        const pwaDismissedTime = localStorage.getItem('pwaDismissedTime');
+        
+        // Se fechou há menos de 7 dias, não mostrar
+        const shouldShowPrompt = () => {
+            if (pwaInstalled) return false;
+            if (pwaDismissed && pwaDismissedTime) {
+                const daysSinceDismiss = (Date.now() - parseInt(pwaDismissedTime)) / (1000 * 60 * 60 * 24);
+                if (daysSinceDismiss < 7) return false;
             }
-        }, 3000);
+            return true;
+        };
+        
+        // Android/Desktop - beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('📱 PWA install prompt disponível');
+            
+            if (shouldShowPrompt()) {
+                setTimeout(() => {
+                    pwaInstallPrompt.classList.add('show');
+                }, 3000);
+            }
+        });
+        
+        // Botão instalar
+        pwaInstallBtn?.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('PWA install outcome:', outcome);
+                
+                if (outcome === 'accepted') {
+                    localStorage.setItem('pwaInstalled', 'true');
+                }
+                
+                deferredPrompt = null;
+                pwaInstallPrompt.classList.remove('show');
+            }
+        });
+        
+        // Botão fechar
+        pwaCloseBtn?.addEventListener('click', () => {
+            pwaInstallPrompt.classList.remove('show');
+            localStorage.setItem('pwaDismissed', 'true');
+            localStorage.setItem('pwaDismissedTime', Date.now().toString());
+        });
+        
+        // iOS Detection
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        
+        if (isIOS && !isInStandaloneMode && shouldShowPrompt()) {
+            setTimeout(() => {
+                iosInstallPrompt.classList.add('show');
+            }, 5000);
+        }
+        
+        iosCloseBtn?.addEventListener('click', () => {
+            iosInstallPrompt.classList.remove('show');
+            localStorage.setItem('pwaDismissed', 'true');
+            localStorage.setItem('pwaDismissedTime', Date.now().toString());
+        });
+        
+        // Detectar quando PWA é instalado
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA instalado com sucesso!');
+            localStorage.setItem('pwaInstalled', 'true');
+            pwaInstallPrompt.classList.remove('show');
+        });
+        
+        // ========================================
+        // Notificações Push - Mostrar apenas se NÃO inscrito
+        // ========================================
+        setTimeout(async () => {
+            if ('serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window) {
+                const permission = Notification.permission;
+                
+                // Não mostrar se já negou ou se já está inscrito
+                if (permission === 'denied') {
+                    console.log('Notificações bloqueadas pelo usuário');
+                    return;
+                }
+                
+                // Verificar se já está inscrito
+                if (permission === 'granted') {
+                    try {
+                        const reg = await navigator.serviceWorker.ready;
+                        const subscription = await reg.pushManager.getSubscription();
+                        if (subscription) {
+                            console.log('✅ Usuário já inscrito em notificações');
+                            // NÃO mostrar botão - usuário já está inscrito
+                            return;
+                        }
+                    } catch (e) {
+                        console.log('Erro ao verificar subscription:', e);
+                    }
+                }
+                
+                // Mostrar botão apenas se não inscrito
+                document.getElementById('notificationToggle').style.display = 'block';
+            }
+        }, 4000);
     </script>
     
     @stack('scripts')

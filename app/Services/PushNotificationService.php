@@ -48,13 +48,17 @@ class PushNotificationService
             return $results;
         }
 
+        // Limitar tamanho do body para compatibilidade mobile (max 200 chars)
+        $shortBody = mb_strlen($body) > 200 ? mb_substr($body, 0, 197) . '...' : $body;
+        
+        // Payload mínimo para melhor compatibilidade
         $payload = json_encode([
             'title' => $title,
-            'body' => $body,
+            'body' => $shortBody,
             'icon' => '/assets/logo.png',
-            'badge' => '/assets/logo.png',
+            'badge' => '/assets/perfil.png',
             'data' => $data
-        ]);
+        ], JSON_UNESCAPED_UNICODE);
 
         try {
             $auth = [
@@ -65,7 +69,12 @@ class PushNotificationService
                 ],
             ];
 
-            $webPush = new \Minishlink\WebPush\WebPush($auth);
+            // Configurações otimizadas para mobile
+            $webPush = new \Minishlink\WebPush\WebPush($auth, [
+                'TTL' => 86400, // 24 horas
+                'urgency' => 'high', // Alta prioridade para mobile
+                'topic' => 'devocional' // Agrupa notificações do mesmo tipo
+            ]);
 
             foreach ($subscriptions as $sub) {
                 $subscription = \Minishlink\WebPush\Subscription::create([
@@ -88,11 +97,12 @@ class PushNotificationService
                 } else {
                     $results['failed']++;
                     $reason = $report->getReason();
-                    \Log::warning('Falha ao enviar push: ' . $reason);
+                    \Log::warning('Falha ao enviar push para ' . substr($endpoint, 0, 30) . ': ' . $reason);
                     
                     if ($report->isSubscriptionExpired()) {
                         PushSubscription::deactivateByEndpoint($endpoint);
                         $results['removed']++;
+                        \Log::info('Subscription expirada removida: ' . substr($endpoint, 0, 50));
                     }
                 }
             }
@@ -101,6 +111,7 @@ class PushNotificationService
             $results['failed'] = $results['total'];
         }
 
+        \Log::info('Push notifications enviadas: ' . json_encode($results));
         return $results;
     }
 
