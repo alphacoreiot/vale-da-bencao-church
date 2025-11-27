@@ -24,27 +24,6 @@
             overflow-x: hidden;
             max-width: 100%;
         }
-        #notificationToggle {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
-            color: #000;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            z-index: 9998;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-            transition: all 0.3s ease;
-            display: none;
-        }
-        #notificationToggle:hover {
-            transform: scale(1.05);
-        }
-        
         /* PWA Install Prompt */
         .pwa-install-prompt {
             position: fixed;
@@ -185,11 +164,6 @@
     <!-- Footer Fixo -->
     @include('components.footer')
 
-    <!-- Botão de Notificações -->
-    <button id="notificationToggle" onclick="toggleNotifications()">
-        <i class="fas fa-bell"></i> Ativar Notificações
-    </button>
-    
     <!-- PWA Install Prompt -->
     <div class="pwa-install-prompt" id="pwaInstallPrompt">
         <img src="{{ asset('assets/perfil.png') }}" alt="Vale da Bênção">
@@ -313,38 +287,7 @@
             pwaInstallPrompt.classList.remove('show');
         });
         
-        // ========================================
-        // Notificações Push - Mostrar apenas se NÃO inscrito
-        // ========================================
-        setTimeout(async () => {
-            if ('serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window) {
-                const permission = Notification.permission;
-                
-                // Não mostrar se já negou ou se já está inscrito
-                if (permission === 'denied') {
-                    console.log('Notificações bloqueadas pelo usuário');
-                    return;
-                }
-                
-                // Verificar se já está inscrito
-                if (permission === 'granted') {
-                    try {
-                        const reg = await navigator.serviceWorker.ready;
-                        const subscription = await reg.pushManager.getSubscription();
-                        if (subscription) {
-                            console.log('✅ Usuário já inscrito em notificações');
-                            // NÃO mostrar botão - usuário já está inscrito
-                            return;
-                        }
-                    } catch (e) {
-                        console.log('Erro ao verificar subscription:', e);
-                    }
-                }
-                
-                // Mostrar botão apenas se não inscrito
-                document.getElementById('notificationToggle').style.display = 'block';
-            }
-        }, 4000);
+
     </script>
     
     @stack('scripts')
