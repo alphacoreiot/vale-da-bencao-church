@@ -10,77 +10,14 @@
         <div class="section-header" style="text-align: center; margin-bottom: 60px; padding: 0 20px;">
             <div style="margin-bottom: 15px;">
                 @switch($section->slug)
-                    @case('eventos')
-                        <lord-icon
-                            src="https://cdn.lordicon.com/abfverha.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                    @break
-                    @case('ministerios')
-                        <lord-icon
-                            src="https://cdn.lordicon.com/jjoolpwc.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                    @break
-                    @case('estudos')
-                        <lord-icon
-                            src="https://cdn.lordicon.com/kipaqhoz.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                    @break
-                    @case('galeria')
-                        <lord-icon
-                            src="https://cdn.lordicon.com/vixtkkbk.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                    @break
-                    @case('testemunhos')
-                        <lord-icon
-                            src="https://cdn.lordicon.com/surjmvno.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                    @break
-                    @case('contato')
-                        <lord-icon
-                            src="https://cdn.lordicon.com/srsgifqc.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                    @break
-                    @case('boas-vindas')
-                        <lord-icon
-                            src="https://cdn.lordicon.com/eouimtlu.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                    @break
-                    @default
-                        <lord-icon
-                            src="https://cdn.lordicon.com/wloilxuq.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:80px;height:80px">
-                        </lord-icon>
+                    @case('eventos') <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="loop" delay="1500" colors="primary:#d4af37,secondary:#ffffff" style="width:80px;height:80px"></lord-icon> @break
+                    @case('ministerios') <lord-icon src="https://cdn.lordicon.com/jjoolpwc.json" trigger="loop" delay="1500" colors="primary:#d4af37,secondary:#ffffff" style="width:80px;height:80px"></lord-icon> @break
+                    @case('estudos') 📖 @break
+                    @case('galeria') <lord-icon src="https://cdn.lordicon.com/vixtkkbk.json" trigger="loop" delay="1500" colors="primary:#d4af37,secondary:#ffffff" style="width:80px;height:80px"></lord-icon> @break
+                    @case('testemunhos') ⭐ @break
+                    @case('contato') <lord-icon src="https://cdn.lordicon.com/srsgifqc.json" trigger="loop" delay="1500" colors="primary:#d4af37,secondary:#ffffff" style="width:80px;height:80px"></lord-icon> @break
+                    @case('boas-vindas') 👋 @break
+                    @default 📄
                 @endswitch
             </div>
             <h1 class="section-main-title" style="font-size: clamp(1.8rem, 4vw, 2.5rem); color: #fff; font-weight: 700; margin-bottom: 15px; line-height: 1.2;">{{ $section->name }}</h1>
@@ -102,8 +39,157 @@
                 </div>
             </div>
         @elseif($section->slug === 'ministerios')
+            <!-- Grid de Ministérios -->
+            <div class="ministerios-grid" style="max-width: 1200px; margin: 0 auto 60px auto; padding: 0 20px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                    <!-- Professores -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">📚</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Professores</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Ensinando a Palavra</p>
+                    </div>
+
+                    <!-- Intercessão -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🙏</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Intercessão</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Orando pela Igreja</p>
+                    </div>
+
+                    <!-- Obreiros -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">✝️</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Obreiros</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Servindo com Dedicação</p>
+                    </div>
+
+                    <!-- Consolidação -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🤝</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Consolidação</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Cuidando das Almas</p>
+                    </div>
+
+                    <!-- Sonorização -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🔊</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Sonorização</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Excelência no Som</p>
+                    </div>
+
+                    <!-- Staff Apóstolo -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">👔</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Staff Apóstolo</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Apoio à Liderança</p>
+                    </div>
+
+                    <!-- Produção -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🎬</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Produção</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Teatro, Música e Eventos</p>
+                    </div>
+
+                    <!-- Introdução -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🚪</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Introdução</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Recepcionando com Amor</p>
+                    </div>
+
+                    <!-- Mídia -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">📱</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Mídia</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Comunicação Digital</p>
+                    </div>
+
+                    <!-- Multimídia -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🎥</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Multimídia</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Transmissão ao Vivo</p>
+                    </div>
+
+                    <!-- Libras -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">👐</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Libras</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Inclusão e Acessibilidade</p>
+                    </div>
+
+                    <!-- Músicos -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🎸</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Músicos</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Adoração e Louvor</p>
+                    </div>
+
+                    <!-- Hadash -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">💃</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Hadash</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Ministério de Dança</p>
+                    </div>
+
+                    <!-- Limpeza -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🧹</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Limpeza</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Mantendo a Casa de Deus</p>
+                    </div>
+
+                    <!-- Casais -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">💑</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Casais</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Fortalecendo Matrimônios</p>
+                    </div>
+
+                    <!-- Batismo -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">💧</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Batismo</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Celebrando a Nova Vida</p>
+                    </div>
+
+                    <!-- Mulheres -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">👩</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Mulheres</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Empoderadas em Cristo</p>
+                    </div>
+
+                    <!-- Homens -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">👨</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Homens</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Guerreiros de Fé</p>
+                    </div>
+
+                    <!-- Teatro -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🎭</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Teatro</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Arte que Transforma</p>
+                    </div>
+
+                    <!-- Jump -->
+                    <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🧑‍🤝‍🧑</div>
+                        <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Jump</h3>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Ministério de Adolescentes</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Vídeo dos Ministérios -->
             <div class="ministerios-section" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+                <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+                    <span class="section-label" style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%); color: #000; padding: 8px 20px; border-radius: 20px; font-size: clamp(12px, 2vw, 14px); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">Vídeo Institucional</span>
+                    <h2 style="font-size: clamp(1.5rem, 3vw, 2rem); color: #fff; font-weight: 700; margin-bottom: 10px;">Conheça Nossos Ministérios</h2>
+                </div>
                 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);">
                     <iframe 
                         src="https://www.youtube.com/embed/fhB35BCk--M?autoplay=1&mute=1" 
