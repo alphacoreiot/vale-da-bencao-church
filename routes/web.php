@@ -3,11 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\SectionController;
+use App\Http\Controllers\Frontend\CelulasController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\PushNotificationController;
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/celulas', [CelulasController::class, 'index'])->name('celulas');
+Route::get('/geojson/Camacari.geojson', [CelulasController::class, 'geojson'])->name('celulas.geojson');
 Route::get('/secao/{slug}', [SectionController::class, 'show'])->name('section.show');
 Route::get('/secao/{sectionSlug}/conteudo/{contentId}', [SectionController::class, 'content'])->name('section.content');
 

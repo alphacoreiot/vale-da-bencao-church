@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         // Seed church sections
         $this->call([
             ChurchSectionsSeeder::class,
+            CelulasSeeder::class,
         ]);
     }
 }
