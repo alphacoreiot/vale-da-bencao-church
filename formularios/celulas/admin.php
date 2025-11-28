@@ -89,11 +89,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $messageType = 'success';
     }
     
+    // Mudar status rapidamente
+    if ($action === 'change_status' && isset($_POST['id']) && isset($_POST['new_status'])) {
+        $validStatuses = ['pendente', 'aprovado', 'rejeitado'];
+        $newStatus = $_POST['new_status'];
+        if (in_array($newStatus, $validStatuses)) {
+            $stmt = $pdo->prepare("UPDATE form_celulas_recadastramento SET status = ?, updated_at = NOW() WHERE id = ?");
+            $stmt->execute([$newStatus, $_POST['id']]);
+            $statusLabels = ['pendente' => 'Pendente', 'aprovado' => 'Aprovado', 'rejeitado' => 'Rejeitado'];
+            $message = "Status alterado para {$statusLabels[$newStatus]}!";
+            $messageType = 'success';
+        }
+    }
+    
     // Atualizar
     if ($action === 'update' && isset($_POST['id'])) {
         $sql = "UPDATE form_celulas_recadastramento SET 
                 nome_celula = ?, lider = ?, geracao_id = ?, bairro = ?, 
                 rua = ?, numero = ?, complemento = ?, ponto_referencia = ?, contato = ?, 
+                contato2_nome = ?, contato2_whatsapp = ?,
                 latitude = ?, longitude = ?, status = ?, updated_at = NOW()
                 WHERE id = ?";
         
@@ -108,6 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['complemento'] ?: null,
             $_POST['ponto_referencia'] ?: null,
             $_POST['contato'],
+            $_POST['contato2_nome'] ?: null,
+            $_POST['contato2_whatsapp'] ?: null,
             $_POST['latitude'] ?: null,
             $_POST['longitude'] ?: null,
             $_POST['status'],
@@ -163,6 +179,149 @@ $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $totalPendentes = $pdo->query("SELECT COUNT(*) FROM form_celulas_recadastramento WHERE status = 'pendente'")->fetchColumn();
 $totalAprovados = $pdo->query("SELECT COUNT(*) FROM form_celulas_recadastramento WHERE status = 'aprovado'")->fetchColumn();
 $totalRejeitados = $pdo->query("SELECT COUNT(*) FROM form_celulas_recadastramento WHERE status = 'rejeitado'")->fetchColumn();
+
+// Exportar dados
+if (isset($_GET['export'])) {
+    $exportFormat = $_GET['export'];
+    $exportData = $registros;
+    
+    if ($exportFormat === 'csv') {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="celulas_recadastramento_' . date('Y-m-d_His') . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        // BOM para UTF-8 no Excel
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+        
+        // Cabeçalho
+        fputcsv($output, ['ID', 'Célula', 'Líder', 'Geração', 'Contato Principal', 'Contato Alt. Nome', 'Contato Alt. WhatsApp', 'Bairro', 'Rua', 'Número', 'Complemento', 'Ponto de Referência', 'Latitude', 'Longitude', 'Status', 'Data Cadastro'], ';');
+        
+        foreach ($exportData as $row) {
+            fputcsv($output, [
+                $row['id'],
+                $row['nome_celula'],
+                $row['lider'],
+                $row['geracao_nome'] ?? '',
+                $row['contato'],
+                $row['contato2_nome'] ?? '',
+                $row['contato2_whatsapp'] ?? '',
+                $row['bairro'],
+                $row['rua'] ?? '',
+                $row['numero'] ?? '',
+                $row['complemento'] ?? '',
+                $row['ponto_referencia'] ?? '',
+                $row['latitude'] ?? '',
+                $row['longitude'] ?? '',
+                ucfirst($row['status']),
+                date('d/m/Y H:i', strtotime($row['created_at']))
+            ], ';');
+        }
+        
+        fclose($output);
+        exit;
+    }
+    
+    if ($exportFormat === 'excel') {
+        header('Content-Type: application/vnd.ms-excel; charset=utf-8');
+        header('Content-Disposition: attachment; filename="celulas_recadastramento_' . date('Y-m-d_His') . '.xls"');
+        
+        echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+        echo '<head><meta charset="UTF-8"><style>td, th { border: 1px solid #ccc; padding: 5px; } th { background: #f0f0f0; font-weight: bold; }</style></head>';
+        echo '<body><table border="1">';
+        echo '<tr><th>ID</th><th>Célula</th><th>Líder</th><th>Geração</th><th>Contato Principal</th><th>Contato Alt. Nome</th><th>Contato Alt. WhatsApp</th><th>Bairro</th><th>Rua</th><th>Número</th><th>Complemento</th><th>Ponto de Referência</th><th>Latitude</th><th>Longitude</th><th>Status</th><th>Data Cadastro</th></tr>';
+        
+        foreach ($exportData as $row) {
+            echo '<tr>';
+            echo '<td>' . $row['id'] . '</td>';
+            echo '<td>' . htmlspecialchars($row['nome_celula']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['lider']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['geracao_nome'] ?? '') . '</td>';
+            echo '<td>' . htmlspecialchars($row['contato']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['contato2_nome'] ?? '') . '</td>';
+            echo '<td>' . htmlspecialchars($row['contato2_whatsapp'] ?? '') . '</td>';
+            echo '<td>' . htmlspecialchars($row['bairro']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['rua'] ?? '') . '</td>';
+            echo '<td>' . htmlspecialchars($row['numero'] ?? '') . '</td>';
+            echo '<td>' . htmlspecialchars($row['complemento'] ?? '') . '</td>';
+            echo '<td>' . htmlspecialchars($row['ponto_referencia'] ?? '') . '</td>';
+            echo '<td>' . ($row['latitude'] ?? '') . '</td>';
+            echo '<td>' . ($row['longitude'] ?? '') . '</td>';
+            echo '<td>' . ucfirst($row['status']) . '</td>';
+            echo '<td>' . date('d/m/Y H:i', strtotime($row['created_at'])) . '</td>';
+            echo '</tr>';
+        }
+        
+        echo '</table></body></html>';
+        exit;
+    }
+}
+
+// Carregar GeoJSON para o mapa
+$geojsonData = null;
+$geojsonPath = __DIR__ . '/../../public/geojson/Camacari.geojson';
+if (!file_exists($geojsonPath)) {
+    $geojsonPath = __DIR__ . '/../../geojson/Camacari.geojson';
+}
+if (file_exists($geojsonPath)) {
+    $geojsonData = file_get_contents($geojsonPath);
+}
+
+// Preparar dados das células para o mapa (com coordenadas)
+$celulasComCoordenadas = array_filter($registros, function($r) {
+    return !empty($r['latitude']) && !empty($r['longitude']);
+});
+
+// Mapeamento de cores por nome de geração
+$coresPorNome = [
+    'água viva' => '#00CED1',
+    'azul celeste' => '#87CEEB',
+    'b e d' => '#8B4513',
+    'bege' => '#F5F5DC',
+    'branca' => '#FFFFFF',
+    'branca e azul' => '#B0E0E6',
+    'cinza' => '#808080',
+    'coral' => '#FF7F50',
+    'dourada' => '#FFD700',
+    'gaditas' => '#8B0000',
+    'israel' => '#0038B8',
+    'jeová makadech' => '#4B0082',
+    'laranja' => '#FFA500',
+    'mostarda' => '#FFDB58',
+    'marrom' => '#8B4513',
+    'neon' => '#39FF14',
+    'ouro' => '#FFD700',
+    'pink' => '#FF69B4',
+    'porta do secreto' => '#4A0E4E',
+    'prata' => '#C0C0C0',
+    'preta' => '#1a1a1a',
+    'preta e branca' => '#2F4F4F',
+    'resgate' => '#DC143C',
+    'rosinha' => '#FFB6C1',
+    'roxa' => '#800080',
+    'verde bandeira' => '#009739',
+    'verde tifanes' => '#00A86B',
+    'verde e vinho' => '#355E3B',
+];
+
+// Buscar cores das gerações
+$coresGeracoes = [];
+$stmtCores = $pdo->query("SELECT id, nome, cor FROM geracoes");
+while ($row = $stmtCores->fetch(PDO::FETCH_ASSOC)) {
+    // Tentar encontrar cor pelo nome
+    $corEncontrada = '#D4AF37'; // cor padrão
+    $nomeLower = mb_strtolower($row['nome']);
+    foreach ($coresPorNome as $chave => $cor) {
+        if (strpos($nomeLower, $chave) !== false) {
+            $corEncontrada = $cor;
+            break;
+        }
+    }
+    
+    $coresGeracoes[$row['id']] = [
+        'nome' => $row['nome'],
+        'cor' => $row['cor'] ?: $corEncontrada
+    ];
+}
 
 function showLoginForm($message, $messageType) {
 ?>
@@ -377,6 +536,31 @@ function showLoginForm($message, $messageType) {
             font-size: 0.8rem;
         }
 
+        /* Export Buttons */
+        .export-buttons {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .btn-export-csv {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-export-csv:hover {
+            background: #218838;
+        }
+
+        .btn-export-excel {
+            background: #217346;
+            color: white;
+        }
+
+        .btn-export-excel:hover {
+            background: #1e6b40;
+        }
+
         /* Stats Cards */
         .stats {
             display: grid;
@@ -516,6 +700,38 @@ function showLoginForm($message, $messageType) {
         .actions {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #219a52;
+        }
+
+        .btn-reject {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #d68910;
+        }
+
+        .btn-pending {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-pending:hover {
+            background: #5a6268;
+        }
+
+        .status-form {
+            display: inline;
         }
 
         /* Message */
@@ -683,6 +899,103 @@ function showLoginForm($message, $messageType) {
         .delete-form {
             display: inline;
         }
+
+        /* Dashboard Map */
+        .map-dashboard {
+            background: var(--dark-card);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .map-dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .map-dashboard-header h2 {
+            color: var(--gold);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-dashboard-header .map-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .map-dashboard-header .map-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .map-dashboard-header .map-stats .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        #dashboardMap {
+            height: 400px;
+            border-radius: 12px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .map-legend-title {
+            width: 100%;
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            background: var(--dark-input);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .legend-item .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            #dashboardMap {
+                height: 300px;
+            }
+            .map-dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -751,7 +1064,31 @@ function showLoginForm($message, $messageType) {
                     <i class="fas fa-times"></i> Limpar
                 </a>
             <?php endif; ?>
+            
+            <div class="export-buttons">
+                <a href="?export=csv<?= $filterStatus ? "&status=$filterStatus" : '' ?><?= $filterGeracao ? "&geracao=$filterGeracao" : '' ?><?= $search ? "&search=" . urlencode($search) : '' ?>" class="btn btn-export-csv" title="Exportar CSV">
+                    <i class="fas fa-file-csv"></i> CSV
+                </a>
+                <a href="?export=excel<?= $filterStatus ? "&status=$filterStatus" : '' ?><?= $filterGeracao ? "&geracao=$filterGeracao" : '' ?><?= $search ? "&search=" . urlencode($search) : '' ?>" class="btn btn-export-excel" title="Exportar Excel">
+                    <i class="fas fa-file-excel"></i> Excel
+                </a>
+            </div>
         </form>
+
+        <!-- Dashboard Map -->
+        <div class="map-dashboard">
+            <div class="map-dashboard-header">
+                <h2><i class="fas fa-map-marked-alt"></i> Mapa das Células</h2>
+                <div class="map-stats">
+                    <span><i class="fas fa-map-marker-alt" style="color: var(--gold);"></i> <?= count($celulasComCoordenadas) ?> células no mapa</span>
+                </div>
+            </div>
+            <div id="dashboardMap"></div>
+            <div class="map-legend" id="mapLegend">
+                <div class="map-legend-title"><i class="fas fa-palette"></i> Legenda das Gerações</div>
+                <!-- Legendas serão inseridas via JS -->
+            </div>
+        </div>
 
         <div class="table-wrapper">
             <div class="table-responsive">
@@ -790,13 +1127,43 @@ function showLoginForm($message, $messageType) {
                                     <td class="text-muted"><?= date('d/m/Y H:i', strtotime($row['created_at'])) ?></td>
                                     <td>
                                         <div class="actions">
-                                            <a href="?edit=<?= $row['id'] ?><?= $filterStatus ? "&status=$filterStatus" : '' ?><?= $filterGeracao ? "&geracao=$filterGeracao" : '' ?><?= $search ? "&search=$search" : '' ?>" class="btn btn-sm btn-secondary">
+                                            <?php if ($row['status'] !== 'aprovado'): ?>
+                                            <form method="POST" class="status-form">
+                                                <input type="hidden" name="action" value="change_status">
+                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                <input type="hidden" name="new_status" value="aprovado">
+                                                <button type="submit" class="btn btn-sm btn-approve" title="Aprovar">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                            <?php endif; ?>
+                                            <?php if ($row['status'] !== 'rejeitado'): ?>
+                                            <form method="POST" class="status-form">
+                                                <input type="hidden" name="action" value="change_status">
+                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                <input type="hidden" name="new_status" value="rejeitado">
+                                                <button type="submit" class="btn btn-sm btn-reject" title="Rejeitar">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
+                                            <?php endif; ?>
+                                            <?php if ($row['status'] !== 'pendente'): ?>
+                                            <form method="POST" class="status-form">
+                                                <input type="hidden" name="action" value="change_status">
+                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                <input type="hidden" name="new_status" value="pendente">
+                                                <button type="submit" class="btn btn-sm btn-pending" title="Voltar para Pendente">
+                                                    <i class="fas fa-clock"></i>
+                                                </button>
+                                            </form>
+                                            <?php endif; ?>
+                                            <a href="?edit=<?= $row['id'] ?><?= $filterStatus ? "&status=$filterStatus" : '' ?><?= $filterGeracao ? "&geracao=$filterGeracao" : '' ?><?= $search ? "&search=$search" : '' ?>" class="btn btn-sm btn-secondary" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form method="POST" class="delete-form" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
+                                            <form method="POST" class="status-form" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
                                                 <input type="hidden" name="action" value="delete">
                                                 <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Excluir">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
@@ -810,6 +1177,143 @@ function showLoginForm($message, $messageType) {
             </div>
         </div>
     </div>
+
+    <!-- Script do Mapa Dashboard -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Dados das células para o mapa
+        const celulasData = <?= json_encode(array_values($celulasComCoordenadas)) ?>;
+        const coresGeracoes = <?= json_encode($coresGeracoes) ?>;
+        const geojsonData = <?= $geojsonData ?: 'null' ?>;
+        
+        // Inicializar mapa dashboard
+        const dashboardMap = L.map('dashboardMap').setView([-12.6996, -38.3263], 11);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(dashboardMap);
+
+        // Adicionar GeoJSON dos bairros
+        if (geojsonData) {
+            const bairrosComCelulas = [...new Set(celulasData.map(c => c.bairro.toUpperCase()))];
+            
+            L.geoJSON(geojsonData, {
+                style: function(feature) {
+                    const bairroNome = feature.properties.nm_bairro?.toUpperCase();
+                    const temCelula = bairrosComCelulas.some(b => 
+                        bairroNome?.includes(b) || b?.includes(bairroNome)
+                    );
+                    
+                    return {
+                        fillColor: temCelula ? '#D4AF37' : '#2c3e50',
+                        weight: 1,
+                        opacity: 0.8,
+                        color: '#D4AF37',
+                        fillOpacity: temCelula ? 0.3 : 0.1
+                    };
+                },
+                onEachFeature: function(feature, layer) {
+                    if (feature.properties && feature.properties.nm_bairro) {
+                        layer.bindTooltip(feature.properties.nm_bairro, {
+                            permanent: false,
+                            direction: 'center',
+                            className: 'bairro-tooltip'
+                        });
+                    }
+                }
+            }).addTo(dashboardMap);
+        }
+
+        // Criar marcadores para cada célula
+        const geracoesNoMapa = new Set();
+        
+        celulasData.forEach(celula => {
+            const cor = coresGeracoes[celula.geracao_id]?.cor || '#D4AF37';
+            const geracaoNome = coresGeracoes[celula.geracao_id]?.nome || 'Sem geração';
+            
+            geracoesNoMapa.add(celula.geracao_id);
+            
+            // Criar ícone personalizado
+            const markerIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="
+                    background: ${cor};
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    border: 3px solid #fff;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                "></div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+            
+            const marker = L.marker([celula.latitude, celula.longitude], { icon: markerIcon })
+                .addTo(dashboardMap);
+            
+            // Popup com informações
+            const statusBadge = celula.status === 'aprovado' 
+                ? '<span style="color:#27ae60;">✓ Aprovado</span>'
+                : celula.status === 'pendente'
+                    ? '<span style="color:#f39c12;">◷ Pendente</span>'
+                    : '<span style="color:#e74c3c;">✗ Rejeitado</span>';
+            
+            marker.bindPopup(`
+                <div style="min-width: 200px;">
+                    <strong style="font-size: 14px; color: #D4AF37;">${celula.nome_celula}</strong><br>
+                    <small style="color: #666;">
+                        <b>Líder:</b> ${celula.lider}<br>
+                        <b>Geração:</b> <span style="color:${cor};">●</span> ${geracaoNome}<br>
+                        <b>Bairro:</b> ${celula.bairro}<br>
+                        ${celula.rua ? `<b>Endereço:</b> ${celula.rua}${celula.numero ? ', ' + celula.numero : ''}<br>` : ''}
+                        ${celula.ponto_referencia ? `<b>Ref:</b> ${celula.ponto_referencia}<br>` : ''}
+                        <b>Contato:</b> ${celula.contato}<br>
+                        <b>Status:</b> ${statusBadge}
+                    </small>
+                </div>
+            `);
+        });
+
+        // Criar legenda com as gerações presentes no mapa
+        const legendContainer = document.getElementById('mapLegend');
+        geracoesNoMapa.forEach(geracaoId => {
+            if (coresGeracoes[geracaoId]) {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <span class="color-dot" style="background: ${coresGeracoes[geracaoId].cor}"></span>
+                    ${coresGeracoes[geracaoId].nome}
+                `;
+                legendContainer.appendChild(item);
+            }
+        });
+
+        // Ajustar zoom para mostrar todas as células
+        if (celulasData.length > 0) {
+            const bounds = L.latLngBounds(celulasData.map(c => [c.latitude, c.longitude]));
+            dashboardMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 14 });
+        }
+    </script>
+    
+    <style>
+        .bairro-tooltip {
+            background: rgba(26, 26, 46, 0.9);
+            border: 1px solid #D4AF37;
+            color: #fff;
+            font-family: 'Exo', sans-serif;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .leaflet-popup-content-wrapper {
+            background: #1a1a2e;
+            color: #fff;
+            border-radius: 10px;
+        }
+        .leaflet-popup-tip {
+            background: #1a1a2e;
+        }
+    </style>
 
     <!-- Modal de Edição -->
     <?php if ($editData): ?>
@@ -847,6 +1351,17 @@ function showLoginForm($message, $messageType) {
                         <div class="form-group">
                             <label>Contato</label>
                             <input type="text" name="contato" class="form-control" value="<?= htmlspecialchars($editData['contato']) ?>" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Contato Alternativo - Nome</label>
+                            <input type="text" name="contato2_nome" class="form-control" value="<?= htmlspecialchars($editData['contato2_nome'] ?? '') ?>" placeholder="Nome do contato alternativo">
+                        </div>
+                        <div class="form-group">
+                            <label>Contato Alternativo - WhatsApp</label>
+                            <input type="text" name="contato2_whatsapp" class="form-control" value="<?= htmlspecialchars($editData['contato2_whatsapp'] ?? '') ?>" placeholder="(00) 00000-0000">
                         </div>
                     </div>
 
@@ -914,30 +1429,29 @@ function showLoginForm($message, $messageType) {
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        const lat = <?= $editData['latitude'] ?: -12.6996 ?>;
-        const lng = <?= $editData['longitude'] ?: -38.3263 ?>;
+        const editLat = <?= $editData['latitude'] ?: -12.6996 ?>;
+        const editLng = <?= $editData['longitude'] ?: -38.3263 ?>;
         
-        const map = L.map('editMap').setView([lat, lng], <?= $editData['latitude'] ? 16 : 13 ?>);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        const editMap = L.map('editMap').setView([editLat, editLng], <?= $editData['latitude'] ? 16 : 13 ?>);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(editMap);
         
-        let marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+        let editMarker = L.marker([editLat, editLng], { draggable: true }).addTo(editMap);
         
-        marker.on('dragend', function(e) {
+        editMarker.on('dragend', function(e) {
             const pos = e.target.getLatLng();
             document.getElementById('editLat').value = pos.lat.toFixed(7);
             document.getElementById('editLng').value = pos.lng.toFixed(7);
         });
         
-        map.on('click', function(e) {
-            marker.setLatLng(e.latlng);
+        editMap.on('click', function(e) {
+            editMarker.setLatLng(e.latlng);
             document.getElementById('editLat').value = e.latlng.lat.toFixed(7);
             document.getElementById('editLng').value = e.latlng.lng.toFixed(7);
         });
 
         // Fix map size issue in modal
-        setTimeout(() => map.invalidateSize(), 100);
+        setTimeout(() => editMap.invalidateSize(), 100);
     </script>
     <?php endif; ?>
 </body>

@@ -64,6 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $complemento = trim($_POST['complemento'] ?? '');
     $ponto_referencia = trim($_POST['ponto_referencia'] ?? '');
     $contato = trim($_POST['contato'] ?? '');
+    $contato2_nome = trim($_POST['contato2_nome'] ?? '');
+    $contato2_whatsapp = trim($_POST['contato2_whatsapp'] ?? '');
     $latitude = !empty($_POST['latitude']) ? floatval($_POST['latitude']) : null;
     $longitude = !empty($_POST['longitude']) ? floatval($_POST['longitude']) : null;
     
@@ -79,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         try {
             $sql = "INSERT INTO form_celulas_recadastramento 
-                    (nome_celula, lider, geracao_id, bairro, rua, numero, complemento, ponto_referencia, contato, latitude, longitude, status, created_at, updated_at) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', NOW(), NOW())";
+                    (nome_celula, lider, geracao_id, bairro, rua, numero, complemento, ponto_referencia, contato, contato2_nome, contato2_whatsapp, latitude, longitude, status, created_at, updated_at) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', NOW(), NOW())";
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
@@ -93,6 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $complemento ?: null,
                 $ponto_referencia ?: null,
                 $contato,
+                $contato2_nome ?: null,
+                $contato2_whatsapp ?: null,
                 $latitude,
                 $longitude
             ]);
@@ -412,6 +416,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: var(--gold);
             text-decoration: none;
         }
+
+        .btn-admin {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--dark-input);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-admin:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -464,9 +485,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group">
                     <label>Contato (WhatsApp) <span class="required">*</span></label>
-                    <input type="tel" name="contato" class="form-control" 
+                    <input type="tel" name="contato" class="form-control phone-mask" 
                            placeholder="(71) 99999-9999"
                            value="<?= htmlspecialchars($_POST['contato'] ?? '') ?>" required>
+                </div>
+
+                <div class="section-title">
+                    <i class="fas fa-phone-alt"></i>
+                    Contato Alternativo
+                </div>
+
+                <div class="form-group">
+                    <label>Nome do Contato Alternativo</label>
+                    <input type="text" name="contato2_nome" class="form-control" 
+                           placeholder="Nome de quem será o contato alternativo"
+                           value="<?= htmlspecialchars($_POST['contato2_nome'] ?? '') ?>">
+                </div>
+
+                <div class="form-group">
+                    <label>WhatsApp Alternativo</label>
+                    <input type="tel" name="contato2_whatsapp" class="form-control phone-mask" 
+                           placeholder="(71) 99999-9999"
+                           value="<?= htmlspecialchars($_POST['contato2_whatsapp'] ?? '') ?>">
                 </div>
 
                 <div class="section-title">
@@ -554,6 +594,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="footer">
             <p>Igreja Vale da Bênção - Camaçari/BA</p>
             <p><a href="/">← Voltar para o site</a></p>
+            <p style="margin-top: 15px;"><a href="admin.php" class="btn-admin"><i class="fas fa-lock"></i> Área Administrativa</a></p>
         </div>
     </div>
 
@@ -563,7 +604,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const defaultLat = -12.6996;
         const defaultLng = -38.3263;
         
-        const map = L.map('map').setView([defaultLat, defaultLng], 13);
+        const map = L.map('map').setView([defaultLat, defaultLng], 11);
         
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
