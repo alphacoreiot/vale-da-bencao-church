@@ -59,7 +59,7 @@ class CelulasController extends Controller
         // Agrupar células por geração para estatísticas
         $celulasPorGeracao = $celulas->groupBy('geracao_id');
 
-        return view('frontend.celulas', compact(
+        return view('frontend.celulas-v2', compact(
             'geracoes', 
             'celulas',
             'totalCelulas', 

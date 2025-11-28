@@ -1,0 +1,701 @@
+/* ===========================================
+   PÁGINA DE CÉLULAS - Vale da Bênção Church
+   =========================================== */
+
+/* Override do layout global */
+.section-content-area {
+    min-height: auto !important;
+}
+
+/* Variáveis */
+:root {
+    --gold: #D4AF37;
+    --gold-dark: #B8941F;
+    --gold-light: rgba(212, 175, 55, 0.3);
+    --black: #000;
+    --dark-bg: #0d0d0d;
+    --card-bg: #1a1a1a;
+    --card-bg-hover: #252525;
+    --text-primary: #fff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --border-subtle: rgba(212, 175, 55, 0.3);
+}
+
+/* ===========================================
+   HERO SECTION
+   =========================================== */
+.celulas-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 140px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.celulas-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.celulas-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.celulas-hero-icon {
+    font-size: 4rem;
+    margin-bottom: 15px;
+}
+
+.celulas-hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--gold);
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.celulas-hero p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Stats */
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(10px);
+    min-width: 120px;
+}
+
+.stat-number {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--gold);
+    font-weight: 700;
+    display: block;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 5px;
+}
+
+/* ===========================================
+   FILTROS SECTION
+   =========================================== */
+.filtros-section {
+    background: var(--black);
+    padding: 5px 20px 30px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filtros-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.filtros-title {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.filtros-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filtro-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 250px;
+}
+
+.filtro-group label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filtro-select {
+    padding: 14px 18px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-subtle);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+    padding-right: 45px;
+}
+
+.filtro-select:hover,
+.filtro-select:focus {
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+.filtro-select option {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 10px;
+}
+
+.filtro-select option:disabled {
+    color: var(--text-muted);
+}
+
+.btn-limpar {
+    padding: 14px 28px;
+    background: transparent;
+    border: 2px solid var(--border-subtle);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-limpar:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* ===========================================
+   MAPA SECTION
+   =========================================== */
+.mapa-section {
+    padding: 60px 20px;
+    background: var(--dark-bg);
+}
+
+.mapa-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    color: var(--gold);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    font-size: 1rem;
+}
+
+.mapa-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 30px;
+    align-items: start;
+}
+
+#mapaCelulas {
+    height: 600px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-subtle);
+}
+
+/* ===========================================
+   SIDEBAR
+   =========================================== */
+.celulas-sidebar {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 25px;
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid var(--border-subtle);
+}
+
+.sidebar-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h3 {
+    color: var(--gold);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.sidebar-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.sidebar-count span {
+    color: var(--gold);
+    font-weight: 700;
+}
+
+/* Lista de Células */
+#listaCelulas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.celula-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 18px;
+    border-left: 4px solid var(--gold);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.celula-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateX(5px);
+}
+
+.celula-card.active {
+    background: rgba(212, 175, 55, 0.1);
+    border-left-color: var(--gold);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.geracao-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #000;
+    white-space: nowrap;
+}
+
+.celula-nome {
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.card-body {
+    margin-bottom: 12px;
+}
+
+.card-body p {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.card-body p:last-child {
+    margin-bottom: 0;
+}
+
+.card-body svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.card-body .lider {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.card-footer {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #25D366;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-whatsapp:hover {
+    background: #128C7E;
+    transform: scale(1.05);
+}
+
+.btn-whatsapp svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.btn-ver-mapa {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--gold);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid var(--gold);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-ver-mapa:hover {
+    background: var(--gold);
+    color: #000;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state svg {
+    width: 60px;
+    height: 60px;
+    fill: var(--text-muted);
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.empty-state h4 {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+}
+
+/* ===========================================
+   LEGENDA
+   =========================================== */
+.legenda-section {
+    padding: 40px 20px;
+    background: var(--black);
+}
+
+.legenda-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.legenda-title {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.legenda-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legenda-cor {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.legenda-nome {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* ===========================================
+   LEAFLET CUSTOMIZATION
+   =========================================== */
+.leaflet-popup-content-wrapper {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-popup-tip {
+    background: var(--card-bg);
+}
+
+.leaflet-popup-content {
+    margin: 0;
+    min-width: 220px;
+}
+
+.popup-celula {
+    padding: 15px;
+}
+
+.popup-header {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--gold);
+}
+
+.popup-geracao {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.popup-header h4 {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.popup-body {
+    margin-bottom: 12px;
+}
+
+.popup-body p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.popup-body p strong {
+    color: var(--gold);
+}
+
+.popup-footer {
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.popup-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #25D366;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.popup-whatsapp:hover {
+    background: #128C7E;
+}
+
+/* Custom Marker */
+.celula-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
+.marker-pin {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.marker-pin:hover {
+    transform: scale(1.2);
+}
+
+/* ===========================================
+   SCROLLBAR
+   =========================================== */
+.celulas-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.celulas-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.celulas-sidebar::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 3px;
+}
+
+.celulas-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-dark);
+}
+
+/* ===========================================
+   RESPONSIVIDADE
+   =========================================== */
+@media (max-width: 1200px) {
+    .mapa-wrapper {
+        grid-template-columns: 1fr 350px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .mapa-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
+    #mapaCelulas {
+        height: 450px;
+    }
+    
+    .celulas-sidebar {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .celulas-hero {
+        padding: 120px 15px 60px;
+    }
+    
+    .stats-container {
+        gap: 15px;
+    }
+    
+    .stat-item {
+        padding: 15px 20px;
+        min-width: 100px;
+    }
+    
+    .filtros-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filtro-group {
+        min-width: auto;
+    }
+    
+    #mapaCelulas {
+        height: 350px;
+    }
+    
+    .celulas-sidebar {
+        max-height: 400px;
+        padding: 20px;
+    }
+    
+    .legenda-grid {
+        gap: 10px;
+    }
+    
+    .legenda-item {
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .card-footer {
+        flex-direction: column;
+    }
+    
+    .btn-whatsapp,
+    .btn-ver-mapa {
+        justify-content: center;
+    }
+}
