@@ -297,21 +297,7 @@
                     </lord-icon>
                     Traçar Rota no Google Maps
                 </a>
-                <div class="info-card">
-                    <div class="info-icon">
-                        <lord-icon
-                            src="https://cdn.lordicon.com/hrjifpbq.json"
-                            trigger="loop"
-                            delay="2000"
-                            colors="primary:#D4AF37,secondary:#ffffff"
-                            style="width:50px;height:50px">
-                        </lord-icon>
-                    </div>
-                    <div class="info-text">
-                        <h4>Células</h4>
-                        <p>Somos uma igreja em células! Pequenos grupos que se reúnem semanalmente para comunhão e crescimento na fé.</p>
-                    </div>
-                </div>
+                
 
                 <a href="{{ route('celulas') }}" class="route-btn">
                     <lord-icon
