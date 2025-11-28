@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'update' && isset($_POST['id'])) {
         $sql = "UPDATE form_celulas_recadastramento SET 
                 nome_celula = ?, lider = ?, geracao_id = ?, bairro = ?, 
-                rua = ?, numero = ?, complemento = ?, contato = ?, 
+                rua = ?, numero = ?, complemento = ?, ponto_referencia = ?, contato = ?, 
                 latitude = ?, longitude = ?, status = ?, updated_at = NOW()
                 WHERE id = ?";
         
@@ -106,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['rua'] ?: null,
             $_POST['numero'] ?: null,
             $_POST['complemento'] ?: null,
+            $_POST['ponto_referencia'] ?: null,
             $_POST['contato'],
             $_POST['latitude'] ?: null,
             $_POST['longitude'] ?: null,
@@ -829,7 +830,7 @@ function showLoginForm($message, $messageType) {
                             <input type="text" name="nome_celula" class="form-control" value="<?= htmlspecialchars($editData['nome_celula']) ?>" required>
                         </div>
                         <div class="form-group">
-                            <label>Líder</label>
+                            <label>Líder(es)</label>
                             <input type="text" name="lider" class="form-control" value="<?= htmlspecialchars($editData['lider']) ?>" required>
                         </div>
                     </div>
@@ -874,6 +875,11 @@ function showLoginForm($message, $messageType) {
                             <label>Complemento</label>
                             <input type="text" name="complemento" class="form-control" value="<?= htmlspecialchars($editData['complemento'] ?? '') ?>">
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ponto de Referência</label>
+                        <input type="text" name="ponto_referencia" class="form-control" value="<?= htmlspecialchars($editData['ponto_referencia'] ?? '') ?>" placeholder="Ex: Próximo ao mercado, em frente à praça...">
                     </div>
 
                     <div class="form-group">

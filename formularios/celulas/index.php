@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rua = trim($_POST['rua'] ?? '');
     $numero = trim($_POST['numero'] ?? '');
     $complemento = trim($_POST['complemento'] ?? '');
+    $ponto_referencia = trim($_POST['ponto_referencia'] ?? '');
     $contato = trim($_POST['contato'] ?? '');
     $latitude = !empty($_POST['latitude']) ? floatval($_POST['latitude']) : null;
     $longitude = !empty($_POST['longitude']) ? floatval($_POST['longitude']) : null;
@@ -73,12 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($geracao_id <= 0) $errors[] = "Selecione uma geração";
     if (empty($bairro)) $errors[] = "Selecione um bairro";
     if (empty($contato)) $errors[] = "Contato é obrigatório";
+    if (empty($latitude) || empty($longitude)) $errors[] = "Localização no mapa é obrigatória. Faça o cadastro no local da célula.";
     
     if (empty($errors)) {
         try {
             $sql = "INSERT INTO form_celulas_recadastramento 
-                    (nome_celula, lider, geracao_id, bairro, rua, numero, complemento, contato, latitude, longitude, status, created_at, updated_at) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', NOW(), NOW())";
+                    (nome_celula, lider, geracao_id, bairro, rua, numero, complemento, ponto_referencia, contato, latitude, longitude, status, created_at, updated_at) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', NOW(), NOW())";
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
@@ -89,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $rua ?: null,
                 $numero ?: null,
                 $complemento ?: null,
+                $ponto_referencia ?: null,
                 $contato,
                 $latitude,
                 $longitude
@@ -165,6 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 50%;
             margin-bottom: 15px;
             border: 3px solid var(--gold);
+            background: #ffffff;
+            padding: 5px;
         }
 
         .header h1 {
@@ -376,6 +381,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: rgba(212, 175, 55, 0.1);
         }
 
+        .location-alert {
+            background: rgba(243, 156, 18, 0.15);
+            border: 1px solid rgba(243, 156, 18, 0.5);
+            border-radius: 12px;
+            padding: 15px 18px;
+            margin-bottom: 20px;
+            color: #f5b041;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .location-alert i {
+            margin-right: 8px;
+            color: #f39c12;
+        }
+
+        .location-alert strong {
+            color: #f39c12;
+        }
+
         .footer {
             text-align: center;
             padding: 30px 0;
@@ -419,9 +444,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                    <label>Nome do Líder <span class="required">*</span></label>
+                    <label>Nome do(s) Líder(es) da Célula <span class="required">*</span></label>
                     <input type="text" name="lider" class="form-control" 
-                           placeholder="Nome completo do líder"
+                           placeholder="Nome completo do(s) líder(es)"
                            value="<?= htmlspecialchars($_POST['lider'] ?? '') ?>" required>
                 </div>
 
@@ -482,9 +507,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label>Ponto de Referência</label>
+                    <input type="text" name="ponto_referencia" class="form-control" 
+                           placeholder="Ex: Próximo ao mercado, em frente à praça..."
+                           value="<?= htmlspecialchars($_POST['ponto_referencia'] ?? '') ?>">
+                </div>
+
                 <div class="section-title">
                     <i class="fas fa-map"></i>
-                    Localização no Mapa
+                    Localização no Mapa <span class="required">*</span>
+                </div>
+
+                <div class="location-alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Importante:</strong> Este cadastro deve ser feito no local onde a célula se reúne. 
+                    A localização é obrigatória para o mapeamento das células.
                 </div>
 
                 <button type="button" class="btn-location" onclick="getMyLocation()">
