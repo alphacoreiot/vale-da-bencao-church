@@ -47,7 +47,15 @@ const AppState = {
     filtros: {
         geracao: null,
         bairro: null
-    }
+    },
+    // Geolocalização
+    userLocation: null,
+    userMarker: null,
+    mostrandoProximas: false,
+    // Paginação mobile
+    paginaAtual: 1,
+    itensPorPagina: 5,
+    celulasAtuais: []
 };
 
 /**
@@ -67,6 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar filtros
     initFiltros();
+    
+    // Inicializar geolocalização
+    initGeolocalizacao();
     
     // Renderizar lista inicial
     renderizarListaCelulas(AppState.celulasData);
@@ -199,6 +210,11 @@ function criarIconeMarcador(cor) {
  * Cria conteúdo do popup
  */
 function criarPopupContent(celula, cor) {
+    const temCoordenadas = celula.tem_coordenadas && celula.latitude && celula.longitude;
+    const mapsUrl = temCoordenadas ? `https://www.google.com/maps/dir/?api=1&destination=${celula.latitude},${celula.longitude}` : '';
+    const uberUrl = temCoordenadas ? `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${celula.latitude}&dropoff[longitude]=${celula.longitude}&dropoff[nickname]=${encodeURIComponent(celula.nome || 'Célula')}` : '';
+    const whatsapp2Link = celula.contato2_whatsapp ? criarWhatsappLink(celula.contato2_whatsapp) : '';
+    
     return `
         <div class="popup-celula">
             <div class="popup-header">
@@ -210,17 +226,46 @@ function criarPopupContent(celula, cor) {
                 <p><strong>Bairro:</strong> ${celula.bairro}</p>
                 ${celula.endereco ? `<p><strong>Endereço:</strong> ${celula.endereco}</p>` : ''}
                 ${celula.ponto_referencia ? `<p><strong>Referência:</strong> ${celula.ponto_referencia}</p>` : ''}
+                ${celula.contato2_nome ? `<p><strong>2º Contato:</strong> ${celula.contato2_nome}</p>` : ''}
             </div>
-            ${celula.whatsapp_link ? `
-                <div class="popup-footer">
-                    <a href="${celula.whatsapp_link}" target="_blank" class="popup-whatsapp">
+            <div class="popup-footer popup-footer-grid">
+                ${celula.whatsapp_link ? `
+                    <a href="${celula.whatsapp_link}" target="_blank" class="popup-btn popup-whatsapp" title="WhatsApp do Líder">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                        WhatsApp
+                        Líder
                     </a>
-                </div>
-            ` : ''}
+                ` : ''}
+                ${whatsapp2Link ? `
+                    <a href="${whatsapp2Link}" target="_blank" class="popup-btn popup-whatsapp2" title="WhatsApp do 2º Contato">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        2º Contato
+                    </a>
+                ` : ''}
+                ${temCoordenadas ? `
+                    <a href="${mapsUrl}" target="_blank" class="popup-btn popup-maps" title="Traçar rota no Google Maps">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        Maps
+                    </a>
+                    <a href="${uberUrl}" target="_blank" class="popup-btn popup-uber" title="Ir de Uber">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        Uber
+                    </a>
+                ` : ''}
+            </div>
         </div>
     `;
+}
+
+/**
+ * Cria link de WhatsApp a partir do número
+ */
+function criarWhatsappLink(numero) {
+    if (!numero) return '';
+    // Limpar número - remover tudo que não é dígito
+    const numeroLimpo = numero.replace(/\D/g, '');
+    // Adicionar código do Brasil se não tiver
+    const numeroCompleto = numeroLimpo.startsWith('55') ? numeroLimpo : '55' + numeroLimpo;
+    return `https://wa.me/${numeroCompleto}`;
 }
 
 /**
@@ -409,11 +454,102 @@ function popularDropdownBairros() {
 }
 
 /**
+ * Verifica se está em dispositivo mobile
+ */
+function isMobile() {
+    return window.innerWidth <= 1024;
+}
+
+/**
+ * Gera o HTML de um card de célula
+ */
+function gerarCardHTML(celula) {
+    const cor = getCorGeracao(celula.geracao);
+    const temCoordenadas = celula.tem_coordenadas && celula.latitude && celula.longitude;
+    const mapsUrl = temCoordenadas ? `https://www.google.com/maps/dir/?api=1&destination=${celula.latitude},${celula.longitude}` : '';
+    const uberUrl = temCoordenadas ? `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${celula.latitude}&dropoff[longitude]=${celula.longitude}&dropoff[nickname]=${encodeURIComponent(celula.nome || 'Célula')}` : '';
+    const whatsapp2Link = celula.contato2_whatsapp ? criarWhatsappLink(celula.contato2_whatsapp) : '';
+    
+    return `
+        <div class="celula-card" data-id="${celula.id}" data-lat="${celula.latitude || ''}" data-lng="${celula.longitude || ''}" style="border-left-color: ${cor}">
+            <div class="card-header">
+                <span class="geracao-badge" style="background: ${cor}">${celula.geracao}</span>
+            </div>
+            <h4 class="celula-nome">${celula.nome || 'Célula'}</h4>
+            <div class="card-body">
+                <p class="lider">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    ${celula.lider}
+                </p>
+                <p>
+                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    ${celula.bairro}${celula.endereco ? ' - ' + celula.endereco : ''}
+                </p>
+                ${celula.ponto_referencia ? `
+                    <p>
+                        <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                        ${celula.ponto_referencia}
+                    </p>
+                ` : ''}
+                ${celula.contato2_nome ? `
+                    <p class="contato2">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        2º: ${celula.contato2_nome}
+                    </p>
+                ` : ''}
+            </div>
+            <div class="card-footer">
+                ${celula.whatsapp_link ? `
+                    <a href="${celula.whatsapp_link}" target="_blank" class="btn-whatsapp" title="WhatsApp do Líder">
+                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        Líder
+                    </a>
+                ` : ''}
+                ${whatsapp2Link ? `
+                    <a href="${whatsapp2Link}" target="_blank" class="btn-whatsapp2" title="WhatsApp do 2º Contato">
+                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        2º
+                    </a>
+                ` : ''}
+                ${temCoordenadas ? `
+                    <a href="${mapsUrl}" target="_blank" class="btn-maps" title="Traçar rota no Google Maps">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        Rota
+                    </a>
+                    <a href="${uberUrl}" target="_blank" class="btn-uber" title="Ir de Uber">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        Uber
+                    </a>
+                    <button class="btn-ver-mapa" onclick="centralizarNoMarcador(${celula.latitude}, ${celula.longitude}, ${celula.id})">
+                        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        Mapa
+                    </button>
+                ` : ''}
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Carrega mais células (paginação mobile)
+ */
+function carregarMaisCelulas() {
+    AppState.paginaAtual++;
+    renderizarListaCelulas(AppState.celulasAtuais, true);
+}
+
+/**
  * Renderiza a lista de células na sidebar
  */
-function renderizarListaCelulas(celulas) {
+function renderizarListaCelulas(celulas, appendMode = false) {
     const container = document.getElementById('listaCelulas');
     if (!container) return;
+    
+    // Resetar página se não for modo append
+    if (!appendMode) {
+        AppState.paginaAtual = 1;
+        AppState.celulasAtuais = celulas;
+    }
     
     if (celulas.length === 0) {
         container.innerHTML = `
@@ -426,49 +562,32 @@ function renderizarListaCelulas(celulas) {
         return;
     }
     
-    container.innerHTML = celulas.map(celula => {
-        const cor = getCorGeracao(celula.geracao);
-        const temCoordenadas = celula.tem_coordenadas && celula.latitude && celula.longitude;
-        
-        return `
-            <div class="celula-card" data-id="${celula.id}" data-lat="${celula.latitude || ''}" data-lng="${celula.longitude || ''}" style="border-left-color: ${cor}">
-                <div class="card-header">
-                    <span class="geracao-badge" style="background: ${cor}">${celula.geracao}</span>
-                </div>
-                <h4 class="celula-nome">${celula.nome || 'Célula'}</h4>
-                <div class="card-body">
-                    <p class="lider">
-                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        ${celula.lider}
-                    </p>
-                    <p>
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        ${celula.bairro}${celula.endereco ? ' - ' + celula.endereco : ''}
-                    </p>
-                    ${celula.ponto_referencia ? `
-                        <p>
-                            <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-                            ${celula.ponto_referencia}
-                        </p>
-                    ` : ''}
-                </div>
-                <div class="card-footer">
-                    ${celula.whatsapp_link ? `
-                        <a href="${celula.whatsapp_link}" target="_blank" class="btn-whatsapp">
-                            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                            WhatsApp
-                        </a>
-                    ` : ''}
-                    ${temCoordenadas ? `
-                        <button class="btn-ver-mapa" onclick="centralizarNoMarcador(${celula.latitude}, ${celula.longitude}, ${celula.id})">
-                            <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                            Ver no Mapa
-                        </button>
-                    ` : ''}
-                </div>
-            </div>
-        `;
-    }).join('');
+    // Verificar se é mobile para usar paginação
+    const usarPaginacao = isMobile();
+    let celulasParaExibir;
+    let temMais = false;
+    
+    if (usarPaginacao) {
+        const inicio = 0;
+        const fim = AppState.paginaAtual * AppState.itensPorPagina;
+        celulasParaExibir = celulas.slice(inicio, fim);
+        temMais = fim < celulas.length;
+    } else {
+        celulasParaExibir = celulas;
+    }
+    
+    // Gerar HTML dos cards
+    const cardsHTML = celulasParaExibir.map(celula => gerarCardHTML(celula)).join('');
+    
+    // Botão "Ver mais" para mobile
+    const btnVerMaisHTML = temMais ? `
+        <button class="btn-ver-mais-celulas" onclick="carregarMaisCelulas()">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>
+            Ver mais células (${celulas.length - celulasParaExibir.length} restantes)
+        </button>
+    ` : '';
+    
+    container.innerHTML = cardsHTML + btnVerMaisHTML;
     
     // Adicionar eventos de clique nos cards
     container.querySelectorAll('.celula-card').forEach(card => {
@@ -662,6 +781,302 @@ function contarCelulasNoBairro(bairroGeo) {
     });
     
     return count;
+}
+
+/* ===========================================
+   GEOLOCALIZAÇÃO
+   =========================================== */
+
+/**
+ * Inicializa o botão de geolocalização
+ */
+function initGeolocalizacao() {
+    const btnLocalizacao = document.getElementById('btnLocalizacao');
+    console.log('initGeolocalizacao - botão encontrado:', btnLocalizacao);
+    
+    if (btnLocalizacao) {
+        btnLocalizacao.addEventListener('click', handleLocalizacaoClick);
+        console.log('Event listener adicionado ao botão de localização');
+    }
+}
+
+/**
+ * Handler do clique no botão de localização
+ */
+function handleLocalizacaoClick() {
+    console.log('=== Botão de localização clicado! ===');
+    
+    const btn = document.getElementById('btnLocalizacao');
+    const btnText = document.getElementById('btnLocalizacaoText');
+    
+    if (!btn || !btnText) {
+        console.error('Elementos do botão não encontrados');
+        return;
+    }
+    
+    // Se já está mostrando células próximas, desativar
+    if (AppState.mostrandoProximas) {
+        console.log('Desativando localização...');
+        desativarLocalizacao();
+        return;
+    }
+    
+    // Verificar suporte
+    if (!navigator.geolocation) {
+        alert('Seu navegador não suporta geolocalização.');
+        return;
+    }
+    
+    console.log('Protocolo:', location.protocol, '| Host:', location.hostname);
+    
+    // Mostrar loading
+    btn.disabled = true;
+    btnText.textContent = 'Localizando...';
+    
+    console.log('Solicitando permissão de localização...');
+    
+    // Obter localização com timeout maior
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            console.log('=== Localização obtida com sucesso! ===');
+            console.log('Latitude:', position.coords.latitude);
+            console.log('Longitude:', position.coords.longitude);
+            
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            AppState.userLocation = { lat: lat, lng: lng };
+            
+            // Adicionar marcador do usuário
+            adicionarMarcadorUsuario(lat, lng);
+            
+            // Ordenar células por distância
+            mostrarCelulasProximas();
+            
+            // Atualizar botão
+            btn.disabled = false;
+            btn.classList.add('ativo');
+            btnText.textContent = 'Desativar localização';
+            AppState.mostrandoProximas = true;
+            
+            console.log('=== Localização ativada! ===');
+        },
+        function(error) {
+            console.error('=== Erro de geolocalização ===');
+            console.error('Código:', error.code);
+            console.error('Mensagem:', error.message);
+            
+            btn.disabled = false;
+            btnText.textContent = 'Usar minha localização';
+            
+            let msg = 'Não foi possível obter sua localização.';
+            if (error.code === 1) {
+                msg = 'Permissão de localização negada. Habilite nas configurações do navegador.';
+            } else if (error.code === 2) {
+                msg = 'Localização indisponível. Verifique se o GPS está ativo.';
+            } else if (error.code === 3) {
+                msg = 'Tempo esgotado. Tente novamente.';
+            }
+            alert(msg);
+        },
+        {
+            enableHighAccuracy: false,
+            timeout: 30000,
+            maximumAge: 300000
+        }
+    );
+}
+
+/**
+ * Adiciona marcador da localização do usuário
+ */
+function adicionarMarcadorUsuario(lat, lng) {
+    // Remover marcador anterior se existir
+    if (AppState.userMarker) {
+        AppState.map.removeLayer(AppState.userMarker);
+    }
+    
+    // Criar ícone customizado
+    const userIcon = L.divIcon({
+        className: 'user-location-marker-container',
+        html: '<div class="user-location-marker"></div>',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+    });
+    
+    // Adicionar marcador
+    AppState.userMarker = L.marker([lat, lng], { icon: userIcon })
+        .addTo(AppState.map)
+        .bindPopup('<strong>Você está aqui!</strong>')
+        .openPopup();
+    
+    // Centralizar no mapa
+    AppState.map.setView([lat, lng], 14);
+}
+
+/**
+ * Calcula distância entre dois pontos (Haversine formula)
+ */
+function calcularDistancia(lat1, lng1, lat2, lng2) {
+    const R = 6371; // Raio da Terra em km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // Distância em km
+}
+
+/**
+ * Formata distância para exibição
+ */
+function formatarDistancia(distanciaKm) {
+    if (distanciaKm < 1) {
+        return Math.round(distanciaKm * 1000) + ' m';
+    }
+    return distanciaKm.toFixed(1) + ' km';
+}
+
+/**
+ * Mostra células ordenadas por proximidade
+ */
+function mostrarCelulasProximas() {
+    if (!AppState.userLocation) return;
+    
+    const { lat, lng } = AppState.userLocation;
+    
+    // Calcular distância para cada célula
+    const celulasComDistancia = AppState.celulasData
+        .filter(c => c.tem_coordenadas && c.latitude && c.longitude)
+        .map(celula => ({
+            ...celula,
+            distancia: calcularDistancia(lat, lng, celula.latitude, celula.longitude)
+        }))
+        .sort((a, b) => a.distancia - b.distancia);
+    
+    // Renderizar lista com distâncias
+    renderizarListaCelulasComDistancia(celulasComDistancia);
+    
+    // Atualizar contador
+    atualizarContador(celulasComDistancia.length);
+    
+    // Atualizar marcadores (mostrar todos, mas destacar os próximos)
+    adicionarMarcadores(celulasComDistancia);
+}
+
+/**
+ * Renderiza lista de células com distância
+ */
+function renderizarListaCelulasComDistancia(celulas) {
+    const container = document.getElementById('listaCelulas');
+    if (!container) return;
+    
+    if (celulas.length === 0) {
+        container.innerHTML = `
+            <div class="lista-vazia">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                </svg>
+                <p>Nenhuma célula encontrada com coordenadas.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = celulas.map((celula, index) => {
+        const cor = getCorGeracao(celula.geracao);
+        const distanciaFormatada = formatarDistancia(celula.distancia);
+        const isProxima = index < 5; // Destacar as 5 mais próximas
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${celula.latitude},${celula.longitude}`;
+        const uberUrl = `https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=${celula.latitude}&dropoff[longitude]=${celula.longitude}&dropoff[nickname]=${encodeURIComponent(celula.nome || 'Célula')}`;
+        const whatsapp2Link = celula.contato2_whatsapp ? criarWhatsappLink(celula.contato2_whatsapp) : '';
+        
+        return `
+            <div class="celula-card ${isProxima ? 'celula-proxima' : ''}" data-lat="${celula.latitude}" data-lng="${celula.longitude}">
+                <div class="celula-card-header">
+                    <span class="geracao-badge" style="background: ${cor}">${celula.geracao}</span>
+                    <span class="celula-distancia">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        ${distanciaFormatada}
+                    </span>
+                </div>
+                <h4 class="celula-nome">${celula.nome || 'Célula'}</h4>
+                <div class="celula-info">
+                    <p><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> ${celula.lider}</p>
+                    <p><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> ${celula.bairro}</p>
+                    ${celula.contato2_nome ? `<p><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> 2º: ${celula.contato2_nome}</p>` : ''}
+                </div>
+                <div class="card-footer card-footer-grid">
+                    ${celula.whatsapp_link ? `
+                        <a href="${celula.whatsapp_link}" target="_blank" class="btn-whatsapp" onclick="event.stopPropagation()" title="WhatsApp do Líder">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Líder
+                        </a>
+                    ` : ''}
+                    ${whatsapp2Link ? `
+                        <a href="${whatsapp2Link}" target="_blank" class="btn-whatsapp2" onclick="event.stopPropagation()" title="WhatsApp do 2º Contato">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            2º
+                        </a>
+                    ` : ''}
+                    <a href="${mapsUrl}" target="_blank" class="btn-maps" onclick="event.stopPropagation()" title="Traçar rota no Google Maps">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        Rota
+                    </a>
+                    <a href="${uberUrl}" target="_blank" class="btn-uber" onclick="event.stopPropagation()" title="Ir de Uber">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        Uber
+                    </a>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Adicionar eventos de clique nos cards
+    container.querySelectorAll('.celula-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('a') || e.target.closest('button')) return;
+            
+            const lat = parseFloat(this.dataset.lat);
+            const lng = parseFloat(this.dataset.lng);
+            
+            if (lat && lng) {
+                centralizarNoMarcador(lat, lng);
+            }
+        });
+    });
+}
+
+/**
+ * Desativa modo de localização
+ */
+function desativarLocalizacao() {
+    const btn = document.getElementById('btnLocalizacao');
+    const btnText = document.getElementById('btnLocalizacaoText');
+    
+    // Remover marcador do usuário
+    if (AppState.userMarker) {
+        AppState.map.removeLayer(AppState.userMarker);
+        AppState.userMarker = null;
+    }
+    
+    // Resetar estado
+    AppState.userLocation = null;
+    AppState.mostrandoProximas = false;
+    
+    // Atualizar botão
+    btn.classList.remove('ativo');
+    btnText.textContent = 'Usar minha localização';
+    
+    // Voltar para lista normal
+    aplicarFiltros();
+    
+    // Resetar zoom
+    AppState.map.setView([-12.70, -38.33], 12);
 }
 
 // Expor funções globalmente para uso no HTML

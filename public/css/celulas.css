@@ -202,6 +202,75 @@
     color: var(--gold);
 }
 
+.btn-localizacao {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border: none;
+    border-radius: 10px;
+    color: #000;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-localizacao:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-localizacao:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-localizacao.ativo {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+}
+
+/* Marcador de localização do usuário */
+.user-location-marker {
+    width: 20px;
+    height: 20px;
+    background: #4285F4;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(66, 133, 244, 0.5), 0 0 20px rgba(66, 133, 244, 0.3);
+    animation: pulse-user 2s infinite;
+}
+
+@keyframes pulse-user {
+    0% {
+        box-shadow: 0 0 10px rgba(66, 133, 244, 0.5), 0 0 20px rgba(66, 133, 244, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(66, 133, 244, 0.8), 0 0 40px rgba(66, 133, 244, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(66, 133, 244, 0.5), 0 0 20px rgba(66, 133, 244, 0.3);
+    }
+}
+
+/* Indicador de distância na lista */
+.celula-distancia {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #4285F4;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.celula-distancia svg {
+    width: 12px;
+    height: 12px;
+}
+
 /* ===========================================
    MAPA SECTION
    =========================================== */
@@ -306,6 +375,22 @@
     border-left-color: var(--gold);
 }
 
+.celula-card.celula-proxima {
+    background: rgba(66, 133, 244, 0.1);
+    border-left-color: #4285F4;
+}
+
+.celula-card.celula-proxima:hover {
+    background: rgba(66, 133, 244, 0.15);
+}
+
+.celula-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -366,53 +451,210 @@
 
 .card-footer {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-whatsapp {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 5px;
     background: #25D366;
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    text-decoration: none;
+    color: #fff !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    text-decoration: none !important;
     transition: all 0.3s ease;
-    font-weight: 500;
+    font-weight: 600;
+    white-space: nowrap;
+    min-height: 32px;
 }
 
 .btn-whatsapp:hover {
     background: #128C7E;
-    transform: scale(1.05);
+    transform: translateY(-1px);
+    color: #fff !important;
 }
 
 .btn-whatsapp svg {
     width: 14px;
     height: 14px;
-    fill: currentColor;
+    fill: #fff;
+    flex-shrink: 0;
+}
+
+/* Segundo contato WhatsApp */
+.btn-whatsapp2 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: #128C7E;
+    color: #fff !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    white-space: nowrap;
+    min-height: 32px;
+}
+
+.btn-whatsapp2:hover {
+    background: #075E54;
+    transform: translateY(-1px);
+    color: #fff !important;
+}
+
+.btn-whatsapp2 svg {
+    width: 14px;
+    height: 14px;
+    fill: #fff;
+    flex-shrink: 0;
+}
+
+/* Botão Google Maps */
+.btn-maps {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: #4285F4;
+    color: #fff !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    white-space: nowrap;
+    min-height: 32px;
+}
+
+.btn-maps:hover {
+    background: #3367D6;
+    transform: translateY(-1px);
+    color: #fff !important;
+}
+
+.btn-maps svg {
+    width: 14px;
+    height: 14px;
+    fill: #fff;
+    flex-shrink: 0;
+}
+
+/* Botão Uber */
+.btn-uber {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: #000;
+    color: #fff !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border: 1px solid #444;
+    white-space: nowrap;
+    min-height: 32px;
+}
+
+.btn-uber:hover {
+    background: #333;
+    transform: translateY(-1px);
+    color: #fff !important;
+}
+
+.btn-uber svg {
+    width: 14px;
+    height: 14px;
+    fill: #fff;
+    flex-shrink: 0;
+}
+
+/* Grid para footer com múltiplos botões */
+.card-footer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-ver-mapa {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 5px;
     background: transparent;
-    color: var(--gold);
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    color: var(--gold) !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
     border: 1px solid var(--gold);
     cursor: pointer;
     transition: all 0.3s ease;
-    font-weight: 500;
+    font-weight: 600;
+    white-space: nowrap;
+    min-height: 32px;
+    text-decoration: none !important;
 }
 
 .btn-ver-mapa:hover {
     background: var(--gold);
+    color: #000 !important;
+    transform: translateY(-1px);
+}
+
+.btn-ver-mapa svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+/* Botão Ver Mais - Paginação Mobile */
+.btn-ver-mais-celulas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 15px;
+    background: linear-gradient(135deg, var(--gold) 0%, #c9a227 100%);
     color: #000;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-ver-mais-celulas:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-ver-mais-celulas:active {
+    transform: translateY(0);
+}
+
+.btn-ver-mais-celulas svg {
+    fill: currentColor;
 }
 
 /* Empty State */
@@ -558,21 +800,61 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.popup-whatsapp {
+.popup-footer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.popup-btn {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    background: #25D366;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 0.8rem;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
     text-decoration: none;
     transition: all 0.3s;
+    font-weight: 500;
+}
+
+.popup-whatsapp {
+    background: #25D366;
+    color: #fff;
 }
 
 .popup-whatsapp:hover {
     background: #128C7E;
+}
+
+.popup-whatsapp2 {
+    background: #128C7E;
+    color: #fff;
+}
+
+.popup-whatsapp2:hover {
+    background: #075E54;
+}
+
+.popup-maps {
+    background: #4285F4;
+    color: #fff;
+}
+
+.popup-maps:hover {
+    background: #3367D6;
+}
+
+.popup-uber {
+    background: #000;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.popup-uber:hover {
+    background: #333;
 }
 
 /* Custom Marker */
@@ -627,14 +909,19 @@
 @media (max-width: 1024px) {
     .mapa-wrapper {
         grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
     }
     
+    /* No mobile: lista primeiro, mapa depois */
     #mapaCelulas {
         height: 450px;
+        order: 2;
     }
     
     .celulas-sidebar {
         max-height: 500px;
+        order: 1;
     }
 }
 
@@ -661,13 +948,17 @@
         min-width: auto;
     }
     
+    /* Mapa por último no mobile */
     #mapaCelulas {
         height: 350px;
+        order: 2;
+        width: 100%;
     }
     
     .celulas-sidebar {
-        max-height: 400px;
+        max-height: none;
         padding: 20px;
+        order: 1;
     }
     
     .legenda-grid {

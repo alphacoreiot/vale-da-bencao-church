@@ -4,7 +4,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="{{ asset('css/celulas.css') }}">
+<link rel="stylesheet" href="{{ asset('css/celulas.css') }}?v={{ time() }}">
 @endpush
 
 @section('content')
@@ -53,6 +53,14 @@
                 </select>
             </div>
             
+            <!-- Botão Minha Localização -->
+            <button id="btnLocalizacao" class="btn-localizacao">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 5px;">
+                    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0013 3.06V1h-2v2.06A8.994 8.994 0 003.06 11H1v2h2.06A8.994 8.994 0 0011 20.94V23h2v-2.06A8.994 8.994 0 0020.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                </svg>
+                <span id="btnLocalizacaoText">Usar minha localização</span>
+            </button>
+            
             <!-- Botão Limpar -->
             <button id="btnLimpar" class="btn-limpar">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 5px;">
@@ -88,57 +96,6 @@
         </div>
     </div>
 </section>
-
-<!-- Legenda Section -->
-<section class="legenda-section">
-    <div class="legenda-container">
-        <div class="legenda-title">Legenda por Geração</div>
-        <div class="legenda-grid">
-            @php
-                $coresGeracoes = [
-                    'Água Viva' => '#00BFFF',
-                    'Azul Celeste' => '#87CEEB',
-                    'B e D' => '#4169E1',
-                    'Bege' => '#D2B48C',
-                    'Branca' => '#FFFFFF',
-                    'Branca e Azul' => '#B0C4DE',
-                    'Cinza' => '#808080',
-                    'Coral' => '#FF7F50',
-                    'Dourada' => '#FFD700',
-                    'Gaditas' => '#228B22',
-                    'Israel' => '#0000CD',
-                    'Jeová Makadech' => '#9932CC',
-                    'Laranja' => '#FFA500',
-                    'Marrom' => '#8B4513',
-                    'Mostarda' => '#FFDB58',
-                    'Neon' => '#39FF14',
-                    'Ouro' => '#DAA520',
-                    'Pink' => '#FF69B4',
-                    'Prata' => '#C0C0C0',
-                    'Preta' => '#333333',
-                    'Preta e Branca' => '#555555',
-                    'Resgate' => '#DC143C',
-                    'Rosinha' => '#FFB6C1',
-                    'Roxa' => '#9370DB',
-                    'Verde Bandeira' => '#009739',
-                    'Verde e Vinho' => '#556B2F',
-                    'Verde Tifanes' => '#00CED1',
-                ];
-            @endphp
-            
-            @foreach($geracoes as $geracao)
-                @php
-                    $cor = $geracao->cor ?? ($coresGeracoes[$geracao->nome] ?? '#D4AF37');
-                    $isLight = in_array($geracao->nome, ['Branca', 'Bege', 'Neon', 'Prata', 'Rosinha', 'Mostarda']);
-                @endphp
-                <div class="legenda-item">
-                    <span class="legenda-cor" style="background: {{ $cor }}; {{ $isLight ? 'border: 2px solid #666;' : '' }}"></span>
-                    <span class="legenda-nome">{{ $geracao->nome }}</span>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
 @endsection
 
 @push('scripts')
@@ -148,5 +105,5 @@
     const celulasData = @json($celulasJson);
     const geracoesData = @json($geracoes);
 </script>
-<script src="{{ asset('js/celulas.js') }}"></script>
+<script src="{{ asset('js/celulas.js') }}?v={{ time() }}"></script>
 @endpush
