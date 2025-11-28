@@ -1,13 +1,13 @@
-<?php
+﻿<?php
 /**
  * Formulário de Recadastramento de Células
  * Aplicação isolada - Não faz parte do Laravel
  */
 
 // Configurações do banco de dados
-$host = '127.0.0.1';
-$dbname = 'u817008098_valedabencao';
-$username = 'u817008098_valedabencao';
+$host = 'localhost';
+$dbname = 'u817008098_igreja';
+$username = 'u817008098_igreja';
 $password = 'QL95yuee3k?';
 
 $message = '';
@@ -48,10 +48,6 @@ if (file_exists($geojsonPath)) {
         sort($bairros);
     }
 }
-// Adicionar bairros extras
-$bairros[] = 'DIAS DAVILA';
-$bairros = array_unique($bairros);
-sort($bairros);
 
 // Processar formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
