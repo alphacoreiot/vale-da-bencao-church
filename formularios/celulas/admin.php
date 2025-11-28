@@ -1281,14 +1281,25 @@ function showLoginForm($message, $messageType) {
             if (coresGeracoes[geracaoId]) {
                 const item = document.createElement('div');
                 item.className = 'legend-item';
-                const cor = coresGeracoes[geracaoId].cor;
-                // Cores escuras precisam de borda branca mais forte
-                const coresEscuras = ['#1a1a1a', '#000000', '#000', '#0a0a0a', '#111'];
-                const bordaStyle = coresEscuras.some(c => cor.toLowerCase() === c) 
-                    ? 'border: 2px solid #ffffff;' 
-                    : 'border: 2px solid rgba(255,255,255,0.5);';
+                const cor = coresGeracoes[geracaoId].cor.toLowerCase();
+                
+                // Detectar cores escuras (pretas, quase pretas)
+                const coresEscuras = ['#1a1a1a', '#000000', '#000', '#0a0a0a', '#111', '#2f4f4f', '#1a1a2e'];
+                const isEscura = coresEscuras.some(c => cor === c) || cor.match(/^#[0-3][0-3]/);
+                
+                // Detectar cores claras (brancas, quase brancas)
+                const coresClaras = ['#ffffff', '#fff', '#f5f5dc', '#fafafa', '#f0f0f0'];
+                const isClara = coresClaras.some(c => cor === c) || cor.match(/^#[ef][ef][ef]/i);
+                
+                let bordaStyle = 'border: 2px solid rgba(255,255,255,0.3);';
+                if (isEscura) {
+                    bordaStyle = 'border: 2px solid #ffffff;';
+                } else if (isClara) {
+                    bordaStyle = 'border: 2px solid #333333;';
+                }
+                
                 item.innerHTML = `
-                    <span class="color-dot" style="background: ${cor}; ${bordaStyle}"></span>
+                    <span class="color-dot" style="background: ${coresGeracoes[geracaoId].cor}; ${bordaStyle}"></span>
                     ${coresGeracoes[geracaoId].nome}
                 `;
                 legendContainer.appendChild(item);
