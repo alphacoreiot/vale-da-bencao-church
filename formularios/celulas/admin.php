@@ -1,6 +1,6 @@
 <?php
 /**
- * Administração de Recadastramento de Células
+ * Administração de Cadastramento de Células Vale da Bênção
  * Aplicação isolada - Não faz parte do Laravel
  */
 
@@ -330,7 +330,7 @@ function showLoginForm($message, $messageType) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Recadastramento de Células</title>
+    <title>Admin - Cadastramento de Células Vale da Bênção</title>
     <link rel="icon" type="image/png" href="/assets/perfil.png">
     <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -416,8 +416,9 @@ function showLoginForm($message, $messageType) {
 </head>
 <body>
     <div class="login-card">
+        <img src="/assets/logo.png" alt="Igreja Vale da Bênção" style="width: 150px; height: auto; margin-bottom: 20px;">
         <h1><i class="fas fa-lock"></i> Área Administrativa</h1>
-        <p>Recadastramento de Células</p>
+        <p>Cadastramento de Células Vale da Bênção</p>
         <?php if ($message): ?>
             <div class="message"><?= $message ?></div>
         <?php endif; ?>
@@ -436,7 +437,7 @@ function showLoginForm($message, $messageType) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Recadastramento de Células</title>
+    <title>Admin - Cadastramento de Células Vale da Bênção</title>
     <link rel="icon" type="image/png" href="/assets/perfil.png">
     <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1001,7 +1002,7 @@ function showLoginForm($message, $messageType) {
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-users-cog"></i> Recadastramento de Células</h1>
+            <h1><i class="fas fa-users-cog"></i> Cadastramento de Células</h1>
             <div class="header-actions">
                 <a href="index.php" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-external-link-alt"></i> Ver Formulário
@@ -1280,8 +1281,14 @@ function showLoginForm($message, $messageType) {
             if (coresGeracoes[geracaoId]) {
                 const item = document.createElement('div');
                 item.className = 'legend-item';
+                const cor = coresGeracoes[geracaoId].cor;
+                // Cores escuras precisam de borda branca mais forte
+                const coresEscuras = ['#1a1a1a', '#000000', '#000', '#0a0a0a', '#111'];
+                const bordaStyle = coresEscuras.some(c => cor.toLowerCase() === c) 
+                    ? 'border: 2px solid #ffffff;' 
+                    : 'border: 2px solid rgba(255,255,255,0.5);';
                 item.innerHTML = `
-                    <span class="color-dot" style="background: ${coresGeracoes[geracaoId].cor}"></span>
+                    <span class="color-dot" style="background: ${cor}; ${bordaStyle}"></span>
                     ${coresGeracoes[geracaoId].nome}
                 `;
                 legendContainer.appendChild(item);

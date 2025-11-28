@@ -1,6 +1,6 @@
 <?php
 /**
- * Formulário de Recadastramento de Células
+ * Formulário de Cadastramento de Células Vale da Bênção
  * Aplicação isolada - Não faz parte do Laravel
  */
 
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $longitude
             ]);
             
-            $message = "Recadastramento enviado com sucesso! Aguarde a aprovação.";
+            $message = "Cadastramento enviado com sucesso! Aguarde a aprovação.";
             $messageType = 'success';
             
             // Limpar campos após sucesso
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recadastramento de Células - Igreja Vale da Bênção</title>
+    <title>Cadastramento de Células - Igreja Vale da Bênção</title>
     <link rel="icon" type="image/png" href="/assets/perfil.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -439,7 +439,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <div class="header">
             <img src="/assets/perfil.png" alt="Igreja Vale da Bênção">
-            <h1>Recadastramento de Células</h1>
+            <h1>Cadastramento de Células Vale da Bênção</h1>
             <p>Preencha os dados da sua célula para atualização cadastral</p>
         </div>
 
@@ -586,7 +586,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <button type="submit" class="btn-submit">
                     <i class="fas fa-paper-plane"></i>
-                    Enviar Recadastramento
+                    Enviar Cadastramento
                 </button>
             </form>
         </div>
