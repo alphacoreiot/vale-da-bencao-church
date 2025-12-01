@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Conteúdo Principal -->
-<section class="section-content-area section-eventos-page" style="padding: 100px 0 60px 0; background: #000;">
+<section class="section-content-area {{ $section->slug === 'eventos' ? 'section-eventos-page' : '' }}" style="padding: 100px 0 60px 0; background: #000;">
     <div class="container">
         <!-- Título da Seção -->
         <div class="section-header" style="text-align: center; margin-bottom: 40px; padding: 0 20px;">
@@ -28,7 +28,7 @@
 
         @if($section->slug === 'eventos')
             <!-- Carrossel 3D Parallax de Eventos -->
-            <div class="carousel-3d-container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; perspective: 1200px;">
+            <div class="carousel-3d-container" style="max-width: 1200px; margin: -20px auto 0; padding: 0 20px; perspective: 1200px;">
                 <div class="carousel-3d-wrapper" id="carousel3DWrapper" style="
                     position: relative;
                     width: 100%;
@@ -373,31 +373,9 @@
             }
             
             @media (max-width: 768px) {
-                .section-eventos-page {
-                    padding: 20px 0 10px 0 !important;
-                    min-height: auto !important;
-                }
-                
-                .section-eventos-page .section-header {
-                    margin-bottom: 10px !important;
-                }
-                
-                .section-eventos-page .section-header > div:first-child {
-                    margin-bottom: 5px !important;
-                }
-                
-                .section-eventos-page .section-header lord-icon {
-                    width: 40px !important;
-                    height: 40px !important;
-                }
-                
-                .section-eventos-page .section-header h2 {
-                    font-size: 1.5rem !important;
-                }
-                
                 .carousel-3d-container {
                     padding: 0 5px !important;
-                    margin-top: 0 !important;
+                    margin-top: -125px !important;
                 }
                 
                 .carousel-3d-wrapper {
@@ -460,21 +438,13 @@
                 .modal-nav.next {
                     right: 5px;
                 }
+                
+                .carousel-hint {
+                    display: none !important;
+                }
             }
             
             @media (max-width: 480px) {
-                .section-eventos-page {
-                    padding: 15px 0 5px 0 !important;
-                }
-                
-                .section-eventos-page .section-header {
-                    margin-bottom: 8px !important;
-                }
-                
-                .section-eventos-page .section-header h2 {
-                    font-size: 1.3rem !important;
-                }
-                
                 .carousel-3d-wrapper {
                     height: 60vh;
                     min-height: 400px;

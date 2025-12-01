@@ -5,6 +5,13 @@
 @section('content')
 <!-- Hero Section com Background -->
 <section class="hero" id="home">
+    <style>
+        @media (max-width: 768px) {
+            .hero-logo {
+                width: 180px !important;
+            }
+        }
+    </style>
     <!-- YouTube Video Background -->
     <div class="video-background">
         <iframe 
@@ -17,9 +24,10 @@
     </div>
     
     <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <h1 class="hero-title-exo">Amamos o que Jesus ama:</h1>
-        <h2 class="hero-animated-text" id="animatedText">Humildade</h2>
+    <div class="hero-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+        <img src="{{ asset('assets/OffWhite-Simbol-8.png') }}" alt="Vale da Bênção" class="hero-logo" style="width: 300px; height: auto; margin-bottom: 0; filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5)); display: block; margin-left: auto; margin-right: auto;">
+        <h1 class="hero-title-exo" style="text-align: center; width: 100%;">Amamos o que Jesus ama:</h1>
+        <h2 class="hero-animated-text" id="animatedText" style="text-align: center; width: 100%;">Humildade</h2>
     </div>
     <div class="scroll-indicator">
         <span>Role para baixo</span>
