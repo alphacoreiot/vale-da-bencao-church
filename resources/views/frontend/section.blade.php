@@ -7,7 +7,7 @@
 <section class="section-content-area {{ $section->slug === 'eventos' ? 'section-eventos-page' : '' }}" style="padding: 100px 0 60px 0; background: #000;">
     <div class="container">
         <!-- Título da Seção -->
-        <div class="section-header" style="text-align: center; margin-bottom: 40px; padding: 0 20px;">
+        <div class="section-header" style="text-align: center; margin-bottom: 40px; padding: 0 20px; position: relative; z-index: 200;">
             <div style="margin-bottom: 15px;">
                 @switch($section->slug)
                     @case('eventos') <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="loop" delay="1500" colors="primary:#d4af37,secondary:#ffffff" style="width:80px;height:80px"></lord-icon> @break
