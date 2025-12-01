@@ -51,16 +51,22 @@
                 @empty
                     <!-- Fallback: Imagens padrão caso não haja mídias cadastradas -->
                     <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 0.jpeg') }}" alt="Vale News 1" class="banner-image">
+                        <img src="{{ asset('assets/001.jpeg') }}" alt="Vale News 1" class="banner-image">
                     </div>
                     <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 1.jpeg') }}" alt="Vale News 2" class="banner-image">
+                        <img src="{{ asset('assets/002.jpeg') }}" alt="Vale News 2" class="banner-image">
                     </div>
                     <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 2.jpeg') }}" alt="Vale News 3" class="banner-image">
+                        <img src="{{ asset('assets/003.jpeg') }}" alt="Vale News 3" class="banner-image">
                     </div>
                     <div class="banner-slide">
-                        <img src="{{ asset('assets/imagem 3.jpeg') }}" alt="Vale News 4" class="banner-image">
+                        <img src="{{ asset('assets/004.jpeg') }}" alt="Vale News 4" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/005.jpeg') }}" alt="Vale News 5" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/006.jpeg') }}" alt="Vale News 6" class="banner-image">
                     </div>
                 @endforelse
             </div>

@@ -36,12 +36,17 @@ class ContextBuilderService
             case 'institucional':
                 $context['institucional'] = $this->getInstitucionalContext($section);
                 break;
+            
+            case 'celulas':
+                $context['celulas'] = $this->getCelulasContext($classification['keywords']);
+                break;
                 
             case 'misto':
                 // Busca múltiplos contextos
                 $context['devocionais'] = $this->getDevocionalContext($classification['keywords']);
                 $context['eventos'] = $this->getEventContextPlaceholder();
                 $context['institucional'] = $this->getInstitucionalContext($section);
+                $context['celulas'] = $this->getCelulasContext($classification['keywords']);
                 break;
         }
 
@@ -75,10 +80,18 @@ class ContextBuilderService
             'telefone', 'email', 'localização', 'onde fica', 'como chegar'
         ];
 
+        $celulasKeywords = [
+            'célula', 'celula', 'células', 'celulas', 'grupo', 'grupos',
+            'pequeno grupo', 'rede', 'líder', 'lider', 'geração', 'geracao',
+            'bairro', 'perto de mim', 'próximo', 'participar', 'entrar',
+            'fazer parte', 'whatsapp', 'contato da célula', 'encontrar célula'
+        ];
+
         $scores = [
             'devocional' => 0,
             'evento' => 0,
             'institucional' => 0,
+            'celulas' => 0,
         ];
 
         $matchedKeywords = [];
@@ -100,6 +113,13 @@ class ContextBuilderService
         foreach ($institucionalKeywords as $keyword) {
             if (Str::contains($messageLower, $keyword)) {
                 $scores['institucional']++;
+            }
+        }
+
+        foreach ($celulasKeywords as $keyword) {
+            if (Str::contains($messageLower, $keyword)) {
+                $scores['celulas']++;
+                $matchedKeywords[] = $keyword;
             }
         }
 
@@ -137,7 +157,7 @@ class ContextBuilderService
             ->get();
 
         // If keywords provided, try to find relevant devocionais
-        $devocionaisRelevantes = [];
+        $devocionaisRelevantes = collect([]);
         if (!empty($keywords)) {
             $query = Devocional::where('ativo', true);
             
@@ -159,13 +179,13 @@ class ContextBuilderService
                 'texto_resumo' => Str::limit(strip_tags($devocionalHoje->texto), 300),
                 'data' => $devocionalHoje->data->format('d/m/Y'),
             ] : null,
-            'devocionais_recentes' => $devocionaisRecentes->map(function($d) {
+            'devocionais_recentes' => $devocionaisRecentes ? $devocionaisRecentes->map(function($d) {
                 return [
                     'titulo' => $d->titulo,
                     'descricao' => $d->descricao,
                     'data' => $d->data->format('d/m/Y'),
                 ];
-            })->toArray(),
+            })->toArray() : [],
             'devocionais_relevantes' => $devocionaisRelevantes->map(function($d) {
                 return [
                     'titulo' => $d->titulo,
@@ -189,6 +209,57 @@ class ContextBuilderService
             'proximo_evento' => null,
             'info' => 'Consulte nossos horários de culto: Domingo 18:30, Quarta 19:00, Quinta (Célula) 19:00',
         ];
+    }
+
+    /**
+     * Normalizar texto para busca (remove acentos, apóstrofos, etc.)
+     */
+    private function normalizeForSearch(string $text): string
+    {
+        // Converter para minúsculas
+        $text = Str::lower($text);
+        
+        // Remover apóstrofos e aspas
+        $text = str_replace(["'", "'", "`", "´", "d'"], ['', '', '', '', 'd'], $text);
+        
+        // Remover acentos
+        $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+        
+        // Remover caracteres especiais mantendo espaços e letras
+        $text = preg_replace('/[^a-z0-9\s]/', '', $text);
+        
+        // Remover espaços extras
+        $text = preg_replace('/\s+/', ' ', trim($text));
+        
+        return $text;
+    }
+
+    /**
+     * Get células context - simplified to just provide link.
+     */
+    private function getCelulasContext(array $keywords = []): array
+    {
+        try {
+            // Apenas estatísticas básicas
+            $totalCelulas = \App\Models\CelulaCadastro::aprovadas()->count();
+            $totalBairros = \App\Models\CelulaCadastro::aprovadas()
+                ->distinct()
+                ->count('bairro');
+            
+            return [
+                'total_celulas' => $totalCelulas,
+                'total_bairros' => $totalBairros,
+                'link_pagina' => 'https://valedabencao.com.br/celulas',
+                'dia_celula' => 'Quinta-feira às 19:00',
+            ];
+            
+        } catch (\Exception $e) {
+            \Log::error('Erro ao buscar células: ' . $e->getMessage());
+            return [
+                'total_celulas' => 0,
+                'link_pagina' => 'https://valedabencao.com.br/celulas',
+            ];
+        }
     }
 
     /**
@@ -316,12 +387,17 @@ class ContextBuilderService
             $basePrompt .= $this->buildEventPrompt($context['eventos']);
         }
 
+        if (isset($context['celulas'])) {
+            $basePrompt .= $this->buildCelulasPrompt($context['celulas']);
+        }
+
         $basePrompt .= "\n=== INSTRUÇÕES DE RESPOSTA ===\n";
         $basePrompt .= "- Para HORÁRIOS: Use os horários dos cultos listados acima\n";
         $basePrompt .= "- Para LIDERANÇA/PASTOR/APÓSTOLO: Mencione Apóstolo Ary Dallas e Naele Santana\n";
         $basePrompt .= "- Para ENDEREÇO/LOCALIZAÇÃO: Use o endereço completo acima\n";
         $basePrompt .= "- Para RESUMIR devocional: Resuma o texto fornecido em 3-4 parágrafos destacando mensagem principal\n";
         $basePrompt .= "- Para perguntas sobre EVENTOS: Liste os eventos com datas e horários exatos\n";
+        $basePrompt .= "- Para perguntas sobre CÉLULAS: Use as informações de células e sempre indique o link da página\n";
         $basePrompt .= "- NÃO adicione informações que não estão no contexto acima\n";
         $basePrompt .= "- Seja sempre acolhedor e convide a pessoa para conhecer a igreja\n";
 
@@ -404,6 +480,40 @@ class ContextBuilderService
         $prompt .= "- Seção: {$institucional['sobre_secao']}\n";
         $prompt .= "- Conteúdos publicados: {$institucional['conteudos_publicados']}\n";
         $prompt .= "- Status: " . ($institucional['secao_ativa'] ? 'Ativa' : 'Inativa') . "\n\n";
+
+        return $prompt;
+    }
+
+    /**
+     * Build células-specific prompt - simplified to just show link.
+     */
+    private function buildCelulasPrompt(array $celulas): string
+    {
+        $prompt = "=== INFORMAÇÕES SOBRE CÉLULAS ===\n\n";
+        
+        $prompt .= "🏠 SOMOS UMA IGREJA EM CÉLULAS!\n";
+        $prompt .= "Células são pequenos grupos que se reúnem semanalmente nas casas para comunhão, oração e estudo da Palavra.\n\n";
+        
+        $prompt .= "📊 ESTATÍSTICAS:\n";
+        $prompt .= "• Total de Células: " . ($celulas['total_celulas'] ?? 'várias') . "\n";
+        $prompt .= "• Bairros Atendidos: " . ($celulas['total_bairros'] ?? 'diversos') . "\n";
+        $prompt .= "• Dia de Célula: " . ($celulas['dia_celula'] ?? 'Quinta-feira às 19:00') . "\n\n";
+        
+        $link = $celulas['link_pagina'] ?? 'https://valedabencao.com.br/celulas';
+        
+        $prompt .= "🔗 PÁGINA INTERATIVA: {$link}\n\n";
+        
+        $prompt .= "=== INSTRUÇÕES PARA RESPOSTAS SOBRE CÉLULAS ===\n";
+        $prompt .= "1. SEMPRE direcione o usuário para a página: {$link}\n";
+        $prompt .= "2. Explique que na página há:\n";
+        $prompt .= "   - Mapa interativo com localização de todas as células\n";
+        $prompt .= "   - Filtros por bairro e geração\n";
+        $prompt .= "   - Botão 'Usar minha localização' para encontrar células próximas\n";
+        $prompt .= "   - Contato direto via WhatsApp com os líderes\n";
+        $prompt .= "   - Botão para traçar rota no Google Maps ou Uber\n";
+        $prompt .= "3. NUNCA liste células específicas ou invente dados\n";
+        $prompt .= "4. Informe que as células se reúnem às quintas-feiras às 19h\n";
+        $prompt .= "5. Convide a pessoa a visitar uma célula\n\n";
 
         return $prompt;
     }
