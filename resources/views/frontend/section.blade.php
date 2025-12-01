@@ -4,10 +4,10 @@
 
 @section('content')
 <!-- Conteúdo Principal -->
-<section class="section-content-area" style="padding: 120px 0 80px 0; background: #000;">
+<section class="section-content-area section-eventos-page" style="padding: 100px 0 60px 0; background: #000;">
     <div class="container">
         <!-- Título da Seção -->
-        <div class="section-header" style="text-align: center; margin-bottom: 60px; padding: 0 20px;">
+        <div class="section-header" style="text-align: center; margin-bottom: 40px; padding: 0 20px;">
             <div style="margin-bottom: 15px;">
                 @switch($section->slug)
                     @case('eventos') <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="loop" delay="1500" colors="primary:#d4af37,secondary:#ffffff" style="width:80px;height:80px"></lord-icon> @break
@@ -27,43 +27,506 @@
         </div>
 
         @if($section->slug === 'eventos')
-            <!-- Carrossel de Eventos -->
-            <div class="carousel-wrapper-full" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-                <div class="carousel-banners" id="carouselEventos">
-                    <div class="banner-slide">
-                        <img src="{{ asset('assets/001.jpeg') }}" alt="Evento 1" class="banner-image">
+            <!-- Carrossel 3D Parallax de Eventos -->
+            <div class="carousel-3d-container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; perspective: 1200px;">
+                <div class="carousel-3d-wrapper" id="carousel3DWrapper" style="
+                    position: relative;
+                    width: 100%;
+                    height: 600px;
+                    transform-style: preserve-3d;
+                ">
+                    <div class="carousel-3d-slide" data-index="0">
+                        <img src="{{ asset('assets/001.jpeg') }}" alt="Evento 1">
                     </div>
-                    <div class="banner-slide">
-                        <img src="{{ asset('assets/002.jpeg') }}" alt="Evento 2" class="banner-image">
+                    <div class="carousel-3d-slide" data-index="1">
+                        <img src="{{ asset('assets/002.jpeg') }}" alt="Evento 2">
                     </div>
-                    <div class="banner-slide">
-                        <img src="{{ asset('assets/003.jpeg') }}" alt="Evento 3" class="banner-image">
+                    <div class="carousel-3d-slide" data-index="2">
+                        <img src="{{ asset('assets/003.jpeg') }}" alt="Evento 3">
                     </div>
-                    <div class="banner-slide">
-                        <img src="{{ asset('assets/004.jpeg') }}" alt="Evento 4" class="banner-image">
+                    <div class="carousel-3d-slide" data-index="3">
+                        <img src="{{ asset('assets/004.jpeg') }}" alt="Evento 4">
                     </div>
-                    <div class="banner-slide">
-                        <img src="{{ asset('assets/005.jpeg') }}" alt="Evento 5" class="banner-image">
+                    <div class="carousel-3d-slide" data-index="4">
+                        <img src="{{ asset('assets/005.jpeg') }}" alt="Evento 5">
                     </div>
-                    <div class="banner-slide">
-                        <img src="{{ asset('assets/006.jpeg') }}" alt="Evento 6" class="banner-image">
+                    <div class="carousel-3d-slide" data-index="5">
+                        <img src="{{ asset('assets/006.jpeg') }}" alt="Evento 6">
                     </div>
                 </div>
-                <div class="carousel-dots" id="carouselEventosDots"></div>
-                <button class="carousel-control prev" id="eventoPrev">‹</button>
-                <button class="carousel-control next" id="eventoNext">›</button>
+                
+                <!-- Controles -->
+                <button class="carousel-3d-btn prev" id="prev3D">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-3d-btn next" id="next3D">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                
+                <!-- Dots -->
+                <div class="carousel-3d-dots" id="dots3D"></div>
+                
+                <!-- Dica de clique (esconde em telas pequenas) -->
+                <p class="carousel-hint" style="text-align: center; color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: 15px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 5px;">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Clique na imagem para ver em tela cheia
+                </p>
             </div>
 
-            <!-- Script do Carrossel de Eventos -->
+            <!-- Modal Fullscreen -->
+            <div id="fullscreenModal" class="fullscreen-modal">
+                <button class="modal-close" id="modalClose">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <button class="modal-nav prev" id="modalPrev">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="modal-nav next" id="modalNext">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <div class="modal-content">
+                    <img id="modalImage" src="" alt="Evento em tela cheia">
+                </div>
+                <div class="modal-counter" id="modalCounter">1 / 6</div>
+            </div>
+
+            <style>
+            .carousel-3d-container {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .carousel-3d-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .carousel-hint {
+                display: block;
+            }
+            
+            @media (max-width: 768px) {
+                .carousel-hint {
+                    display: none;
+                }
+            }
+            
+            .carousel-3d-slide {
+                position: absolute;
+                width: 50%;
+                max-width: 450px;
+                height: 100%;
+                border-radius: 16px;
+                overflow: hidden;
+                cursor: pointer;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                background: rgba(0, 0, 0, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                /* Transições separadas para evitar conflitos */
+                transition: transform 0.5s ease-out, opacity 0.5s ease-out, filter 0.5s ease-out;
+                will-change: transform, opacity;
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+            }
+            
+            .carousel-3d-slide img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            
+            .carousel-3d-slide.active {
+                z-index: 100 !important;
+                transform: translateX(0) scale(1);
+                opacity: 1;
+                filter: brightness(1);
+            }
+            
+            .carousel-3d-slide.active:hover {
+                transform: translateX(0) scale(1.02);
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            }
+            
+            .carousel-3d-slide.prev {
+                z-index: 50 !important;
+                transform: translateX(-70%) scale(0.75);
+                opacity: 0.7;
+                filter: brightness(0.5);
+            }
+            
+            .carousel-3d-slide.next {
+                z-index: 50 !important;
+                transform: translateX(70%) scale(0.75);
+                opacity: 0.7;
+                filter: brightness(0.5);
+            }
+            
+            .carousel-3d-slide.far-prev {
+                z-index: 25 !important;
+                transform: translateX(-120%) scale(0.55);
+                opacity: 0.4;
+                filter: brightness(0.3);
+            }
+            
+            .carousel-3d-slide.far-next {
+                z-index: 25 !important;
+                transform: translateX(120%) scale(0.55);
+                opacity: 0.4;
+                filter: brightness(0.3);
+            }
+            
+            .carousel-3d-slide.hidden {
+                z-index: 1 !important;
+                opacity: 0;
+                pointer-events: none;
+                transform: translateX(0) scale(0.4);
+            }
+            
+            .carousel-3d-btn {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: #fff;
+                cursor: pointer;
+                z-index: 200;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+            }
+            
+            .carousel-3d-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            }
+            
+            .carousel-3d-btn.prev {
+                left: 20px;
+            }
+            
+            .carousel-3d-btn.next {
+                right: 20px;
+            }
+            
+            .carousel-3d-dots {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 30px;
+            }
+            
+            .carousel-3d-dots .dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .carousel-3d-dots .dot:hover {
+                background: rgba(255, 255, 255, 0.5);
+            }
+            
+            .carousel-3d-dots .dot.active {
+                background: #fff;
+                transform: scale(1.2);
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            }
+            
+            /* Modal Fullscreen */
+            .fullscreen-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                z-index: 9999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .fullscreen-modal.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 1;
+            }
+            
+            .modal-content {
+                max-width: 95vw;
+                max-height: 90vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-content img {
+                max-width: 100%;
+                max-height: 90vh;
+                object-fit: contain;
+                border-radius: 8px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                animation: zoomIn 0.3s ease;
+            }
+            
+            @keyframes zoomIn {
+                from {
+                    transform: scale(0.8);
+                    opacity: 0;
+                }
+                to {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+            
+            .modal-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: #fff;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                z-index: 10001;
+            }
+            
+            .modal-close:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(1.1) rotate(90deg);
+            }
+            
+            .modal-nav {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: #fff;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                z-index: 10001;
+            }
+            
+            .modal-nav:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-50%) scale(1.1);
+            }
+            
+            .modal-nav.prev {
+                left: 20px;
+            }
+            
+            .modal-nav.next {
+                right: 20px;
+            }
+            
+            .modal-counter {
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 1rem;
+                background: rgba(0, 0, 0, 0.5);
+                padding: 8px 20px;
+                border-radius: 20px;
+            }
+            
+            @media (max-width: 768px) {
+                .section-eventos-page {
+                    padding: 20px 0 10px 0 !important;
+                    min-height: auto !important;
+                }
+                
+                .section-eventos-page .section-header {
+                    margin-bottom: 10px !important;
+                }
+                
+                .section-eventos-page .section-header > div:first-child {
+                    margin-bottom: 5px !important;
+                }
+                
+                .section-eventos-page .section-header lord-icon {
+                    width: 40px !important;
+                    height: 40px !important;
+                }
+                
+                .section-eventos-page .section-header h2 {
+                    font-size: 1.5rem !important;
+                }
+                
+                .carousel-3d-container {
+                    padding: 0 5px !important;
+                    margin-top: 0 !important;
+                }
+                
+                .carousel-3d-wrapper {
+                    height: 55vh;
+                    min-height: 350px;
+                }
+                
+                .carousel-3d-slide {
+                    width: 90%;
+                    max-width: none;
+                }
+                
+                .carousel-3d-slide.prev,
+                .carousel-3d-slide.next {
+                    transform: translateX(-60%) scale(0.65);
+                    opacity: 0.5;
+                }
+                
+                .carousel-3d-slide.next {
+                    transform: translateX(60%) scale(0.65);
+                }
+                
+                .carousel-3d-slide.far-prev,
+                .carousel-3d-slide.far-next {
+                    display: none;
+                }
+                
+                .carousel-3d-btn {
+                    width: 36px;
+                    height: 36px;
+                }
+                
+                .carousel-3d-btn.prev {
+                    left: 2px;
+                }
+                
+                .carousel-3d-btn.next {
+                    right: 2px;
+                }
+                
+                .carousel-3d-dots {
+                    margin-top: 15px;
+                    gap: 8px;
+                }
+                
+                .carousel-3d-dots .dot {
+                    width: 10px;
+                    height: 10px;
+                }
+                
+                .modal-nav {
+                    width: 40px;
+                    height: 40px;
+                }
+                
+                .modal-nav.prev {
+                    left: 5px;
+                }
+                
+                .modal-nav.next {
+                    right: 5px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .section-eventos-page {
+                    padding: 15px 0 5px 0 !important;
+                }
+                
+                .section-eventos-page .section-header {
+                    margin-bottom: 8px !important;
+                }
+                
+                .section-eventos-page .section-header h2 {
+                    font-size: 1.3rem !important;
+                }
+                
+                .carousel-3d-wrapper {
+                    height: 60vh;
+                    min-height: 400px;
+                }
+                
+                .carousel-3d-slide {
+                    width: 95%;
+                }
+                
+                .carousel-3d-slide.prev,
+                .carousel-3d-slide.next {
+                    opacity: 0.3;
+                    display: none;
+                }
+                
+                .carousel-3d-btn {
+                    width: 32px;
+                    height: 32px;
+                }
+                
+                .carousel-3d-dots {
+                    margin-top: 8px;
+                    gap: 6px;
+                }
+                
+                .carousel-3d-dots .dot {
+                    width: 8px;
+                    height: 8px;
+                }
+            }
+            </style>
+
             <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const carousel = document.getElementById('carouselEventos');
-                const slides = carousel.querySelectorAll('.banner-slide');
-                const dotsContainer = document.getElementById('carouselEventosDots');
-                const prevBtn = document.getElementById('eventoPrev');
-                const nextBtn = document.getElementById('eventoNext');
+                const wrapper = document.getElementById('carousel3DWrapper');
+                const slides = wrapper.querySelectorAll('.carousel-3d-slide');
+                const slidesArray = Array.from(slides);
+                const dotsContainer = document.getElementById('dots3D');
+                const prevBtn = document.getElementById('prev3D');
+                const nextBtn = document.getElementById('next3D');
+                const totalSlides = slides.length;
                 let currentIndex = 0;
                 let autoPlayInterval;
+                let isAnimating = false;
+
+                // Modal elements
+                const modal = document.getElementById('fullscreenModal');
+                const modalImage = document.getElementById('modalImage');
+                const modalClose = document.getElementById('modalClose');
+                const modalPrev = document.getElementById('modalPrev');
+                const modalNext = document.getElementById('modalNext');
+                const modalCounter = document.getElementById('modalCounter');
 
                 // Criar dots
                 slides.forEach((_, index) => {
@@ -76,27 +539,63 @@
 
                 const dots = dotsContainer.querySelectorAll('.dot');
 
+                function getRelativeIndex(index) {
+                    return ((index % totalSlides) + totalSlides) % totalSlides;
+                }
+
                 function updateCarousel() {
-                    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    // Primeiro, remover todas as classes e resetar
+                    slidesArray.forEach((slide) => {
+                        slide.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next', 'hidden');
+                        slide.style.zIndex = '1';
+                    });
+                    
+                    // Depois aplicar as novas classes com z-index explícito
+                    slidesArray.forEach((slide, index) => {
+                        const diff = index - currentIndex;
+                        const normalizedDiff = ((diff + totalSlides + Math.floor(totalSlides/2)) % totalSlides) - Math.floor(totalSlides/2);
+                        
+                        if (normalizedDiff === 0) {
+                            slide.classList.add('active');
+                            slide.style.zIndex = '100';
+                        } else if (normalizedDiff === -1 || (normalizedDiff === totalSlides - 1)) {
+                            slide.classList.add('prev');
+                            slide.style.zIndex = '50';
+                        } else if (normalizedDiff === 1 || (normalizedDiff === -(totalSlides - 1))) {
+                            slide.classList.add('next');
+                            slide.style.zIndex = '50';
+                        } else if (normalizedDiff === -2 || normalizedDiff === totalSlides - 2) {
+                            slide.classList.add('far-prev');
+                            slide.style.zIndex = '25';
+                        } else if (normalizedDiff === 2 || normalizedDiff === -(totalSlides - 2)) {
+                            slide.classList.add('far-next');
+                            slide.style.zIndex = '25';
+                        } else {
+                            slide.classList.add('hidden');
+                            slide.style.zIndex = '1';
+                        }
+                    });
+
                     dots.forEach((dot, index) => {
                         dot.classList.toggle('active', index === currentIndex);
                     });
                 }
 
                 function goToSlide(index) {
-                    currentIndex = index;
+                    if (isAnimating) return;
+                    isAnimating = true;
+                    currentIndex = getRelativeIndex(index);
                     updateCarousel();
                     resetAutoPlay();
+                    setTimeout(() => isAnimating = false, 550);
                 }
 
                 function nextSlide() {
-                    currentIndex = (currentIndex + 1) % slides.length;
-                    updateCarousel();
+                    goToSlide(currentIndex + 1);
                 }
 
                 function prevSlide() {
-                    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-                    updateCarousel();
+                    goToSlide(currentIndex - 1);
                 }
 
                 function resetAutoPlay() {
@@ -104,36 +603,105 @@
                     autoPlayInterval = setInterval(nextSlide, 5000);
                 }
 
-                prevBtn.addEventListener('click', () => {
-                    prevSlide();
+                // Modal functions
+                function openModal(index) {
+                    currentIndex = index;
+                    const img = slides[index].querySelector('img');
+                    modalImage.src = img.src;
+                    modalCounter.textContent = `${index + 1} / ${totalSlides}`;
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    clearInterval(autoPlayInterval);
+                }
+
+                function closeModal() {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
                     resetAutoPlay();
+                }
+
+                function modalNextSlide() {
+                    currentIndex = getRelativeIndex(currentIndex + 1);
+                    const img = slides[currentIndex].querySelector('img');
+                    modalImage.style.opacity = '0';
+                    setTimeout(() => {
+                        modalImage.src = img.src;
+                        modalImage.style.opacity = '1';
+                        modalCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+                        updateCarousel();
+                    }, 150);
+                }
+
+                function modalPrevSlide() {
+                    currentIndex = getRelativeIndex(currentIndex - 1);
+                    const img = slides[currentIndex].querySelector('img');
+                    modalImage.style.opacity = '0';
+                    setTimeout(() => {
+                        modalImage.src = img.src;
+                        modalImage.style.opacity = '1';
+                        modalCounter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+                        updateCarousel();
+                    }, 150);
+                }
+
+                prevBtn.addEventListener('click', prevSlide);
+                nextBtn.addEventListener('click', nextSlide);
+                modalClose.addEventListener('click', closeModal);
+                modalPrev.addEventListener('click', modalPrevSlide);
+                modalNext.addEventListener('click', modalNextSlide);
+
+                // Click no slide ativo abre modal
+                slides.forEach((slide, index) => {
+                    slide.addEventListener('click', () => {
+                        if (slide.classList.contains('active')) {
+                            openModal(index);
+                        } else {
+                            goToSlide(index);
+                        }
+                    });
                 });
 
-                nextBtn.addEventListener('click', () => {
-                    nextSlide();
-                    resetAutoPlay();
+                // Fechar modal com ESC ou clique fora
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
                 });
 
-                // Touch/Swipe support
-                let touchStartX = 0;
-                let touchEndX = 0;
-
-                carousel.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
-                });
-
-                carousel.addEventListener('touchend', (e) => {
-                    touchEndX = e.changedTouches[0].screenX;
-                    if (touchStartX - touchEndX > 50) {
-                        nextSlide();
-                        resetAutoPlay();
-                    } else if (touchEndX - touchStartX > 50) {
-                        prevSlide();
-                        resetAutoPlay();
+                document.addEventListener('keydown', (e) => {
+                    if (modal.classList.contains('active')) {
+                        if (e.key === 'Escape') closeModal();
+                        if (e.key === 'ArrowLeft') modalPrevSlide();
+                        if (e.key === 'ArrowRight') modalNextSlide();
+                    } else {
+                        if (e.key === 'ArrowLeft') prevSlide();
+                        if (e.key === 'ArrowRight') nextSlide();
                     }
                 });
 
-                // Iniciar autoplay
+                // Touch/Swipe no carrossel
+                let touchStartX = 0;
+                wrapper.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                wrapper.addEventListener('touchend', (e) => {
+                    const touchEndX = e.changedTouches[0].screenX;
+                    if (touchStartX - touchEndX > 50) nextSlide();
+                    else if (touchEndX - touchStartX > 50) prevSlide();
+                }, { passive: true });
+
+                // Touch/Swipe no modal
+                modal.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                modal.addEventListener('touchend', (e) => {
+                    const touchEndX = e.changedTouches[0].screenX;
+                    if (touchStartX - touchEndX > 50) modalNextSlide();
+                    else if (touchEndX - touchStartX > 50) modalPrevSlide();
+                }, { passive: true });
+
+                // Inicializar
+                updateCarousel();
                 autoPlayInterval = setInterval(nextSlide, 5000);
             });
             </script>
