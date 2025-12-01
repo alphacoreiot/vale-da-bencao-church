@@ -141,6 +141,10 @@ body {
     pointer-events: none;
     transform: translate(-50%, -50%);
     z-index: 0;
+    background-image: url('../assets/capa.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .video-background iframe {

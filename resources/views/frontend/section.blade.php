@@ -27,157 +27,256 @@
         </div>
 
         @if($section->slug === 'eventos')
-            <!-- Imagem dos Eventos do Mês -->
-            <div class="eventos-section" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-                <div style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);">
-                    <img src="{{ asset('assets/imagem 0.jpeg') }}" 
-                         alt="Eventos do Mês" 
-                         style="width: 100%; height: auto; display: block;">
-                    
-                    <!-- Overlay com destaque -->
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+            <!-- Carrossel de Eventos -->
+            <div class="carousel-wrapper-full" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+                <div class="carousel-banners" id="carouselEventos">
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/001.jpeg') }}" alt="Evento 1" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/002.jpeg') }}" alt="Evento 2" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/003.jpeg') }}" alt="Evento 3" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/004.jpeg') }}" alt="Evento 4" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/005.jpeg') }}" alt="Evento 5" class="banner-image">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="{{ asset('assets/006.jpeg') }}" alt="Evento 6" class="banner-image">
+                    </div>
                 </div>
+                <div class="carousel-dots" id="carouselEventosDots"></div>
+                <button class="carousel-control prev" id="eventoPrev">‹</button>
+                <button class="carousel-control next" id="eventoNext">›</button>
             </div>
+
+            <!-- Script do Carrossel de Eventos -->
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const carousel = document.getElementById('carouselEventos');
+                const slides = carousel.querySelectorAll('.banner-slide');
+                const dotsContainer = document.getElementById('carouselEventosDots');
+                const prevBtn = document.getElementById('eventoPrev');
+                const nextBtn = document.getElementById('eventoNext');
+                let currentIndex = 0;
+                let autoPlayInterval;
+
+                // Criar dots
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    if (index === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(index));
+                    dotsContainer.appendChild(dot);
+                });
+
+                const dots = dotsContainer.querySelectorAll('.dot');
+
+                function updateCarousel() {
+                    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentIndex);
+                    });
+                }
+
+                function goToSlide(index) {
+                    currentIndex = index;
+                    updateCarousel();
+                    resetAutoPlay();
+                }
+
+                function nextSlide() {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    updateCarousel();
+                }
+
+                function prevSlide() {
+                    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                    updateCarousel();
+                }
+
+                function resetAutoPlay() {
+                    clearInterval(autoPlayInterval);
+                    autoPlayInterval = setInterval(nextSlide, 5000);
+                }
+
+                prevBtn.addEventListener('click', () => {
+                    prevSlide();
+                    resetAutoPlay();
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    nextSlide();
+                    resetAutoPlay();
+                });
+
+                // Touch/Swipe support
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                carousel.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+
+                carousel.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    if (touchStartX - touchEndX > 50) {
+                        nextSlide();
+                        resetAutoPlay();
+                    } else if (touchEndX - touchStartX > 50) {
+                        prevSlide();
+                        resetAutoPlay();
+                    }
+                });
+
+                // Iniciar autoplay
+                autoPlayInterval = setInterval(nextSlide, 5000);
+            });
+            </script>
         @elseif($section->slug === 'ministerios')
             <!-- Grid de Ministérios -->
             <div class="ministerios-grid" style="max-width: 1200px; margin: 0 auto 60px auto; padding: 0 20px;">
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
                     <!-- Professores -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">📚</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Professores</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Ensinando a Palavra</p>
                     </div>
 
                     <!-- Intercessão -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🙏</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Intercessão</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Orando pela Igreja</p>
                     </div>
 
                     <!-- Obreiros -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">✝️</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M6 7h12" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Obreiros</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Servindo com Dedicação</p>
                     </div>
 
                     <!-- Consolidação -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🤝</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Consolidação</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Cuidando das Almas</p>
                     </div>
 
                     <!-- Sonorização -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🔊</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Sonorização</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Excelência no Som</p>
                     </div>
 
                     <!-- Staff Apóstolo -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">👔</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Staff Apóstolo</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Apoio à Liderança</p>
                     </div>
 
                     <!-- Produção -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🎬</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Produção</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Teatro, Música e Eventos</p>
                     </div>
 
                     <!-- Introdução -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🚪</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Introdução</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Recepcionando com Amor</p>
                     </div>
 
                     <!-- Mídia -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">📱</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Mídia</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Comunicação Digital</p>
                     </div>
 
                     <!-- Multimídia -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🎥</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Multimídia</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Transmissão ao Vivo</p>
                     </div>
 
                     <!-- Libras -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">👐</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1.575 1.575 0 1 0-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 0 1 3.15 0v1.5m-3.15 0 .075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 0 1 3.15 0V15M6.9 7.575a1.575 1.575 0 1 0-3.15 0v8.175a6.75 6.75 0 0 0 6.75 6.75h2.018a5.25 5.25 0 0 0 3.712-1.538l1.732-1.732a5.25 5.25 0 0 0 1.538-3.712l.003-2.024a.668.668 0 0 1 .198-.471 1.575 1.575 0 1 0-2.228-2.228 3.818 3.818 0 0 0-1.12 2.687M6.9 7.575V12m6.27 4.318A4.49 4.49 0 0 1 16.35 15m.002 0h-.002" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Libras</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Inclusão e Acessibilidade</p>
                     </div>
 
                     <!-- Músicos -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🎸</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19c-2.5 0-4-1.5-4-3s1.5-2 4-2v-11l10-2v11c0 1.5-1.5 3-4 3s-4-1.5-4-3 1.5-2 4-2V5l-6 1.2V16c0 1.5-1.5 3-4 3z"/></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Músicos</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Adoração e Louvor</p>
                     </div>
 
                     <!-- Hadash -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">💃</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;"><circle cx="16" cy="4" r="2"/><path d="M3 9l4-1 5 1"/><path d="M12 9l4-3"/><path d="M14 13l-3 8"/><path d="M16 6l-2 7 5 8"/><path d="M7 8l-2 4"/><path d="M5 12l6 1"/></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Hadash</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Ministério de Dança</p>
                     </div>
 
                     <!-- Limpeza -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🧹</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M18 9.75 17.625 12m0 0L15.75 14.25M17.625 12l1.875 2.25M17.625 12 19.5 9.75" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Limpeza</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Mantendo a Casa de Deus</p>
                     </div>
 
                     <!-- Casais -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">💑</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Casais</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Fortalecendo Matrimônios</p>
                     </div>
 
                     <!-- Batismo -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">💧</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Batismo</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Celebrando a Nova Vida</p>
                     </div>
 
                     <!-- Mulheres -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">👩</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;"><circle cx="12" cy="9" r="5"/><path d="M12 14v7"/><path d="M9 18h6"/></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Mulheres</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Empoderadas em Cristo</p>
                     </div>
 
                     <!-- Homens -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">👨</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;"><circle cx="10" cy="14" r="5"/><path d="M14 10l6-6"/><path d="M16 4h4v4"/></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Homens</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Guerreiros de Fé</p>
                     </div>
 
                     <!-- Teatro -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🎭</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;"><path d="M2 4c0 0 2-2 5-2s5 2 5 2v7c0 2.5-2 5-5 5s-5-2.5-5-5V4z"/><circle cx="5" cy="8" r="0.5" fill="#D4AF37"/><circle cx="9" cy="8" r="0.5" fill="#D4AF37"/><path d="M5 11c0 0 1 1.5 2 1.5s2-1.5 2-1.5"/><path d="M12 6c0 0 2-2 5-2s5 2 5 2v7c0 2.5-2 5-5 5s-5-2.5-5-5V6z"/><circle cx="15" cy="10" r="0.5" fill="#D4AF37"/><circle cx="19" cy="10" r="0.5" fill="#D4AF37"/><path d="M15 14c0 0 1-1.5 2-1.5s2 1.5 2 1.5"/></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Teatro</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Arte que Transforma</p>
                     </div>
 
                     <!-- Jump -->
                     <div class="ministerio-card" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.05) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='#D4AF37'; this.style.boxShadow='0 8px 25px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.boxShadow='none';">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🧑‍🤝‍🧑</div>
+                        <div style="margin-bottom: 15px; display: flex; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#D4AF37" style="width:48px;height:48px;"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" /></svg></div>
                         <h3 style="color: #D4AF37; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px;">Jump</h3>
                         <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Ministério de Adolescentes</p>
                     </div>
