@@ -73,16 +73,6 @@
                             style="width:20px;height:20px">
                         </lord-icon>
                         contato@valedabencao.com.br
-                    </span><br>
-                    <span style="display: inline-flex; align-items: center; gap: 5px;">
-                        <lord-icon
-                            src="https://cdn.lordicon.com/rsvfayfn.json"
-                            trigger="loop"
-                            delay="3000"
-                            colors="primary:#D4AF37"
-                            style="width:20px;height:20px">
-                        </lord-icon>
-                        (71) 98765-4321
                     </span>
                 </p>
                 <a href="https://www.google.com/maps/dir/?api=1&destination=-12.6957261,-38.2934209" 
