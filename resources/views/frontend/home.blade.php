@@ -401,21 +401,24 @@
                 </div>
             @empty
                 <div class="vale-news-3d-slide" data-index="0">
-                    <img src="{{ asset('assets/001.jpeg') }}" alt="Vale News 1">
+                    <img src="{{ asset('assets/000.jpeg') }}" alt="Vale News Destaque">
                 </div>
                 <div class="vale-news-3d-slide" data-index="1">
-                    <img src="{{ asset('assets/002.jpeg') }}" alt="Vale News 2">
+                    <img src="{{ asset('assets/001.jpeg') }}" alt="Vale News 1">
                 </div>
                 <div class="vale-news-3d-slide" data-index="2">
-                    <img src="{{ asset('assets/003.jpeg') }}" alt="Vale News 3">
+                    <img src="{{ asset('assets/002.jpeg') }}" alt="Vale News 2">
                 </div>
                 <div class="vale-news-3d-slide" data-index="3">
-                    <img src="{{ asset('assets/004.jpeg') }}" alt="Vale News 4">
+                    <img src="{{ asset('assets/003.jpeg') }}" alt="Vale News 3">
                 </div>
                 <div class="vale-news-3d-slide" data-index="4">
-                    <img src="{{ asset('assets/005.jpeg') }}" alt="Vale News 5">
+                    <img src="{{ asset('assets/004.jpeg') }}" alt="Vale News 4">
                 </div>
                 <div class="vale-news-3d-slide" data-index="5">
+                    <img src="{{ asset('assets/005.jpeg') }}" alt="Vale News 5">
+                </div>
+                <div class="vale-news-3d-slide" data-index="6">
                     <img src="{{ asset('assets/006.jpeg') }}" alt="Vale News 6">
                 </div>
             @endforelse

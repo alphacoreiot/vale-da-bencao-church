@@ -36,21 +36,24 @@
                     transform-style: preserve-3d;
                 ">
                     <div class="carousel-3d-slide" data-index="0">
-                        <img src="{{ asset('assets/001.jpeg') }}" alt="Evento 1">
+                        <img src="{{ asset('assets/000.jpeg') }}" alt="Evento Destaque">
                     </div>
                     <div class="carousel-3d-slide" data-index="1">
-                        <img src="{{ asset('assets/002.jpeg') }}" alt="Evento 2">
+                        <img src="{{ asset('assets/001.jpeg') }}" alt="Evento 1">
                     </div>
                     <div class="carousel-3d-slide" data-index="2">
-                        <img src="{{ asset('assets/003.jpeg') }}" alt="Evento 3">
+                        <img src="{{ asset('assets/002.jpeg') }}" alt="Evento 2">
                     </div>
                     <div class="carousel-3d-slide" data-index="3">
-                        <img src="{{ asset('assets/004.jpeg') }}" alt="Evento 4">
+                        <img src="{{ asset('assets/003.jpeg') }}" alt="Evento 3">
                     </div>
                     <div class="carousel-3d-slide" data-index="4">
-                        <img src="{{ asset('assets/005.jpeg') }}" alt="Evento 5">
+                        <img src="{{ asset('assets/004.jpeg') }}" alt="Evento 4">
                     </div>
                     <div class="carousel-3d-slide" data-index="5">
+                        <img src="{{ asset('assets/005.jpeg') }}" alt="Evento 5">
+                    </div>
+                    <div class="carousel-3d-slide" data-index="6">
                         <img src="{{ asset('assets/006.jpeg') }}" alt="Evento 6">
                     </div>
                 </div>
