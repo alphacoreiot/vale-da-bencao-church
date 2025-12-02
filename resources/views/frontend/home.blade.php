@@ -861,7 +861,7 @@
                     <lord-icon
                         src="https://cdn.lordicon.com/ofwpzftr.json"
                         trigger="hover"
-                        colors="primary:#000000,secondary:#D4AF37"
+                        colors="primary:#D4AF37,secondary:#D4AF37"
                         style="width:30px;height:30px">
                     </lord-icon>
                     Traçar Rota no Google Maps
@@ -872,7 +872,7 @@
                     <lord-icon
                         src="https://cdn.lordicon.com/osuxyevn.json"
                         trigger="hover"
-                        colors="primary:#000000,secondary:#D4AF37"
+                        colors="primary:#D4AF37,secondary:#D4AF37"
                         style="width:30px;height:30px">
                     </lord-icon>
                     Encontrar Célula Próxima

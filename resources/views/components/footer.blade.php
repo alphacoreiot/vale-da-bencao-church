@@ -81,7 +81,7 @@
                     <lord-icon
                         src="https://cdn.lordicon.com/ofwpzftr.json"
                         trigger="hover"
-                        colors="primary:#000000"
+                        colors="primary:#D4AF37"
                         style="width:20px;height:20px">
                     </lord-icon>
                     Como Chegar
