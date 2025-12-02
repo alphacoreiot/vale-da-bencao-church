@@ -833,7 +833,7 @@
                     </div>
                     <div class="info-text">
                         <h4>Endereço</h4>
-                        <p>Rua Dos Buritis, 07<br>Camaçari/BA</p>
+                        <p>Rua do Cajueiro - Parque das Palmeiras<br>Camaçari, BA</p>
                     </div>
                 </div>
                 

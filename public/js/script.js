@@ -365,7 +365,7 @@ const churchInfo = {
         celula: 'Célula às quintas-feiras das 19:00 às 21:00'
     },
     lideranca: 'Apóstolo Ary Dallas e Naele Santana',
-    endereco: 'Rua Dos Buritis, 07 - Parque Das Palmeiras, Camaçari/BA',
+    endereco: 'Rua do Cajueiro - Parque das Palmeiras, Camaçari, BA',
     mensagem: 'Seja cordial ao convite. Focamos no que Jesus ama: Você!'
 };
 

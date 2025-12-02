@@ -61,9 +61,9 @@
                             colors="primary:#D4AF37"
                             style="width:20px;height:20px">
                         </lord-icon>
-                        Rua Dos Buritis, 07
+                        Rua do Cajueiro - Parque das Palmeiras
                     </span><br>
-                    Camaçari/BA<br><br>
+                    Camaçari, BA<br><br>
                     <span style="display: inline-flex; align-items: center; gap: 5px;">
                         <lord-icon
                             src="https://cdn.lordicon.com/diihvcfp.json"

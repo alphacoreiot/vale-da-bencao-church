@@ -357,7 +357,7 @@ class ContextBuilderService
         $basePrompt .= "=== INFORMAÇÕES INSTITUCIONAIS DA IGREJA ===\n\n";
         $basePrompt .= "🏛️ NOME: Igreja Vale da Bênção Church\n";
         $basePrompt .= "✝️ LIDERANÇA: Apóstolo Ary Dallas e Naele Santana\n";
-        $basePrompt .= "📍 ENDEREÇO: Rua Dos Buritis, 07 - Parque Das Palmeiras, Camaçari/BA\n";
+        $basePrompt .= "📍 ENDEREÇO: Rua do Cajueiro - Parque das Palmeiras, Camaçari, BA\n";
         $basePrompt .= "📺 CANAL YOUTUBE: @valedabencaochurch\n\n";
         
         $basePrompt .= "📅 HORÁRIOS DOS CULTOS:\n";
