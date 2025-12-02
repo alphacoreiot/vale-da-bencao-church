@@ -20,7 +20,7 @@
                     @default 📄
                 @endswitch
             </div>
-            <h1 class="section-main-title" style="font-size: clamp(1.8rem, 4vw, 2.5rem); color: #fff; font-weight: 700; margin-bottom: 15px; line-height: 1.2;">{{ $section->name }}</h1>
+            <h1 class="section-main-title" style="font-size: clamp(1.8rem, 4vw, 2.5rem); color: #fff; font-weight: 700; margin-bottom: 15px; line-height: 1.2;">{{ $section->slug === 'contato' ? 'Contatos' : $section->name }}</h1>
             @if($section->description)
                 <p class="section-description" style="color: rgba(255,255,255,0.7); font-size: clamp(1rem, 2vw, 1.1rem); max-width: 700px; margin: 0 auto;">{{ $section->description }}</p>
             @endif

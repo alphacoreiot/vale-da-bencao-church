@@ -618,20 +618,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Carregar GeoJSON
-    fetch('/geojson/Camacari.geojson')
+    fetch('/geojson/Camacari.geojson?v=' + Date.now())
         .then(response => response.json())
         .then(data => {
+            console.log('GeoJSON carregado - Total de bairros:', data.features.length);
             geojsonLayer = L.geoJSON(data, {
                 style: function(feature) {
-                    const bairroGeo = feature.properties.nm_bairro;
-                    const temCelulas = contarCelulasPorBairroGeo(bairroGeo) > 0;
-                    
+                    // Todos os bairros com o mesmo estilo dourado forte
                     return {
-                        fillColor: temCelulas ? '#D4AF37' : '#333',
+                        fillColor: '#D4AF37',
                         weight: 1,
-                        opacity: 0.8,
-                        color: temCelulas ? '#D4AF37' : '#555',
-                        fillOpacity: temCelulas ? 0.4 : 0.1
+                        opacity: 1,
+                        color: '#D4AF37',
+                        fillOpacity: 0.6
                     };
                 },
                 onEachFeature: function(feature, layer) {
@@ -696,6 +695,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             }).addTo(map);
+            
+            // Ajustar mapa para mostrar todo o território de Camaçari
+            map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
         })
         .catch(err => console.error('Erro ao carregar GeoJSON:', err));
     

@@ -125,6 +125,8 @@ let currentWordIndex = 0;
 const animatedTextElement = document.getElementById('animatedText');
 
 function animateWords() {
+    if (!animatedTextElement) return; // Verificar se o elemento existe
+    
     if (currentWordIndex < words.length - 1) {
         // Fade out
         animatedTextElement.style.animation = 'none';
@@ -153,7 +155,7 @@ function animateWords() {
 
 // Iniciar animação após 1 segundo
 setTimeout(() => {
-    animateWords();
+    if (animatedTextElement) animateWords();
 }, 1500);
 
 // Menu Toggle

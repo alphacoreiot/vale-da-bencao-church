@@ -90,7 +90,7 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} Igreja Vale da Benção. Todos os direitos reservados.</p>
+            <p>&copy; {{ date('Y') }} Igreja Vale da Benção Church. Todos os direitos reservados.</p>
             <p class="footer-credits">
                 Desenvolvido com 
                 <lord-icon
