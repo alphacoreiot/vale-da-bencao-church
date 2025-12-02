@@ -1,2 +1,15 @@
+# Robots.txt - Igreja Vale da Bênção Church
+# https://valedabencao.com.br
+
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /_debugbar/
+
+# Sitemap
+Sitemap: https://valedabencao.com.br/sitemap.xml
+
+# Crawl-delay (opcional - evita sobrecarga)
+Crawl-delay: 1

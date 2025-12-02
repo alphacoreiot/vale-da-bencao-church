@@ -919,7 +919,7 @@
                     </a>
                     
                     <!-- Localização Button -->
-                    <a href="https://www.google.com/maps/search/?api=1&query=Rua+Dos+Buritis+07+Parque+Das+Palmeiras+Camaçari+BA" target="_blank" class="social-button" style="display: flex; align-items: center; gap: 15px; padding: 20px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 12px; text-decoration: none; transition: all 0.3s ease; cursor: pointer; backdrop-filter: blur(10px); min-height: 80px;" onmouseover="this.style.background='linear-gradient(135deg, #D4AF37 0%, #B8941F 100%)'; this.style.borderColor='#D4AF37'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 20px rgba(212, 175, 55, 0.4)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=-12.6957261,-38.2934209" target="_blank" class="social-button" style="display: flex; align-items: center; gap: 15px; padding: 20px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 12px; text-decoration: none; transition: all 0.3s ease; cursor: pointer; backdrop-filter: blur(10px); min-height: 80px;" onmouseover="this.style.background='linear-gradient(135deg, #D4AF37 0%, #B8941F 100%)'; this.style.borderColor='#D4AF37'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 20px rgba(212, 175, 55, 0.4)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <div style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;" viewBox="0 0 24 24" fill="#fff">
                                 <path d="M12 0c-4.198 0-8 3.403-8 7.602 0 4.198 3.469 9.21 8 16.398 4.531-7.188 8-12.2 8-16.398 0-4.199-3.801-7.602-8-7.602zm0 11c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z"/>
@@ -928,6 +928,17 @@
                         <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
                             <span style="color: #fff; font-weight: 700; font-size: 1rem; line-height: 1.2;">Localização</span>
                             <span style="color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; font-weight: 400;">Camaçari, BA</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Uber Button -->
+                    <a href="https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[formatted_address]=Igreja%20Vale%20da%20Ben%C3%A7%C3%A3o%2C%20Cama%C3%A7ari%2C%20BA&dropoff[latitude]=-12.6957261&dropoff[longitude]=-38.2934209" target="_blank" class="social-button" style="display: flex; align-items: center; gap: 15px; padding: 20px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 12px; text-decoration: none; transition: all 0.3s ease; cursor: pointer; backdrop-filter: blur(10px); min-height: 80px;" onmouseover="this.style.background='linear-gradient(135deg, #D4AF37 0%, #B8941F 100%)'; this.style.borderColor='#D4AF37'; this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 20px rgba(212, 175, 55, 0.4)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(212, 175, 55, 0.3)'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="Uber" style="width: 100%; height: auto; filter: brightness(0) invert(1);">
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+                            <span style="color: #fff; font-weight: 700; font-size: 1rem; line-height: 1.2;">Uber</span>
+                            <span style="color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; font-weight: 400;">Pedir corrida até a igreja</span>
                         </div>
                     </a>
                 </div>

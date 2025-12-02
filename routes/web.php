@@ -6,12 +6,21 @@ use App\Http\Controllers\Frontend\SectionController;
 use App\Http\Controllers\Frontend\CelulasController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\PushNotificationController;
+use App\Http\Controllers\SitemapController;
+
+// Sitemap para SEO
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/celulas', [CelulasController::class, 'index'])->name('celulas');
 Route::get('/geojson/Camacari.geojson', [CelulasController::class, 'geojson'])->name('celulas.geojson');
 Route::get('/secao/{slug}', [SectionController::class, 'show'])->name('section.show');
+
+// Página de Doações (rota direta)
+Route::get('/doacoes', function () {
+    return view('frontend.doacoes');
+})->name('doacoes');
 Route::get('/secao/{sectionSlug}/conteudo/{contentId}', [SectionController::class, 'content'])->name('section.content');
 
 // Push Notifications API
