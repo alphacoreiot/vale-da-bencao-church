@@ -42,6 +42,7 @@
             padding: 80px 0;
             background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
             overflow: hidden;
+            margin-top: 120px;
         }
         
         .vale-news-3d-container {

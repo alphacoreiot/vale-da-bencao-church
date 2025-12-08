@@ -134,21 +134,44 @@ body {
 /* Hero Section */
 .hero {
     position: relative;
+    min-height: 600px;
     height: 95vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    z-index: 1;
+}
+
+/* Ajuste para FullHD (1920x1080) */
+@media (min-width: 1920px) {
+    .hero-logo {
+        width: 250px !important;
+    }
+    .hero-title-exo {
+        font-size: 24px !important;
+        margin-bottom: 15px !important;
+    }
+    .hero-animated-text {
+        font-size: 40px !important;
+        margin-top: 20px !important;
+    }
+    .scroll-indicator {
+        bottom: 20px !important;
+    }
+    .carousel-section {
+        padding: 100px 40px !important;
+        margin-top: 60px !important;
+    }
 }
 
 .video-background {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    transform: translate(-50%, -50%);
     z-index: 0;
     background-image: url('../assets/capa.png');
     background-size: cover;
@@ -157,13 +180,13 @@ body {
 }
 
 .video-background iframe {
-    width: 100vw;
-    height: 56.25vw; /* 16:9 Aspect Ratio */
-    min-height: 100vh;
-    min-width: 177.77vh; /* 16:9 Aspect Ratio */
     position: absolute;
     top: 50%;
     left: 50%;
+    width: 100vw;
+    height: 56.25vw;
+    min-width: 177.78vh;
+    min-height: 100vh;
     transform: translate(-50%, -50%);
 }
 
@@ -1025,6 +1048,8 @@ body {
     overflow: hidden;
     background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
     padding: 40px;
+    margin-top: 80px;
+    z-index: 9999;
 }
 
 .carousel-content-wrapper {
