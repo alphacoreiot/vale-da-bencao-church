@@ -5,6 +5,10 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\SectionController;
 use App\Http\Controllers\Frontend\CelulasController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Content\AuthController as ContentAuthController;
+use App\Http\Controllers\Content\DashboardController as ContentDashboardController;
+use App\Http\Controllers\Content\EstudoCelulaController;
+use App\Http\Controllers\Content\UserController as ContentUserController;
 use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\SitemapController;
 
@@ -99,5 +103,40 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth', 'log.activity'
         Route::put('/', [App\Http\Controllers\Admin\RotationController::class, 'update'])->name('update');
         Route::post('/rotate', [App\Http\Controllers\Admin\RotationController::class, 'rotate'])->name('rotate');
         Route::post('/toggle', [App\Http\Controllers\Admin\RotationController::class, 'toggle'])->name('toggle');
+    });
+});
+
+// ==========================================
+// Content Manager SPA Routes
+// ==========================================
+
+// SPA Shell - todas as rotas /content/* servem a mesma view
+Route::get('/content/{any?}', [ContentAuthController::class, 'index'])
+    ->where('any', '.*')
+    ->name('content.spa');
+
+// Content API Routes
+Route::prefix('api/content')->group(function () {
+    // Auth (public)
+    Route::post('/login', [ContentAuthController::class, 'login']);
+    Route::post('/logout', [ContentAuthController::class, 'logout']);
+    Route::get('/check', [ContentAuthController::class, 'check']);
+    
+    // Protected routes
+    Route::middleware('content.auth')->group(function () {
+        Route::get('/me', [ContentAuthController::class, 'me']);
+        Route::get('/dashboard', [ContentDashboardController::class, 'index']);
+        
+        // Estudo da Célula
+        Route::get('/estudos-celula', [EstudoCelulaController::class, 'index']);
+        Route::post('/estudos-celula', [EstudoCelulaController::class, 'store']);
+        Route::post('/estudos-celula/{id}', [EstudoCelulaController::class, 'update']);
+        Route::delete('/estudos-celula/{id}', [EstudoCelulaController::class, 'destroy']);
+        
+        // Usuários
+        Route::get('/users', [ContentUserController::class, 'index']);
+        Route::post('/users', [ContentUserController::class, 'store']);
+        Route::post('/users/{id}', [ContentUserController::class, 'update']);
+        Route::delete('/users/{id}', [ContentUserController::class, 'destroy']);
     });
 });
